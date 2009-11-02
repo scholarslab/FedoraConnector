@@ -6,21 +6,21 @@
  * @package Fedora
  **/
 
-define('FEDORA_PLUGIN_VERSION', get_plugin_ini('Fedora', 'version'));
-define('FEDORA_PLUGIN_DIR', dirname(__FILE__));
+define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
+define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 
 define('FEDORA_REPO_ROOT', 'http://localhost:8080/fedora');
 
-add_plugin_hook('install', 'fedora_install');
-add_plugin_hook('uninstall', 'fedora_uninstall');
-add_plugin_hook('before_save_item','fedora_item_to_object');
-add_plugin_hook('define_routes', 'fedora_routes');
+add_plugin_hook('install', 'fedora_connector_install');
+add_plugin_hook('uninstall', 'fedora_connector_uninstall');
+add_plugin_hook('before_save_item','fedora_connector_item_to_object');
+add_plugin_hook('define_routes', 'fedora_connector_routes');
 
-function fedora_install()  {
-	set_option('fedora_version', FEDORA_PLUGIN_VERSION);
+function fedora_connector_install()  {
+	set_option('fedora_connector_version', FEDORA_CONNECTOR_PLUGIN_VERSION);
 }
 
-function fedora_uninstall() {
+function fedora_connector_uninstall() {
 
 }
 
@@ -29,12 +29,12 @@ function fedora_uninstall() {
  *
  * @return void
  **/
-function fedora_routes($router) {
-	$router->addConfig(new Zend_Config_Ini(FEDORA_PLUGIN_DIR .
+function fedora_connector_routes($router) {
+	$router->addConfig(new Zend_Config_Ini(FEDORA_CONNECTOR_PLUGIN_DIR .
 	DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
 }
 
-function fedora_item_to_object($item) {
+function fedora_connector_item_to_object($item) {
 	$logger = Omeka_Context::getInstance()->getLogger();
 	
 	if ( $myitem->getItemType()->name != 'Fedora object') return;

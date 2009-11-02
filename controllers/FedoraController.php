@@ -12,7 +12,7 @@ require_once 'repo-soap.php'; // library containing wrappers for SOAP access to 
 /**
  * URLs for files are routed through this controller.
  **/
-class Fedora_FedoraController extends Omeka_Controller_Action
+class FedoraConnector_FedoraController extends Omeka_Controller_Action
 {
 	public function getAction()
 	{
