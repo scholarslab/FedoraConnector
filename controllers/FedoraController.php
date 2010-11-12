@@ -5,8 +5,8 @@
  * @package Fedora
  **/
 
-require_once 'File.php';
-require_once 'repo-soap.php'; // library containing wrappers for SOAP access to repo
+//require_once 'File.php';
+//require_once 'repo-soap.php'; // library containing wrappers for SOAP access to repo
 
 
 /**
