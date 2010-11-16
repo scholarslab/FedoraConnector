@@ -8,7 +8,7 @@
  * @author Ethan Gruber: ewg4x at virginia dot edu
  */
 
-class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
+class FedoraConnector_ServersController extends Omeka_Controller_Action
 {  
     /*public function createAction(){
     	$agent = array();
