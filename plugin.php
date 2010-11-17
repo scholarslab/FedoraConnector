@@ -82,20 +82,38 @@ function fedora_connector_admin_navigation($tabs)
 }
 
 function fedora_connector_config_form()
-{  
+{      
     $omittedDatastreams = get_option('fedora_connector_omitted_datastreams');
-	$form = fedora_connector_server_form();
 ?>
-	<style type="text/css">.zend_form>dd{ margin-bottom:20px; }</style>
 	<div class="field">
-		<label for="fedora_connector_server">Default Fedora Server</label>       
-		<p class="explanation">URL and name of default the Fedora server.  The path should include the name of the Tomcat application (usually 'fedora') and trailing forward slash.  Example: http://yourfedoraserver.com:8080/fedora/</p>
-		<?php echo $form; ?>
+		<label for="fedora_connector_server">Omitted Datastreams:</label>   
+		 <?php echo __v()->formText('fedora_connector_omitted_datastreams', $omittedDatastreams, null);?>    
+		<p class="explanation">List datastream IDs, comma-separated, that should be omitted from the datastream selection checkbox list and object metadata dropdown menu.  Default: RELS-EXT,RELS-INT,AUDIT.</p>
 	</div>
 <?php
 }
 
-function fedora_connector_server_form(){
+function fedora_connector_config()
+{
+	set_option('fedora_connector_omitted_datastreams', $_POST['fedora_connector_omitted_datastreams']);
+	/*$db = get_db();
+	$data = array();
+    $form = fedora_connector_server_form();
+    if ($form->isValid($_POST)) {    
+    	//get posted values		
+		$uploadedData = $form->getValues();
+		
+		//cycle through each checkbox
+		foreach ($uploadedData as $k => $v){
+			if ($k != 'submit'){
+				$data[$k] = $v;
+			}		
+		}
+		$db->insert('fedora_connector_servers', $data);
+    }*/
+}
+
+/*function fedora_connector_server_form(){
 	$db = get_db();
 	$servers = $db->getTable('FedoraConnector_Server')->findBySql('is_default = ?', array(1));
 	
@@ -127,26 +145,7 @@ function fedora_connector_server_form(){
     }
     
     return $form;
-}
-
-function fedora_connector_config()
-{
-	$db = get_db();
-	$data = array();
-    $form = fedora_connector_server_form();
-    if ($form->isValid($_POST)) {    
-    	//get posted values		
-		$uploadedData = $form->getValues();
-		
-		//cycle through each checkbox
-		foreach ($uploadedData as $k => $v){
-			if ($k != 'submit'){
-				$data[$k] = $v;
-			}		
-		}
-		$db->insert('fedora_connector_servers', $data);
-    }
-}
+}*/
 
 /**
  * Add Fedora Datastreams tab to Edit Items form page * 
@@ -167,10 +166,6 @@ function fedora_connector_item_form_tabs($tabs)
    return $tabs;
 }
 
-/*****************************
- * HELPERS
- *****************************/
-
 function fedora_connector_pid_form($item) {
 	$db = get_db();
 	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item->id));
@@ -182,11 +177,11 @@ function fedora_connector_pid_form($item) {
 	$ht .= '<div id="omeka-map-form">';
 	//if there are datastreams, display the table
 	if ($datastreams[0]->pid != NULL){
-		$ht .= '<table><thead><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Metadata</th><th>Delete?</th></thead>';
+		$ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Delete?</th></thead>';
 		foreach ($datastreams as $datastream){
 			$delete_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';
 			$add_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
-			$ht.= '<tr><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->pid, $datastream->datastream) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . '</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '&item_id=' . $item->id . '">Delete</a></td></tr>';
+			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . '</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '&item_id=' . $item->id . '">Delete</a></td></tr>';
 		}
 		$ht .= '</table>';
 		$ht .= '<p><a href="' . $add_url . '?id=' . $item->id . '">Add another</a>?</p>';
@@ -199,32 +194,20 @@ function fedora_connector_pid_form($item) {
 	$ht .= '</div>';
     return $ht;
 }
-/****
- * render_fedora_datastreams_for_item
- * renders all datastreams in the item view
- ****/
-function render_fedora_datastreams_for_item ($item_id, $options=array()){
-	$db = get_db();
-	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item_id));
-	$html = '';
-	foreach($datastreams as $datastream){
-		$html .= render_fedora_datastream($datastream->pid, $datastream->datastream, $options);
-	}
-	return $html;
-}
 
+/*****************************
+ * HELPERS
+ *****************************/
 /****
  * Link to a fedora datastream.  Commonly used on Edit Item page under Fedora Datastreams tab.
  ****/
-function link_to_fedora_datastream($pid, $datastreamId){
+function link_to_fedora_datastream($id){
 	$html = '';
-	$server = get_option('fedora_connector_server');	
 	$db = get_db();
-	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('pid = ? AND datastream = ?', array($pid, $datastreamId));	
-	foreach ($datastreams as $datastream){
-		$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
-		$html .= '<a href="' . $url . '" target="_blank">' . $datastream->datastream . '</a>';
-	}
+	$datastream = $db->getTable('FedoraConnector_Datastream')->find($id);
+	$server = fedora_connector_get_server($datastream);
+	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+	$html .= '<a href="' . $url . '" target="_blank">' . $datastream->datastream . '</a>';
 	return $html;
 }
 /***
@@ -235,17 +218,13 @@ function list_fedora_datastreams($item){
 	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item->id));
 	$html = '';
 	if ($datastreams[0]->pid != NULL){
-		//$html .= '<table><thead><th>PID</th><th>Datastream ID</th><th>Metadata</th></thead>';
-		
 		foreach ($datastreams as $datastream){
 			$html .= '<h4>PID: ' . $datastream->pid . '</h4>';
 			$html .= '<ul>';			
-			$html .= '<li>Datastream: ' . link_to_fedora_datastream($datastream->pid, $datastream->datastream) . '</li>';
+			$html .= '<li>Datastream: ' . link_to_fedora_datastream($datastream->id) . '</li>';
 			$html .= '<li>Metadata: ' . $datastream->metadata_stream . '</li>';
 			$html .= '</ul';
-			//$html.= '<tr><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->pid, $datastream->datastream) . '</td><td>' . $datastream->metadata_stream . '</td></tr>';
-		}		
-		//$html .= '</table>';
+		}
 	} else {
 		$html .= '<p>There are no datastreams for this item yet. ' . link_to_item('Add a Datastream', array(), 'edit') . '.</p>';
 	}
@@ -253,27 +232,39 @@ function list_fedora_datastreams($item){
 }
 
 /****
+ * render_fedora_datastreams_for_item
+ * renders all datastreams in the item view
+ ****/
+function render_fedora_datastreams_for_item ($item_id, $options=array()){
+	$db = get_db();
+	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item_id));
+	$html = '';
+	foreach($datastreams as $datastream){
+		$html .= render_fedora_datastream($datastream->id, $options);
+	}
+	return $html;
+}
+
+/****
  * render_fedora_datastream
- * accepts fedora PID and datastream ID.
+ * accepts ID
  * Switch cases, depending on mime_type.  Datastream IDs are arbitrary so
  * mime-type disseminators need to be extensible. 
  ****/
-function render_fedora_datastream ($pid, $datastreamId, $options=array()){
+function render_fedora_datastream ($id, $options=array()){
 	$html = '';
 	$db = get_db();
-	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('pid = ? AND datastream = ?', array($pid, $datastreamId));
-	foreach ($datastreams as $datastream){
-		$mime_type = $datastream->mime_type;
-		
-		//switch based on mime-types
-		switch($mime_type){
-			case 'image/jp2':
-				$html .= fedora_disseminator_imagejp2($datastream,$options);
-				break;
-			case 'image/jpeg':
-				$html .= fedora_disseminator_imagejpeg($datastream,$options);
-				break;
-		}
+	$datastream = $db->getTable('FedoraConnector_Datastream')->find($id);	
+	$mime_type = $datastream->mime_type;
+	
+	//switch based on mime-types
+	switch($mime_type){
+		case 'image/jp2':
+			$html .= fedora_disseminator_imagejp2($datastream,$options);
+			break;
+		case 'image/jpeg':
+			$html .= fedora_disseminator_imagejpeg($datastream,$options);
+			break;
 	}
 	return $html;
 }
@@ -284,13 +275,15 @@ function render_fedora_datastream ($pid, $datastreamId, $options=array()){
 
 //image/jpeg
 function fedora_disseminator_imagejpeg($datastream,$options){
-	$server = get_option('fedora_connector_server');
+	$db = get_db();
+	$server = fedora_connector_get_server($datastream);
 	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
 }
 
 //JP2K = image/jp2
 function fedora_disseminator_imagejp2 ($datastream,$options){
-	$server = get_option('fedora_connector_server');
+	$db = get_db();
+	$server = fedora_connector_get_server($datastream);	
 	$size = $options['size'];
 	$url = $server . 'get/' . $datastream->pid . '/djatoka:jp2SDef/getRegion';
 	switch($size){
@@ -304,6 +297,15 @@ function fedora_disseminator_imagejp2 ($datastream,$options){
 				$html = '<img alt="image" src="' . $url . '?scale=400,400"/>';
 		}	
 	return $html;
+}
+
+/****
+ * Get the URL of the server by passing in the server_id from the $datastream
+ ****/
+function fedora_connector_get_server($datastream){
+	$db = get_db();
+	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id)->url;
+	return $server;
 }
 
 /**

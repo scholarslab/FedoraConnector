@@ -8,6 +8,9 @@
  * @author Ethan Gruber: ewg4x at virginia dot edu
  */
 
+//Require Zend Form Elements
+require "Zend/Form/Element.php";
+
 class FedoraConnector_ServersController extends Omeka_Controller_Action
 {  
     /*public function createAction(){
@@ -17,171 +20,166 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     }*/
     
 	public function indexAction(){
-            $db = get_db();
-            $item_id = $this->_getParam('id');
-            $form = $this->getPidForm($item_id);
-            $this->view->id = $item_id;
-            $this->view->form = $form;
-    }
-
-    public function selectAction() 
-    {
-    	$form = $this->getPidForm();
+		$db = get_db();
     	
-		if ($_POST) {
-    		if ($form->isValid($this->_request->getPost())) {    
-    			//get posted values		
-				$uploadedData = $form->getValues();
-				$item_id = $uploadedData['fedora_connector_item_id'];
-				$pid = $uploadedData['fedora_connector_pid'];
-				$datastreamsForm = $this->datastreamsForm($item_id, $pid);
-				$this->view->form = $datastreamsForm;    		
-    		}
-    	}
-    	else {
-    			$this->flashError('Failed to gather posted data.');    			
-    	}
+    	$currentPage = $this->_getParam('page', 1);
+    	
+    	
+    	$count = $db->getTable('FedoraConnector_Server')->count();
+    	$this->view->servers =  FedoraConnector_Server::getServer($currentPage);
+    	$this->view->count = $count;
+		
+        /** 
+         * Now process the pagination
+         * 
+         **/
+        $paginationUrl = $this->getRequest()->getBaseUrl().'/servers/index/';
+
+        //Serve up the pagination
+        $pagination = array('page'          => $currentPage, 
+                            'per_page'      => 10, 
+                            'total_results' => $count, 
+                            'link'          => $paginationUrl);
+        
+        Zend_Registry::set('pagination', $pagination);
     }
     
-    public function updateAction() 
-    {
-    	$form = $this->datastreamsForm();
-    	
-		if ($_POST) {
-			$uploadedData = $this->_request->getPost();
-    		if ($form->isValid($uploadedData)) {    
-    			//get posted values    			
-				
-				$item_id = $uploadedData['fedora_connector_item_id'];
-				$pid = $uploadedData['fedora_connector_pid'];
-				$metadataStream = $uploadedData['fedora_connector_metadata'];
-				$posted = 0;
-				foreach($uploadedData as $k=>$v){
-					if (strstr($k, 'fedora_connector_datastream') && $v != '0'){
-						$data = array();
-						$exploded = explode('fedora_connector_datastream_', $k);
-						$datastream = $exploded[1];
-						$data = array('item_id'=>$item_id, 'pid'=>$pid, 'datastream'=>$datastream, 'mime_type'=>$v, 'metadata_stream'=>$metadataStream);
-						try{
-								//update the database with new values
-								$db = get_db();
-								$db->insert('fedora_connector_datastreams', $data);
-								$posted += 1;
-							} catch (Exception $err) {
-								$this->flashError($err->getMessage());
-	        				}
-					} 
-				}
-				if ($posted > 0){
-					$this->flashSuccess('Fedora datastreams connected to Item');
-					$this->_helper->redirector->goto($item_id, 'edit', 'items');
-				} else{
-					$this->flashError('No datastreams selected.');
-					$this->_helper->redirector->goto($item_id, 'edit', 'items');
-				}
-    		}
-			else {
-				var_dump($this->_request->getPost());
-    			$this->flashError('Failed to gather posted data.');    			
-    		}
-    	}
-    	
+    public function createAction(){
+    	$server = array();
+    	$form = $this->serverForm($server);
+		$this->view->form = $form;
+    }
+    
+	public function editAction(){
+		$db = get_db();
+		$serverId = $this->_getParam('id');
+		$count = count($db->getTable('FedoraConnector_Server')->findAll());
+		$server = $db->getTable('FedoraConnector_Server')->find($serverId);
+		$form = $this->serverForm($server);
+		$this->view->count = $count;
+		$this->view->id = $serverId;
+		$this->view->form = $form;
     }
     
     public function deleteAction()
     {
         if ($user = $this->getCurrentUser()) {
-			$datastreamId = $this->_getParam('id');
-			$item_id = $this->_getParam('item_id');
+			$serverId = $this->_getParam('id');
 			$db = get_db();
-            $datastream = $db->getTable('FedoraConnector_Datastream')->find($datastreamId);
+            $server = $db->getTable('FedoraConnector_Server')->find($serverId);
+            //$entries = $db->getTable('ElementText')->findBySql('text = ?', array($serverId));
             
-			$datastream->delete();
-			$this->flashSuccess('Fedora datastream successfully deleted.');
-			$this->_helper->redirector->goto($item_id, 'edit', 'items');
+			$server->delete();
+			/*foreach ($entries as $entry){
+                $entry->delete();
+               }*/
+			$this->flashSuccess('The server was successfully deleted!');
+			$this->redirect->goto('index'); 
         }
-        else{
-        	$this->_forward('forbidden');
-        }
+        
+        $this->_forward('forbidden');
     }
     
-	private function getPidForm($item_id)
-	{
-	    require "Zend/Form/Element.php";
-    	$form = new Zend_Form();
-		$form->setAction('select');    	
-    	$form->setMethod('post');
-    	$form->setAttrib('enctype', 'multipart/form-data');
-    	  	
-    	//PID
-		$pid = new Zend_Form_Element_Text('fedora_connector_pid');
-		$pid->setLabel('PID');
-		$pid->setRequired(true);
-		$form->addElement($pid);
+	public function updateAction(){
+		$form = $this->serverForm($server);
 		
-		//Submit button
-    	$form->addElement('submit','submit');
-    	$submitElement=$form->getElement('submit');
-    	$submitElement->setLabel('Submit');    	
-		
-		//item id 	
-    	$itemId = new Zend_Form_Element_Hidden('fedora_connector_item_id');
-    	$itemId->setValue($item_id);
-    	$form->addElement($itemId);
-    	
-    	return $form;
-	}
-	
-	private function datastreamsForm($item_id, $pid)
-	{
-		$server = get_option('fedora_connector_server');
-		$datastreamXmlPath = $server . 'objects/' . $pid . '/datastreams?format=xml';
-		$xml_doc = new DomDocument;	
-		$xml_doc->load($datastreamXmlPath);
-		$xpath = new DOMXPath($xml_doc);
-		$datastreams = $xpath->query("//*[local-name() = 'datastream']");
-	   
-    	$form = new Zend_Form();
-		$form->setAction('update');    	
-    	$form->setMethod('post');
-    	$form->setAttrib('enctype', 'multipart/form-data');
-    	
-    	//list available datastreams to attach.  multicheckbox.
-    	foreach ($datastreams as $datastream){
-	    	$datastreamElement = new Zend_Form_Element_Checkbox('fedora_connector_datastream_' . $datastream->getAttribute('dsid'));
-			$datastreamElement->setLabel($datastream->getAttribute('dsid'));
-			$datastreamElement->setCheckedValue($datastream->getAttribute('mimeType'));			
-			$form->addElement($datastreamElement);
-    	} 
-    	
-    	$metadataStream = new Zend_Form_Element_Select('fedora_connector_metadata');
-    	$metadataStream->setLabel('Metadata Datastream:');
-    	foreach ($datastreams as $datastream){
-    		if (strstr($datastream->getAttribute('mimeType'), 'text/xml')){
-    			$metadataStream->addMultiOption($datastream->getAttribute('dsid'), $datastream->getAttribute('dsid'));
+    	if ($_POST) {
+    		if ($form->isValid($this->_request->getPost())) {    
+    			//get posted values		
+				$uploadedData = $form->getValues();
+				if ($uploadedData['method'] == 'create'){
+					$data = array('name'=>$uploadedData['name'],
+						'url'=>$uploadedData['url'],
+						'is_default'=>$uploadedData['is_default']);
+				} elseif ($uploadedData['method'] == 'update'){
+					$data = array('id'=>$uploadedData['id'],
+						'name'=>$uploadedData['name'],
+						'url'=>$uploadedData['url'],
+						'is_default'=>$uploadedData['is_default']);
+				}
+				
+				//get db
+				try{		
+					$db = get_db();
+					
+					//if is_default is set to true, iterate through existing rows in the table to set is_default to 0 for all other servers
+					if ($uploadedData['is_default'] == '1'){
+						$servers = $db->getTable('FedoraConnector_Server')->findBySql('is_default = ?', array('1'));
+						foreach ($servers as $server){
+							$db->insert('fedora_connector_servers', array('name'=>$server->name, 'url'=>$server->url, 'id'=>$server->id, 'is_default'=>'0'));
+						}
+					}
+					$db->insert('fedora_connector_servers', $data);		
+					$this->flashSuccess('Server updated.');				
+					$this->redirect->goto('index');							
+					
+				} catch (Exception $e) {
+					$this->flashError($e->getMessage());
+        		}
     		}
+    		else {
+    			$this->flashError('URL and server name are required.');
+    			$this->view->form = $form;
+    		}
+    		
     	}
-    	$metadataStream->setRegisterInArrayValidator(false);
-    	//$metadataStream->setValue('MODS');
-    	$form->addElement($metadataStream);
+    	else {
+    			$this->flashError('Failed to gather posted data.');
+    			$this->view->form = $form;
+    	}
+    }
+
+    private function serverForm($server){
+	    $form = new Zend_Form();  	
+	    $form->setMethod('post');
+	    $form->setAction('update');
+	    $form->setAttrib('enctype', 'multipart/form-data');	
+	    
+	    $url = new Zend_Form_Element_Text('url');
+		$url->setLabel('URL:');
+		$url->setRequired(true);
+		if ($server != NULL){
+			$url->setValue($server->url);
+		}
+		$form->addElement($url);
 		
-		//item id 	
-    	$itemIdElement = new Zend_Form_Element_Hidden('fedora_connector_item_id');
-    	$itemIdElement->setValue($item_id);
-    	$form->addElement($itemIdElement);
-    	
-    	//fedora pid
-    	$pidElement = new Zend_Form_Element_Hidden('fedora_connector_pid');
-    	$pidElement->setValue($pid);
-    	$form->addElement($pidElement);
-    	
-    	//Submit button
-    	$form->addElement('submit','submit');
-    	$submitElement=$form->getElement('submit');
-    	$submitElement->setLabel('Submit');    	
-    	
-    	return $form;
-    	
-	}
+		$name = new Zend_Form_Element_Text('name');
+		$name->setLabel('Name:');
+		$name->setRequired(true);
+		if ($server != NULL){
+			$name->setValue($server->name);
+		}
+		$form->addElement($name);
+		
+				
+		$isDefault = new Zend_Form_Element_Checkbox('is_default');
+		$isDefault->setLabel('Is Default Server:');
+		if ($server != NULL){
+			$isDefault->setValue($server->is_default);
+		}
+		$form->addElement($isDefault);
+		
+		$id = new Zend_Form_Element_Hidden('id');		
+		if ($server != NULL){
+			$id->setValue($server->id);
+		}
+		$form->addElement($id);
+		
+		 //define method	   
+    	$method = new Zend_Form_Element_Hidden('method');
+		if ($server != NULL){
+    		$method->setValue('update');
+    	 } else {
+    	 	$method->setValue('create');
+    	 }
+    	$form->addElement($method);
+	    
+		//Submit button
+	    $form->addElement('submit','submit');
+	    $submitElement=$form->getElement('submit');
+	    $submitElement->setLabel('Submit');    
+		
+	    return $form;
+    }
 }
 

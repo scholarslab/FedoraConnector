@@ -8,8 +8,12 @@
  * @author Ethan Gruber: ewg4x at virginia dot edu
  */
 
+//Require Zend Form Elements
+require "Zend/Form/Element.php";
+
 class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 {  
+	
     /*public function createAction(){
     	$agent = array();
     	$form = $this->agentForm($agent);
@@ -34,7 +38,8 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 				$uploadedData = $form->getValues();
 				$item_id = $uploadedData['fedora_connector_item_id'];
 				$pid = $uploadedData['fedora_connector_pid'];
-				$datastreamsForm = $this->datastreamsForm($item_id, $pid);
+				$server_id = $uploadedData['fedora_connector_server_id'];
+				$datastreamsForm = $this->datastreamsForm($item_id, $pid, $server_id);
 				$this->view->form = $datastreamsForm;    		
     		}
     	}
@@ -55,13 +60,14 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 				$item_id = $uploadedData['fedora_connector_item_id'];
 				$pid = $uploadedData['fedora_connector_pid'];
 				$metadataStream = $uploadedData['fedora_connector_metadata'];
+				$server_id = $uploadedData['fedora_connector_server_id'];
 				$posted = 0;
 				foreach($uploadedData as $k=>$v){
 					if (strstr($k, 'fedora_connector_datastream') && $v != '0'){
 						$data = array();
 						$exploded = explode('fedora_connector_datastream_', $k);
 						$datastream = $exploded[1];
-						$data = array('item_id'=>$item_id, 'pid'=>$pid, 'datastream'=>$datastream, 'mime_type'=>$v, 'metadata_stream'=>$metadataStream);
+						$data = array('item_id'=>$item_id, 'pid'=>$pid, 'datastream'=>$datastream, 'mime_type'=>$v, 'metadata_stream'=>$metadataStream, 'server_id'=>$server_id);
 						try{
 								//update the database with new values
 								$db = get_db();
@@ -107,15 +113,30 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     
 	private function getPidForm($item_id)
 	{
-	    require "Zend/Form/Element.php";
+		$db = get_db();
+		$servers = $db->getTable('FedoraConnector_Server')->findAll();
+	    
     	$form = new Zend_Form();
 		$form->setAction('select');    	
     	$form->setMethod('post');
     	$form->setAttrib('enctype', 'multipart/form-data');
+    	
+    	$serverElement = new Zend_Form_Element_Select('fedora_connector_server_id');
+    	$serverElement->setLabel('Server:');
+    	foreach ($servers as $server){
+    		$serverElement->addMultiOption($server->id, $server->name);
+    		if ($server->is_default > 0) {
+    			$is_default = $server->id;
+    		}
+    	}
+    	$serverElement->setValue($is_default);
+    	$serverElement->setRegisterInArrayValidator(false);
+    	//$metadataStream->setValue('MODS');
+    	$form->addElement($serverElement);
     	  	
     	//PID
 		$pid = new Zend_Form_Element_Text('fedora_connector_pid');
-		$pid->setLabel('PID');
+		$pid->setLabel('PID:');
 		$pid->setRequired(true);
 		$form->addElement($pid);
 		
@@ -132,9 +153,16 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     	return $form;
 	}
 	
-	private function datastreamsForm($item_id, $pid)
+	private function datastreamsForm($item_id, $pid, $server_id)
 	{
-		$server = get_option('fedora_connector_server');
+		//get the server from the FedoraConnecter_Server table
+		$db = get_db();
+		$server = $db->getTable('FedoraConnector_Server')->find($server_id)->url;
+	
+		//get excluded datastreams
+		$ommittedString = get_option('fedora_connector_omitted_datastreams');
+		
+		//get the datastreams from Fedora REST
 		$datastreamXmlPath = $server . 'objects/' . $pid . '/datastreams?format=xml';
 		$xml_doc = new DomDocument;	
 		$xml_doc->load($datastreamXmlPath);
@@ -148,23 +176,32 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     	
     	//list available datastreams to attach.  multicheckbox.
     	foreach ($datastreams as $datastream){
-	    	$datastreamElement = new Zend_Form_Element_Checkbox('fedora_connector_datastream_' . $datastream->getAttribute('dsid'));
-			$datastreamElement->setLabel($datastream->getAttribute('dsid'));
-			$datastreamElement->setCheckedValue($datastream->getAttribute('mimeType'));			
-			$form->addElement($datastreamElement);
+    		//skip datastream if in omitted list.  example: RELS-INT, RELS-EXT, AUDIT
+    		if (!strstr($ommittedString, $datastream->getAttribute('dsid'))){
+		    	$datastreamElement = new Zend_Form_Element_Checkbox('fedora_connector_datastream_' . $datastream->getAttribute('dsid'));
+				$datastreamElement->setLabel($datastream->getAttribute('dsid'));
+				$datastreamElement->setCheckedValue($datastream->getAttribute('mimeType'));			
+				$form->addElement($datastreamElement);
+    		}
     	} 
     	
     	$metadataStream = new Zend_Form_Element_Select('fedora_connector_metadata');
-    	$metadataStream->setLabel('Metadata Datastream:');
+    	$metadataStream->setLabel('Object Metadata:');
     	foreach ($datastreams as $datastream){
-    		if (strstr($datastream->getAttribute('mimeType'), 'text/xml')){
+    		//skip datastream if in omitted list.  example: RELS-INT, RELS-EXT, AUDIT.  applies to text/xml mime-types only
+    		if (strstr($datastream->getAttribute('mimeType'), 'text/xml') && !strstr($ommittedString, $datastream->getAttribute('dsid'))){
     			$metadataStream->addMultiOption($datastream->getAttribute('dsid'), $datastream->getAttribute('dsid'));
     		}
     	}
+    	$metadataStream->setValue('DC');
     	$metadataStream->setRegisterInArrayValidator(false);
-    	//$metadataStream->setValue('MODS');
     	$form->addElement($metadataStream);
 		
+    	//Submit button
+    	$form->addElement('submit','submit');
+    	$submitElement=$form->getElement('submit');
+    	$submitElement->setLabel('Submit');  
+    	
 		//item id 	
     	$itemIdElement = new Zend_Form_Element_Hidden('fedora_connector_item_id');
     	$itemIdElement->setValue($item_id);
@@ -175,13 +212,12 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     	$pidElement->setValue($pid);
     	$form->addElement($pidElement);
     	
-    	//Submit button
-    	$form->addElement('submit','submit');
-    	$submitElement=$form->getElement('submit');
-    	$submitElement->setLabel('Submit');    	
+    	//server id
+		$serverId = new Zend_Form_Element_Hidden('fedora_connector_server_id');
+    	$serverId->setValue($server_id);
+    	$form->addElement($serverId);
     	
-    	return $form;
-    	
+    	return $form;    	
 	}
 }
 
