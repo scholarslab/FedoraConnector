@@ -4,7 +4,7 @@
  * @copyright  Scholars' Lab 2010
  * @license    http://www.apache.org/licenses/LICENSE-2.0.html
  * @version    $Id:$
- * @package VraCoreElements
+ * @package FedoraConnector
  * @author Ethan Gruber: ewg4x at virginia dot edu
  */
 
@@ -13,12 +13,6 @@ require "Zend/Form/Element.php";
 
 class FedoraConnector_ServersController extends Omeka_Controller_Action
 {  
-    /*public function createAction(){
-    	$agent = array();
-    	$form = $this->agentForm($agent);
-		$this->view->form = $form;
-    }*/
-    
 	public function indexAction(){
 		$db = get_db();
     	

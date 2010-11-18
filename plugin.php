@@ -1,15 +1,15 @@
 <?php
 
 /**
- * @version $Id$
- * @copyright UVaLib DRS R & D, 2009
- * @package Fedora
+ * @copyright  Scholars' Lab 2010
+ * @license    http://www.apache.org/licenses/LICENSE-2.0.html
+ * @version    $Id:$
+ * @package FedoraConnector
+ * @author Ethan Gruber: ewg4x at virginia dot edu
  **/
 
 define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
 define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
-
-//define('FEDORA_REPO_ROOT', 'http://localhost:8080/fedora');
 
 //hooks
 add_plugin_hook('install', 'fedora_connector_install');
@@ -180,8 +180,9 @@ function fedora_connector_pid_form($item) {
 		$ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Delete?</th></thead>';
 		foreach ($datastreams as $datastream){
 			$delete_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';
+			$import_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/import/';
 			$add_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
-			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . '</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '&item_id=' . $item->id . '">Delete</a></td></tr>';
+			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' [<a href="' . $import_url . '?id=' . $datastream->id . '">import</a>]</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '">Delete</a></td></tr>';
 		}
 		$ht .= '</table>';
 		$ht .= '<p><a href="' . $add_url . '?id=' . $item->id . '">Add another</a>?</p>';
@@ -210,6 +211,7 @@ function link_to_fedora_datastream($id){
 	$html .= '<a href="' . $url . '" target="_blank">' . $datastream->datastream . '</a>';
 	return $html;
 }
+
 /***
  * List Fedora datastreams: used on Admin show item page 
  ****/
