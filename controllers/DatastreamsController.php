@@ -36,7 +36,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     		if ($form->isValid($this->_request->getPost())) {    
     			//get posted values		
 				$uploadedData = $form->getValues();
-				$item_id = $uploadedData['fedora_connector_item_id'];
+				$item_id = ($uploadedData['fedora_connector_item_id'] > 0) ? $uploadedData['fedora_connector_item_id'] : 0;
 				$pid = $uploadedData['fedora_connector_pid'];
 				$server_id = $uploadedData['fedora_connector_server_id'];
 				$datastreamsForm = $this->datastreamsForm($item_id, $pid, $server_id);
@@ -55,12 +55,20 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 		if ($_POST) {
 			$uploadedData = $this->_request->getPost();
     		if ($form->isValid($uploadedData)) {    
-    			//get posted values    			
+    			//get posted values    								
+    		
+    			if ($uploadedData['fedora_connector_item_id'] > 0){
+    				$item_id = $uploadedData['fedora_connector_item_id'];
+    			} else {
+    				$item = new Item;    				
+    				$item->save();
+    				$item_id = $item->id;
+    			}
 				
-				$item_id = $uploadedData['fedora_connector_item_id'];
 				$pid = $uploadedData['fedora_connector_pid'];
 				$metadataStream = $uploadedData['fedora_connector_metadata'];
 				$server_id = $uploadedData['fedora_connector_server_id'];
+				
 				$posted = 0;
 				foreach($uploadedData as $k=>$v){
 					if (strstr($k, 'fedora_connector_datastream') && $v != '0'){
@@ -114,6 +122,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     	$db = get_db();
     	$id = $this->_getParam('id');
     	$datastream = $db->getTable('FedoraConnector_Datastream')->find($id);
+    	
     	$item = $db->getTable('Item')->find($datastream->item_id);
     	$server = fedora_connector_get_server($datastream);
     	$dcUrl = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->metadata_stream . '/content';

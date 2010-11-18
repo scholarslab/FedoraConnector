@@ -270,10 +270,18 @@ function render_fedora_datastream ($id, $options=array()){
 	}
 	return $html;
 }
-
 /****
- * DISSEMINATORS 
+ * Get the URL of the server by passing in the server_id from the $datastream
  ****/
+function fedora_connector_get_server($datastream){
+	$db = get_db();
+	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id)->url;
+	return $server;
+}
+
+/***************
+ * DISSEMINATORS 
+ ***************/
 
 //image/jpeg
 function fedora_disseminator_imagejpeg($datastream,$options){
@@ -301,31 +309,6 @@ function fedora_disseminator_imagejp2 ($datastream,$options){
 	return $html;
 }
 
-/****
- * Get the URL of the server by passing in the server_id from the $datastream
- ****/
-function fedora_connector_get_server($datastream){
-	$db = get_db();
-	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id)->url;
-	return $server;
-}
-
-/**
- * Add the routes from routes.ini in this plugin folder.
- *
- * @return void
- **/
-/*function fedora_connector_routes($router) {
-	$router->addConfig(new Zend_Config_Ini(FEDORA_CONNECTOR_PLUGIN_DIR .
-	DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
-}*/
-
-/*function fedora_connector_item_to_object($item) {
-	$logger = Omeka_Context::getInstance()->getLogger();
-	
-	if ( $myitem->getItemType()->name != 'Fedora object') return;
-	$identifiers = $myitem->getElementTextsByElementNameAndSetName( 'Fedora PID', 'Item Type Metadata');
-	$pid = $identifiers[0]->text;
-	$members = getMembers($pid);
-	$logger->log($members);
-}*/
+/***************
+ * IMPORTERS 
+ ***************/
