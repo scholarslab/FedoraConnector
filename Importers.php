@@ -71,71 +71,67 @@ function fedora_importer_MODS($datastream){
 	//based on Library of Congress guidelines: http://www.loc.gov/standards/mods//dcsimple-mods.html
 	foreach ($dc as $name){
 		if ($name == 'Title'){
-			$queries = array('//*[local-name()="titleInfo"]/*[local-name()="title"]');
+			$queries = array('//*[local-name()="mods"]/*[local-name()="titleInfo"]/*[local-name()="title"]');
 		} elseif ($name == 'Creator'){
-			$queries = array('//*[local-name()="name"][*[local-name()="role"] = "creator"]');
-		}/* elseif ($name == 'Subject'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="profileDesc"]/*[local-name()="textClass"]/*[local-name()="keywords"]/*[local-name()="list"]/*[local-name()="item"]');
+			$queries = array('//*[local-name()="mods"]/*[local-name()="name"][*[local-name()="role"] = "creator"]');
+		} elseif ($name == 'Subject'){
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="subject"]/*[local-name()="topic"]');
 		} elseif ($name == 'Description'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="encodingDesc"]/*[local-name()="refsDecl"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="encodingDesc"]/*[local-name()="projectDesc"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="encodingDesc"]/*[local-name()="editorialDesc"]');
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="abstract"]',
+								'//*[local-name()="mods"]/*[local-name()="note"]',
+								'//*[local-name()="mods"]/*[local-name()="tableOfContents"]');
 		} elseif ($name == 'Publisher'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="publicationStmt"]/*[local-name()="publisher"]/*[local-name()="publisher"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="publicationStmt"]/*[local-name()="publisher"]/*[local-name()="pubPlace"]');
+			$queries = array('//*[local-name()="mods"]/*[local-name()="originInfo"]/*[local-name()="publisher"]');
 		} elseif ($name == 'Contributor'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="titleStmt"]/*[local-name()="editor"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="titleStmt"]/*[local-name()="funder"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="titleStmt"]/*[local-name()="sponsor"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="titleStmt"]/*[local-name()="principle"]');
+			//Mapping from name/namePart to Contributor specifically is difficult.  There are likely institutional differences in mapping
+			$queries = array();
 		} elseif ($name == 'Date'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="publicationStmt"]/*[local-name()="date"]');
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="originInfo"]/*[local-name()="dateIssued"]',
+								'//*[local-name()="mods"]/*[local-name()="originInfo"]/*[local-name()="dateCreated"]',
+								'//*[local-name()="mods"]/*[local-name()="originInfo"]/*[local-name()="dateCaptured"]',
+								'//*[local-name()="mods"]/*[local-name()="originInfo"]/*[local-name()="dateOther"]');
 		} elseif ($name == 'Type'){
-			//type, defined with Item Type Metadata dropdown
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="typeOfResource"]',
+								'//*[local-name()="mods"]/*[local-name()="genre"]');
 			$queries = array();				
 		} elseif ($name == 'Format'){
-			//format, added manually as text/*[local-name()="xml"] below
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="physicalDescription"]/*[local-name()="internetMediaType"]',
+								'//*[local-name()="mods"]/*[local-name()="physicalDescription"]/*[local-name()="extent"]',
+								'//*[local-name()="mods"]/*[local-name()="physicalDescription"]/*[local-name()="form"]');
 			$queries == array();
 		} elseif ($name == 'Identifier'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="publicationStmt"]/*[local-name()="idno"][@type="ARK"]');
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="identifier"]',
+								'//*[local-name()="mods"]/*[local-name()="location"]/*[local-name()="uri"]');
 		} elseif ($name == 'Source'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="sourceDesc"]/*[local-name()="bibful"]/*[local-name()="publicationStmt"]/*[local-name()="publisher"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="sourceDesc"]/*[local-name()="bibful"]/*[local-name()="publicationStmt"]/*[local-name()="pubPlace"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="sourceDesc"]/*[local-name()="bibful"]/*[local-name()="publicationStmt"]/*[local-name()="date"]',
-								'//*[local-name()="teiHeader"]/*[local-name()="sourceDesc"]/*[local-name()="bibl"]');
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="relatedItem"][@type="original"]/*[local-name()="titleInfo"]/*[local-name()="title"]',
+								'//*[local-name()="mods"]/*[local-name()="relatedItem"][@type="original"]/*[local-name()="location"]/*[local-name()="url"]');
 		} elseif ($name == 'Language'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="profileDesc"]/*[local-name()="langUsage"]/*[local-name()="language"]');
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="language"]');
 		} elseif ($name == 'Relation'){
-			$queries = array(	'//*[local-name()="teiHeader"]/*[local-name()="fileDesc"]/*[local-name()="seriesStmt"]/*[local-name()="title"]');
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="relatedItem"]/*[local-name()="titleInfo"]/*[local-name()="title"]',
+								'//*[local-name()="mods"]/*[local-name()="relatedItem"]/*[local-name()="location"]/*[local-name()="url"]');
 		} elseif ($name == 'Coverage'){
-			//skip coverage, there is no clear mapping from TEI Header to Dublin Core
-			$queries == array();
+			$queries = array(	'//*[local-name()="mods"]/*[local-name()="subject"]/*[local-name()="temporal"]',
+								'//*[local-name()="mods"]/*[local-name()="subject"]/*[local-name()="geographic"]',
+								'//*[local-name()="mods"]/*[local-name()="subject"]/*[local-name()="hierarchicalGeographic"]',
+								'//*[local-name()="mods"]/*[local-name()="subject"]/*[local-name()="cartographics"]');
 		} elseif ($name == 'Rights'){
-			$queries == array('//*[local-name()="teiheader"]/*[local-name()="fileDesc"]/*[local-name()="publicationStmt"]/*[local-name()="availability"]');
-		}*/
+			$queries == array('//*[local-name()="mods"]/*[local-name()="accessCondition"]');
+		}
 		
 		//get item element texts
 		$ielement = $item->getElementByNameAndSetName($name, 'Dublin Core');
 		$ielementTexts = $item->getTextsByElement($ielement);
-		$itexts = array();
-		foreach ($ielementTexts as $ielementText){
-			$itexts[] = $ielementText['text'];
-		}
 		
 		//set element texts for item and file
 		foreach ($queries as $query){
 			$nodes = $xpath->query($query);
 			foreach ($nodes as $node){					
-				//see if that text is already set and don't put in any blank or null fields
+				//trip whitespace from nodeValue
 				$value = preg_replace('/\s\s+/', ' ', trim($node->nodeValue));
-				
-				//item
-				if (!in_array(trim($value), $itexts) && trim($value) != '' && trim($value) != NULL){
-					$item->addTextForElement($ielement, trim($value));
-				}
+				$item->addTextForElement($ielement, $value);				
 			}
 		}
-		
-		$item->saveElementTexts();
 	}
+	$item->saveElementTexts();
 }

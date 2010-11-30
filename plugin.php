@@ -244,7 +244,9 @@ function fedora_connector_get_server($datastream){
  * choose between various importers for different XML metadata types.  Default is Dublin Core
  ****/
 function fedora_connector_import_metadata($datastream){
-    	switch($datastream->metadata_stream){
+	$importerFunction = 'fedora_importer_' . $datastream->metadata_stream;
+	$importerFunction ($datastream);
+    	/*switch($datastream->metadata_stream){
 			case 'DC':
 				//Dublin Core
 				echo fedora_importer_DC($datastream);
@@ -253,6 +255,6 @@ function fedora_connector_import_metadata($datastream){
 				//MODS
 				echo fedora_importer_MODS($datastream);
 				break;
-		}	
+		}*/	
     return;    
 }
