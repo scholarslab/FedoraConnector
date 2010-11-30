@@ -60,13 +60,8 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         if ($user = $this->getCurrentUser()) {
 			$serverId = $this->_getParam('id');
 			$db = get_db();
-            $server = $db->getTable('FedoraConnector_Server')->find($serverId);
-            //$entries = $db->getTable('ElementText')->findBySql('text = ?', array($serverId));
-            
+            $server = $db->getTable('FedoraConnector_Server')->find($serverId);            
 			$server->delete();
-			/*foreach ($entries as $entry){
-                $entry->delete();
-               }*/
 			$this->flashSuccess('The server was successfully deleted!');
 			$this->redirect->goto('index'); 
         }

@@ -7,6 +7,9 @@
  * @package FedoraConnector
  * @author Ethan Gruber: ewg4x at virginia dot edu
  **/
+//include the disseminators and importers which are stored in separate files
+require "Disseminators.php";
+require "Importers.php";
 
 define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
 define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
@@ -14,6 +17,7 @@ define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 //hooks
 add_plugin_hook('install', 'fedora_connector_install');
 add_plugin_hook('uninstall', 'fedora_connector_uninstall');
+add_plugin_hook('before_delete_item', 'fedora_connector_before_delete_item');
 add_plugin_hook('admin_theme_header', 'fedora_connector_admin_header');
 add_plugin_hook('define_acl', 'fedora_connector_define_acl');
 add_plugin_hook('config_form', 'fedora_connector_config_form');
@@ -56,9 +60,16 @@ function fedora_connector_uninstall() {
 	$servers = "DROP TABLE IF EXISTS `{$db->prefix}fedora_connector_servers`";
 	$db->query($datastreams);
 	$db->query($servers);
-	
-	//delete option
-	//delete_option('fedora_connector_server');
+}
+
+//delete all datastreams associated with item on item deletion
+function fedora_connector_before_delete_item($item)
+{
+	$db = get_db();
+	$datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item['id']));
+	foreach ($datastreams as $datastream){
+		$datastream->delete();
+	}
 }
 
 function fedora_connector_admin_header($request)
@@ -96,56 +107,7 @@ function fedora_connector_config_form()
 function fedora_connector_config()
 {
 	set_option('fedora_connector_omitted_datastreams', $_POST['fedora_connector_omitted_datastreams']);
-	/*$db = get_db();
-	$data = array();
-    $form = fedora_connector_server_form();
-    if ($form->isValid($_POST)) {    
-    	//get posted values		
-		$uploadedData = $form->getValues();
-		
-		//cycle through each checkbox
-		foreach ($uploadedData as $k => $v){
-			if ($k != 'submit'){
-				$data[$k] = $v;
-			}		
-		}
-		$db->insert('fedora_connector_servers', $data);
-    }*/
 }
-
-/*function fedora_connector_server_form(){
-	$db = get_db();
-	$servers = $db->getTable('FedoraConnector_Server')->findBySql('is_default = ?', array(1));
-	
-	require "Zend/Form/Element.php";
-    $form = new Zend_Form();  	
-    $form->setMethod('post');
-    $form->setAttrib('enctype', 'multipart/form-data');	
-    
-    foreach ($servers as $server){
-    	$url = new Zend_Form_Element_Text('url');
-		$url->setLabel('URL:');
-		$url->setRequired(true);
-		$url->setValue($server->url);
-		$form->addElement($url);
-		
-		$name = new Zend_Form_Element_Text('name');
-		$name->setLabel('Name:');
-		$name->setRequired(true);
-		$name->setValue($server->name);
-		$form->addElement($name);
-		
-		$id = new Zend_Form_Element_Hidden('id');
-		$id->setValue($server->id);
-		$form->addElement($id);
-		
-		$isDefault = new Zend_Form_Element_Hidden('is_default');
-		$isDefault->setValue($server->is_default);
-		$form->addElement($isDefault);
-    }
-    
-    return $form;
-}*/
 
 /**
  * Add Fedora Datastreams tab to Edit Items form page * 
@@ -186,7 +148,6 @@ function fedora_connector_pid_form($item) {
 		}
 		$ht .= '</table>';
 		$ht .= '<p><a href="' . $add_url . '?id=' . $item->id . '">Add another</a>?</p>';
-		//$ht .= render_fedora_datastream('holsinger:1', 'JP2K', array('size'=>'screen'));
 	} else {
 		//otherwise link to add a new datastream
 		$add_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
@@ -279,36 +240,19 @@ function fedora_connector_get_server($datastream){
 	return $server;
 }
 
-/***************
- * DISSEMINATORS 
- ***************/
-
-//image/jpeg
-function fedora_disseminator_imagejpeg($datastream,$options){
-	$db = get_db();
-	$server = fedora_connector_get_server($datastream);
-	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
-}
-
-//JP2K = image/jp2
-function fedora_disseminator_imagejp2 ($datastream,$options){
-	$db = get_db();
-	$server = fedora_connector_get_server($datastream);	
-	$size = $options['size'];
-	$url = $server . 'get/' . $datastream->pid . '/djatoka:jp2SDef/getRegion';
-	switch($size){
-			case 'thumb':
-				$html = '<img alt="image" src="' . $url . '?scale=120,120"/>';
+/****
+ * choose between various importers for different XML metadata types.  Default is Dublin Core
+ ****/
+function fedora_connector_import_metadata($datastream){
+    	switch($datastream->metadata_stream){
+			case 'DC':
+				//Dublin Core
+				echo fedora_importer_DC($datastream);
 				break;
-			case 'screen':
-				$html = '<img alt="image" src="' . $url . '?scale=600,600"/>';
+			case 'MODS':
+				//MODS
+				echo fedora_importer_MODS($datastream);
 				break;
-			default:
-				$html = '<img alt="image" src="' . $url . '?scale=400,400"/>';
 		}	
-	return $html;
+    return;    
 }
-
-/***************
- * IMPORTERS 
- ***************/

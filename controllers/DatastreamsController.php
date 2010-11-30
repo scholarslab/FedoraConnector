@@ -123,41 +123,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     	$id = $this->_getParam('id');
     	$datastream = $db->getTable('FedoraConnector_Datastream')->find($id);
     	
-    	$item = $db->getTable('Item')->find($datastream->item_id);
-    	$server = fedora_connector_get_server($datastream);
-    	$dcUrl = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->metadata_stream . '/content';
-    	
-    	//get the datastream from Fedora REST
-		$xml_doc = new DomDocument;	
-		$xml_doc->load($dcUrl);
-		$xpath = new DOMXPath($xml_doc);
-		
-    	//get element_ids
-		$dcSetId = $db->getTable('ElementSet')->findByName('Dublin Core')->id;
-		$dcElements = $db->getTable('Element')->findBySql('element_set_id = ?', array($dcSetId));
-		$dc = array();
-		
-		//write DC element names and ids to new array for processing
-		foreach ($dcElements as $dcElement){
-			$dc[$dcElement['name']] = strtolower($dcElement['name']);
-		}
-		
-		foreach ($dc as $omekaName=>$xmlName){
-			$query = '//*[local-name() = "' . $xmlName . '"]';
-			
-			//get item element texts
-			$element = $item->getElementByNameAndSetName($omekaName, 'Dublin Core');
-			
-			//set element texts for item and file
-			$nodes = $xpath->query($query);
-			foreach ($nodes as $node){
-				//$item->addTextForElement($element, $node->nodeValue);	
-				
-				//addTextForElement not working for some reason...
-				$db->insert('element_texts', array('record_id'=>$item->id, 'record_type_id'=>2, 'element_id'=>$element->id, 'html'=>0, 'text'=>$node->nodeValue));
-						
-			}
-		}
+    	echo fedora_connector_import_metadata($datastream);
 		
 		$this->flashSuccess('Metadata succesfully imported.');
 		$this->_helper->redirector->goto($datastream->item_id, 'edit', 'items');
