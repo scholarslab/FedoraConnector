@@ -27,6 +27,33 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
             $this->view->id = $item_id;
             $this->view->form = $form;
     }
+    
+    public function browseAction() 	
+    {
+    	$db = get_db();
+    	
+    	$currentPage = $this->_getParam('page', 1);
+    	
+    	$deleteUrl = WEB_ROOT . '/admin/fedora-connector/datastreams/delete/';
+    	$count = $db->getTable('FedoraConnector_Datastream')->count();
+    	$this->view->datastreams =  FedoraConnector_Datastream::getDatastream($currentPage);
+    	$this->view->count = $count;
+    	$this->view->deleteUrl = $deleteUrl;
+		
+        /** 
+         * Now process the pagination
+         * 
+         **/
+        $paginationUrl = $this->getRequest()->getBaseUrl().'/datastreams/browse/';
+
+        //Serve up the pagination
+        $pagination = array('page'          => $currentPage, 
+                            'per_page'      => 10, 
+                            'total_results' => $count, 
+                            'link'          => $paginationUrl);
+        
+        Zend_Registry::set('pagination', $pagination);
+    }
 
     public function selectAction() 
     {

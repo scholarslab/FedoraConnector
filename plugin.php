@@ -82,12 +82,16 @@ function fedora_connector_admin_header($request)
 function fedora_connector_define_acl($acl)
 {
     $acl->loadResourceList(array('FedoraConnector_Server' => array('index', 'status')));
+     $acl->loadResourceList(array('FedoraConnector_Datastream' => array('index', 'status')));
 }
 
 function fedora_connector_admin_navigation($tabs)
 {
     if (get_acl()->checkUserPermission('FedoraConnector_Server', 'index')) {
         $tabs['Fedora Servers'] = uri('fedora-connector/servers/');        
+    }
+    if (get_acl()->checkUserPermission('FedoraConnector_Datastream', 'browse')) {
+        $tabs['Fedora Objects'] = uri('fedora-connector/datastreams/browse/');        
     }
     return $tabs;
 }
@@ -141,10 +145,9 @@ function fedora_connector_pid_form($item) {
 	if ($datastreams[0]->pid != NULL){
 		$ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Delete?</th></thead>';
 		foreach ($datastreams as $datastream){
-			$delete_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';
-			$import_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/import/';
+			$delete_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';		
 			$add_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
-			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' [<a href="' . $import_url . '?id=' . $datastream->id . '">import</a>]</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '">Delete</a></td></tr>';
+			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' ' . fedora_connector_importer_link($datastream) . '</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '">Delete</a></td></tr>';
 		}
 		$ht .= '</table>';
 		$ht .= '<p><a href="' . $add_url . '?id=' . $item->id . '">Add another</a>?</p>';
@@ -209,8 +212,31 @@ function render_fedora_datastreams_for_item ($item_id, $options=array()){
 }
 
 /****
+ * Get the URL of the server by passing in the server_id from the $datastream
+ ****/
+function fedora_connector_get_server($datastream){
+	$db = get_db();
+	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id)->url;
+	return $server;
+}
+/****
+ * Generate the link to import metadata for the object only if the XML metadata has an importer function associated with it
+ ****/
+function fedora_connector_importer_link($datastream){
+	$import_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/import/';
+	$importers = fedora_connector_list_importers();
+	if (in_array($datastream->metadata_stream, $importers)){
+		$html = '[<a href="' . $import_url . '?id=' . $datastream->id . '">import</a>]';
+	}	
+	return $html;
+}
+/*************************
+ * DISSEMINATOR AND IMPORTER INITIATORS
+ * disseminator and importer functions contained in separate PHP files
+ *************************/
+/****
  * render_fedora_datastream
- * accepts ID
+ * accepts ID and options in an array
  * Switch cases, depending on mime_type.  Datastream IDs are arbitrary so
  * mime-type disseminators need to be extensible. 
  ****/
@@ -228,33 +254,33 @@ function render_fedora_datastream ($id, $options=array()){
 		case 'image/jpeg':
 			$html .= fedora_disseminator_imagejpeg($datastream,$options);
 			break;
+		default:
+			$html .= '<b>There is no FedoraConnector disseminator for this mime-type</b>';
 	}
 	return $html;
 }
 /****
- * Get the URL of the server by passing in the server_id from the $datastream
+ * List available Importers
+ * This loads Importers.php into a string and extracts all fedora_importer_DATASTREAM functions to
+ * dynamically generate a list of metadata datastreams that have had importation handlers written
  ****/
-function fedora_connector_get_server($datastream){
-	$db = get_db();
-	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id)->url;
-	return $server;
-}
+function fedora_connector_list_importers(){
+	$pathToFile = FEDORA_CONNECTOR_PLUGIN_DIR . DIRECTORY_SEPARATOR . "Importers.php";	
+	$string = file_get_contents($pathToFile);
 
+	preg_match_all('/fedora_importer_([A-Z]+)/', $string, $matches);
+	$importers = array();
+	
+	foreach ($matches[1] as $match){
+		$importers[] = $match;
+	}
+	return $importers;
+}
 /****
- * choose between various importers for different XML metadata types.  Default is Dublin Core
+ * Initialize importation based on metadata_stream
  ****/
 function fedora_connector_import_metadata($datastream){
 	$importerFunction = 'fedora_importer_' . $datastream->metadata_stream;
-	$importerFunction ($datastream);
-    	/*switch($datastream->metadata_stream){
-			case 'DC':
-				//Dublin Core
-				echo fedora_importer_DC($datastream);
-				break;
-			case 'MODS':
-				//MODS
-				echo fedora_importer_MODS($datastream);
-				break;
-		}*/	
+	$importerFunction ($datastream);	
     return;    
 }
