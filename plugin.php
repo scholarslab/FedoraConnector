@@ -143,11 +143,11 @@ function fedora_connector_pid_form($item) {
 	$ht .= '<div id="omeka-map-form">';
 	//if there are datastreams, display the table
 	if ($datastreams[0]->pid != NULL){
-		$ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Delete?</th></thead>';
+		$ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Preview</th><th>Delete?</th></thead>';
 		foreach ($datastreams as $datastream){
 			$delete_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';		
 			$add_url = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
-			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' ' . fedora_connector_importer_link($datastream) . '</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '">Delete</a></td></tr>';
+			$ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' ' . fedora_connector_importer_link($datastream) . '</td><td>' . (strstr($datastream['mime_type'], 'image/') ? render_fedora_datastream_preview($datastream) : '') . '</td><td><a href="' . $delete_url . '?id=' . $datastream->id . '">Delete</a></td></tr>';
 		}
 		$ht .= '</table>';
 		$ht .= '<p><a href="' . $add_url . '?id=' . $item->id . '">Add another</a>?</p>';
@@ -228,6 +228,21 @@ function fedora_connector_importer_link($datastream){
 	if (in_array($datastream->metadata_stream, $importers)){
 		$html = '[<a href="' . $import_url . '?id=' . $datastream->id . '">import</a>]';
 	}	
+	return $html;
+}
+function render_fedora_datastream_preview($datastream){
+	$db = get_db();
+	$server = fedora_connector_get_server($datastream);
+	$mime_type = $datastream->mime_type;
+	switch($mime_type){
+		case 'image/jp2':
+			$html = fedora_disseminator_imagejp2($datastream,array('size'=>'thumb'));
+			break;
+		default:
+			$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+			$html = '<img alt="image" src="' . $url . '" class="fedora-preview"/>';
+	}
+	
 	return $html;
 }
 /*************************

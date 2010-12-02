@@ -9,6 +9,8 @@ function fedora_disseminator_imagejpeg($datastream,$options){
 	$db = get_db();
 	$server = fedora_connector_get_server($datastream);
 	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+	$html = '<img alt="image" src="' . $url . '"/>';
+	return $html;
 }
 
 //JP2K = image/jp2

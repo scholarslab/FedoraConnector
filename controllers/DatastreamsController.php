@@ -33,9 +33,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     	$db = get_db();
     	
     	$currentPage = $this->_getParam('page', 1);
-    	
     	$deleteUrl = WEB_ROOT . '/admin/fedora-connector/datastreams/delete/';
     	$count = $db->getTable('FedoraConnector_Datastream')->count();
+    	
     	$this->view->datastreams =  FedoraConnector_Datastream::getDatastream($currentPage);
     	$this->view->count = $count;
     	$this->view->deleteUrl = $deleteUrl;
