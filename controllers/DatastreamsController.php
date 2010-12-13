@@ -52,7 +52,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                             'total_results' => $count, 
                             'link'          => $paginationUrl);
         
-        Zend_Registry::set('pagination', $pagination);
+        Zend_Registry::set('pagination', $pagination);        
     }
 
     public function selectAction() 
@@ -106,7 +106,47 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 						try{
 								//update the database with new values
 								$db = get_db();
-								$db->insert('fedora_connector_datastreams', $data);
+								$fedoraconnector_id = $db->insert('fedora_connector_datastreams', $data);
+								
+								//if TeiDisplay is installed, write an entry to the table if datastream is 'TEI'
+								if (function_exists('tei_display_installed')) {
+									if ($datastream == 'TEI' && strstr($v, 'text/xml')){
+										
+										$newDatastream = $db->getTable('FedoraConnector_Datastream')->find($fedoraconnector_id);
+										$server = fedora_connector_get_server($newDatastream);
+										$teiFile = fedora_connector_content_url($newDatastream, $server);
+										//get the TEI id
+										$xml_doc = new DomDocument;									
+										$xml_doc->load($teiFile);
+										$xpath = new DOMXPath($xml_doc);
+										
+										$teiNode = $xml_doc->getElementsByTagName('TEI');
+										$tei2Node = $xml_doc->getElementsByTagName('TEI.2');
+												
+										foreach ($teiNode as $teiNode){
+											$p5_id = $teiNode->getAttribute('xml:id');
+										} 				
+										foreach ($tei2Node as $tei2Node){
+											$p4_id = $tei2Node->getAttribute('id');
+										}
+										
+										if (isset($p5_id)){
+											$tei_id = $p5_id;
+										} else if (isset($p4_id)){
+											$tei_id = $p4_id;
+										} else {
+											$tei_id = NULL;
+										}
+										
+										
+										
+										if ($tei_id != NULL){
+											$teiData = array('item_id'=>$item_id, 'fedoraconnector_id'=>$fedoraconnector_id, 'tei_id'=>$tei_id);
+											$db->insert('tei_display_configs', $teiData);
+										}
+									}
+								}								
+								
 								$posted += 1;
 							} catch (Exception $err) {
 								$this->flashError($err->getMessage());

@@ -163,6 +163,9 @@ function fedora_connector_pid_form($item) {
 /*****************************
  * HELPERS
  *****************************/
+function fedora_connector_installed(){
+	return 'active';
+}
 /****
  * Link to a fedora datastream.  Commonly used on Edit Item page under Fedora Datastreams tab.
  ****/
@@ -220,6 +223,13 @@ function fedora_connector_get_server($datastream){
 	return $server;
 }
 /****
+ * Get the URL of the server by passing in the server_id from the $datastream
+ ****/
+function fedora_connector_content_url($datastream, $server){
+	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+	return $url;
+}
+/****
  * Generate the link to import metadata for the object only if the XML metadata has an importer function associated with it
  ****/
 function fedora_connector_importer_link($datastream){
@@ -234,13 +244,16 @@ function render_fedora_datastream_preview($datastream){
 	$db = get_db();
 	$server = fedora_connector_get_server($datastream);
 	$mime_type = $datastream->mime_type;
-	switch($mime_type){
-		case 'image/jp2':
-			$html = fedora_disseminator_imagejp2($datastream,array('size'=>'thumb'));
-			break;
-		default:
-			$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
-			$html = '<img alt="image" src="' . $url . '" class="fedora-preview"/>';
+	//render images only
+	if (strstr($mime_type, 'image/')){
+		switch($mime_type){
+			case 'image/jp2':
+				$html = fedora_disseminator_imagejp2($datastream,array('size'=>'thumb'));
+				break;
+			default:
+				$url = fedora_connector_content_url($datastream, $server);
+				$html = '<img alt="image" src="' . $url . '" class="fedora-preview"/>';
+		}
 	}
 	
 	return $html;
@@ -268,6 +281,14 @@ function render_fedora_datastream ($id, $options=array()){
 			break;
 		case 'image/jpeg':
 			$html .= fedora_disseminator_imagejpeg($datastream,$options);
+			break;
+		// TEI XML
+		case strstr($mime_type, 'text/xml'):	
+			if ($datastream->datastream == 'TEI' && function_exists('tei_display_installed')){
+				$html .= fedora_disseminator_tei($datastream,$options);
+			} else {
+				$html .= '<b>There is no FedoraConnector disseminator for this mime-type</b>';
+			}
 			break;
 		default:
 			$html .= '<b>There is no FedoraConnector disseminator for this mime-type</b>';
