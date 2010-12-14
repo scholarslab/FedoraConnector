@@ -6,8 +6,7 @@
 
 //image/jpeg
 function fedora_disseminator_imagejpeg($datastream,$options){
-	$server = fedora_connector_get_server($datastream);
-	$url = fedora_connector_content_url($datastream, $server);
+	$url = fedora_connector_content_url($datastream);
 	$html = '<img alt="image" src="' . $url . '"/>';
 	return $html;
 }

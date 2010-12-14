@@ -8,8 +8,7 @@
 function fedora_importer_DC($datastream){
 	$db = get_db();
 	$item = $db->getTable('Item')->find($datastream->item_id);
-    $server = fedora_connector_get_server($datastream);
-    $dcUrl = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->metadata_stream . '/content';
+	$dcUrl = fedora_connector_metadata_url($datastream);
 
 	//get the datastream from Fedora REST
 	$xml_doc = new DomDocument;	
@@ -48,13 +47,11 @@ function fedora_importer_DC($datastream){
 //MODS
 function fedora_importer_MODS($datastream){
 	$db = get_db();
-	$item = $db->getTable('Item')->find($datastream->item_id);
-    $server = fedora_connector_get_server($datastream);
-    $dcUrl = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->metadata_stream . '/content';
+    $modsUrl = fedora_connector_metadata_url($datastream);
 
 	//get the datastream from Fedora REST
 	$xml_doc = new DomDocument;	
-	$xml_doc->load($dcUrl);
+	$xml_doc->load($modsUrl);
 	$xpath = new DOMXPath($xml_doc);
 	
     //get element_ids

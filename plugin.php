@@ -46,6 +46,7 @@ function fedora_connector_install()  {
 				`id` int(10) unsigned NOT NULL auto_increment,
 				`url` tinytext collate utf8_unicode_ci,
 				`name` tinytext collate utf8_unicode_ci,
+				`version` tinytext collate utf8_unicode_ci,
 				`is_default` tinyint(1) unsigned NOT NULL,
 		       PRIMARY KEY  (`id`)
 		       ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
@@ -60,6 +61,14 @@ function fedora_connector_uninstall() {
 	$servers = "DROP TABLE IF EXISTS `{$db->prefix}fedora_connector_servers`";
 	$db->query($datastreams);
 	$db->query($servers);
+	
+	//if TeiDisplay is installed, remove Fedora TEI datastreams from its table
+	if (function_exists('tei_display_installed')){
+		$teiFiles = $db->getTable('TeiDisplay_Config')->findBySql('is_fedora_datastream = ?', array(1));
+		foreach ($teiFiles as $teiFile){
+				$teiFile->delete();
+		}
+	}
 }
 
 //delete all datastreams associated with item on item deletion
@@ -173,8 +182,7 @@ function link_to_fedora_datastream($id){
 	$html = '';
 	$db = get_db();
 	$datastream = $db->getTable('FedoraConnector_Datastream')->find($id);
-	$server = fedora_connector_get_server($datastream);
-	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+	$url = fedora_connector_content_url($datastream);
 	$html .= '<a href="' . $url . '" target="_blank">' . $datastream->datastream . '</a>';
 	return $html;
 }
@@ -223,10 +231,50 @@ function fedora_connector_get_server($datastream){
 	return $server;
 }
 /****
- * Get the URL of the server by passing in the server_id from the $datastream
+ * Get the URL of the datastream by passing in the server_id from the $datastream.
+ * The script will query the Fedora servers table and return the version of the repository
+ * in which the Object is located.  The version determines the service.
+ * Fedora 2.x -- get, Fedora 3.x -- objects  
  ****/
-function fedora_connector_content_url($datastream, $server){
-	$url = $server . 'objects/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+function fedora_connector_content_url($datastream){
+	$db = get_db();
+	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id);
+	$serverUrl = $server->url;
+	
+	switch ($server->version){
+		case preg_match('/^2\./'):
+			$service = 'get';
+			break;
+		default:
+			$service = 'objects';
+			break; 
+	}
+	
+	$url = $serverUrl . $service . '/' . $datastream->pid . '/datastreams/' . $datastream->datastream . '/content';
+	return $url;
+}
+
+/****
+ * Get the URL of the object metadata datastream by passing in the server_id from the $datastream.
+ * The script will query the Fedora servers table and return the version of the repository
+ * in which the Object is located.  The version determines the service.
+ * Fedora 2.x -- get, Fedora 3.x -- objects  
+ ****/
+function fedora_connector_metadata_url($datastream){
+	$db = get_db();
+	$server = $db->getTable('FedoraConnector_Server')->find($datastream->server_id);
+	$serverUrl = $server->url;
+	
+	switch ($server->version){
+		case preg_match('/^2\./'):
+			$service = 'get';
+			break;
+		default:
+			$service = 'objects';
+			break; 
+	}
+	
+	$url = $serverUrl . $service . '/' . $datastream->pid . '/datastreams/' . $datastream->metadata_stream . '/content';
 	return $url;
 }
 /****
@@ -242,7 +290,6 @@ function fedora_connector_importer_link($datastream){
 }
 function render_fedora_datastream_preview($datastream){
 	$db = get_db();
-	$server = fedora_connector_get_server($datastream);
 	$mime_type = $datastream->mime_type;
 	//render images only
 	if (strstr($mime_type, 'image/')){
@@ -251,7 +298,7 @@ function render_fedora_datastream_preview($datastream){
 				$html = fedora_disseminator_imagejp2($datastream,array('size'=>'thumb'));
 				break;
 			default:
-				$url = fedora_connector_content_url($datastream, $server);
+				$url = fedora_connector_content_url($datastream);
 				$html = '<img alt="image" src="' . $url . '" class="fedora-preview"/>';
 		}
 	}
@@ -282,7 +329,7 @@ function render_fedora_datastream ($id, $options=array()){
 		case 'image/jpeg':
 			$html .= fedora_disseminator_imagejpeg($datastream,$options);
 			break;
-		// TEI XML
+		// TEI XML: change datastream string from TEI to another id, if applicable
 		case strstr($mime_type, 'text/xml'):	
 			if ($datastream->datastream == 'TEI' && function_exists('tei_display_installed')){
 				$html .= fedora_disseminator_tei($datastream,$options);

@@ -26,7 +26,8 @@
 	                <tr>
 	                	<th>ID</th>
 	                    <th>Name</th>
-	                    <th>Url</th>
+	                    <th>URL</th>
+	                    <th>Version</th>
 	                    <th>Default</th>
 						<th>Edit?</th>
 	                </tr>
@@ -37,6 +38,7 @@
 						<td><?php echo html_escape($server['id']); ?></td>
 	                    <td><?php echo html_escape($server['name']); ?></td>
 	                    <td><?php echo html_escape($server['url']); ?></td>
+	                    <td><?php echo html_escape($server['version']); ?></td>
 	                    <td><?php if ($server['is_default'] == 1){ echo 'Yes'; } ?></td>
 						<td><a href="<?php echo html_escape(uri('fedora-connector/servers/edit')); ?>?id=<?php echo $server['id']; ?>" class="edit">Edit</a></td>
 	                </tr>

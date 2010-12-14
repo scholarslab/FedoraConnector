@@ -76,36 +76,56 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     		if ($form->isValid($this->_request->getPost())) {    
     			//get posted values		
 				$uploadedData = $form->getValues();
-				if ($uploadedData['method'] == 'create'){
-					$data = array('name'=>$uploadedData['name'],
-						'url'=>$uploadedData['url'],
-						'is_default'=>$uploadedData['is_default']);
-				} elseif ($uploadedData['method'] == 'update'){
-					$data = array('id'=>$uploadedData['id'],
-						'name'=>$uploadedData['name'],
-						'url'=>$uploadedData['url'],
-						'is_default'=>$uploadedData['is_default']);
+				//test for server connection with curl
+    						
+				$describeUrl = $uploadedData['url'] . 'describe?xml=true';
+				$xml_doc = new DomDocument;	
+				$xml_doc->load($describeUrl);
+				$xpath = new DOMXPath($xml_doc);
+				$query = '//*[local-name() = "repositoryVersion"]';
+				$nodes = $xpath->query($query);
+				foreach ($nodes as $node){
+					$version = $node->nodeValue;
 				}
-				
-				//get db
-				try{		
-					$db = get_db();
-					
-					//if is_default is set to true, iterate through existing rows in the table to set is_default to 0 for all other servers
-					if ($uploadedData['is_default'] == '1'){
-						$servers = $db->getTable('FedoraConnector_Server')->findBySql('is_default = ?', array('1'));
-						foreach ($servers as $server){
-							$db->insert('fedora_connector_servers', array('name'=>$server->name, 'url'=>$server->url, 'id'=>$server->id, 'is_default'=>'0'));
-						}
+				if ($version != NULL){
+					switch($uploadedData['method']){
+						case 'create':
+							$data = array('name'=>$uploadedData['name'],
+							'url'=>$uploadedData['url'],
+							'is_default'=>$uploadedData['is_default'],
+							'version'=>$version);
+							break;
+						case 'update':
+							$data = array('id'=>$uploadedData['id'],
+							'name'=>$uploadedData['name'],
+							'url'=>$uploadedData['url'],
+							'is_default'=>$uploadedData['is_default'],
+							'version'=>$version);
+							break;
 					}
-					$db->insert('fedora_connector_servers', $data);		
-					$this->flashSuccess('Server updated.');				
-					$this->redirect->goto('index');							
-					
-				} catch (Exception $e) {
-					$this->flashError($e->getMessage());
-        		}
-    		}
+					//get db
+					try{		
+						$db = get_db();
+						
+						//if is_default is set to true, iterate through existing rows in the table to set is_default to 0 for all other servers
+						if ($uploadedData['is_default'] == '1'){
+							$servers = $db->getTable('FedoraConnector_Server')->findBySql('is_default = ?', array('1'));
+							foreach ($servers as $server){
+								$db->insert('fedora_connector_servers', array('name'=>$server->name, 'url'=>$server->url, 'id'=>$server->id, 'is_default'=>'0'));
+							}
+						}
+						$db->insert('fedora_connector_servers', $data);		
+						$this->flashSuccess('Server updated.');				
+						$this->redirect->goto('index');							
+						
+					} catch (Exception $e) {
+						$this->flashError($e->getMessage());
+	        		}
+				} else {
+					$this->flashError('Server URL cannot be validated.  Not receiving Fedora repositoryVersion response.');
+	    			$this->view->form = $form;
+				}
+			}
     		else {
     			$this->flashError('URL and server name are required.');
     			$this->view->form = $form;

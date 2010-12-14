@@ -141,7 +141,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 										
 										
 										if ($tei_id != NULL){
-											$teiData = array('item_id'=>$item_id, 'fedoraconnector_id'=>$fedoraconnector_id, 'tei_id'=>$tei_id);
+											$teiData = array('item_id'=>$item_id, 'is_fedora_datastream'=>1, 'fedoraconnector_id'=>$fedoraconnector_id, 'tei_id'=>$tei_id);
 											$db->insert('tei_display_configs', $teiData);
 										}
 									}
