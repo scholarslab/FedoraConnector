@@ -1,11 +1,16 @@
 <?php 
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+
+
 
 /***************
  * DISSEMINATORS 
  ***************/
 
 //image/jpeg
-function fedora_disseminator_imagejpeg($datastream,$options){
+function fedora_disseminator_imagejpeg($datastream, $options)
+{
 	$url = fedora_connector_content_url($datastream);
 	$html = '<img alt="image" src="' . $url . '"/>';
 	return $html;
@@ -40,3 +45,11 @@ function fedora_disseminator_tei($datastream,$options){
 	}
 	return;
 }
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * c-hanging-comment-ender-p: nil
+ * End:
+ */

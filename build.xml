@@ -182,7 +182,7 @@
             -o HTML:frames:earthli,HTML:Smarty:PHP,HTML:frames:phphtmllib,HTML:frames:phpedit,PDF:default:default
         -->
         <exec executable="phpdoc">
-            <arg line="-o HTML:frames:earthli -d ${basedir} -t ${build}/api -i tests/,dist/,build/,tutorials/" />
+            <arg line="-o HTML:frames:earthli -d ${basedir} -f tutorials/${name}.pkg -t ${build}/api -i tests/,dist/,build/" />
         </exec>
     </target>
 
