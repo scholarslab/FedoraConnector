@@ -1,0 +1,9 @@
+.*.sw*$
+*~$
+build/
+TAGS
+.settings
+.hgignore
+.buildpath
+.project
+.DS_Store
