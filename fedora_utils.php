@@ -202,6 +202,7 @@ function fedora_connector_metadata_url($datastream)
  */
 function fedora_connector_importer_link($datastream)
 {
+    // XXX -> view
     $importUrl = html_escape(WEB_ROOT)
         . '/admin/fedora-connector/datastreams/import/';
     $importers = fedora_connector_list_importers();
@@ -224,7 +225,7 @@ function fedora_connector_importer_link($datastream)
  */
 function render_fedora_datastream_preview($datastream)
 {
-    # XXX -> view
+    // XXX -> view
     $mimeType = $datastream->mime_type;
 
     if ($mimeType == 'image/jp2') {
@@ -258,7 +259,7 @@ function render_fedora_datastream_preview($datastream)
  */
 function render_fedora_datastream ($id, $options=array())
 {
-    # XXX -> view, obviously
+    // XXX -> view, obviously
     $datastream = get_db()
         ->getTable('FedoraConnector_Datastream')
         ->find($id);
@@ -294,7 +295,7 @@ function render_fedora_datastream ($id, $options=array())
  */
 function fedora_connector_list_importers()
 {
-    # XXX -> controller, probably. Or maybe leave here.
+    // XXX -> controller, probably. Or maybe leave here.
     $pathToFile =
         FEDORA_CONNECTOR_PLUGIN_DIR . DIRECTORY_SEPARATOR . "Importers.php";
     $string = file_get_contents($pathToFile);
@@ -321,7 +322,7 @@ function fedora_connector_list_importers()
  */
 function fedora_connector_import_metadata($datastream)
 {
-
+    // XXX -> controller, maybe.
     $importerFunction = "fedora_importer_{$datastream->metadata_stream}";
     $importerFunction($datastream);
 }
