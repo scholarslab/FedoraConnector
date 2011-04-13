@@ -1,5 +1,8 @@
 <?php 
 
+// ERR: If you refactor this somewhere else, be sure to update 
+// fedora_connector_list_importers.
+
 /***************
  * IMPORTERS
  ***************/
