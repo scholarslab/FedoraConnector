@@ -90,11 +90,11 @@ function fedora_importer_DC($datastream)
 		foreach ($nodes as $node) {
 			// addTextForElement not working for some reason...
             $textInfo = array(
-                'record_id'      = >$item->id,
-                'record_type_id' = >2,
-                'element_id'     = >$element->id,
-                'html'           = >0,
-                'text'           = >$node->nodeValue
+                'record_id'      => $item->id,
+                'record_type_id' => 2,
+                'element_id'     => $element->id,
+                'html'           => 0,
+                'text'           => $node->nodeValue
             );
             $db->insert('element_texts', $textInfo);
 		}

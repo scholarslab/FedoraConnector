@@ -318,13 +318,13 @@ function fedora_connector_list_importers()
  *
  * @param Omeka_Record $datastream The datastream to import metadata for.
  *
- * @return void;
+ * @return object This returns whatever the importer function returns.
  */
 function fedora_connector_import_metadata($datastream)
 {
     // XXX -> controller, maybe.
     $importerFunction = "fedora_importer_{$datastream->metadata_stream}";
-    $importerFunction($datastream);
+    return $importerFunction($datastream);
 }
 
 /*
