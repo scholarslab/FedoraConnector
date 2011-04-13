@@ -257,7 +257,7 @@ function render_fedora_datastream_preview($datastream)
  *
  * @return string The HTML for the datastream.
  */
-function render_fedora_datastream ($id, $options=array())
+function render_fedora_datastream($id, $options=array())
 {
     // XXX -> view, obviously
     $datastream = get_db()
@@ -287,7 +287,7 @@ function render_fedora_datastream ($id, $options=array())
     return $html;
 }
 
-/****
+/**
  * This returns a list of the available importers.
  *
  * @return array An array listing the metadata formats that have import

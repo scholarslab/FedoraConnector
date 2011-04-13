@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
@@ -45,7 +45,7 @@
  *
  * This ignores the options.
  *
- * @param Omeka_Record $datastream This is the datastream representing the 
+ * @param Omeka_Record $datastream This is the datastream representing the
  * JPEG.
  * @param array $options Options for displaying the image.
  *
@@ -64,11 +64,11 @@ function fedora_disseminator_imagejpeg($datastream, $options)
  * This pays attention to these options:
  *
  * <dl>
- * <dt>size</dt> <dd>The size to display the image. One of 'thumb', 'screen', 
+ * <dt>size</dt> <dd>The size to display the image. One of 'thumb', 'screen',
  * or anything else (for default).
  * </dl>
  *
- * @param Omeka_Record $datastream This is the datastream representing the 
+ * @param Omeka_Record $datastream This is the datastream representing the
  * image.
  * @param array $options Options for displaying the image.
  *
@@ -88,22 +88,22 @@ function fedora_disseminator_imagejp2($datastream,$options)
         break;
     default:
         $html = '<img alt="image" src="' . $url . '?scale=400,400"/>';
-    }	
+    }
 
     return $html;
 }
 
 /**
- * This creates the HTML to display a TEI-encoded XML document represented in a 
+ * This creates the HTML to display a TEI-encoded XML document represented in a
  * datastream.
  *
  * This just dispatches to the TeiDisplay plugin.
  *
- * XXX: Oh, wow. This needs to reflect on whether TeiDisplay is installed, and 
- * only exist if it does. I probably need to move these display functions into 
+ * XXX: Oh, wow. This needs to reflect on whether TeiDisplay is installed, and
+ * only exist if it does. I probably need to move these display functions into
  * a small framework that can tell whether they need to be used or not.
  *
- * @param Omeka_Record $datastream This is the datastream representing the 
+ * @param Omeka_Record $datastream This is the datastream representing the
  * document.
  * @param array $options Options for displaying the image.
  *
