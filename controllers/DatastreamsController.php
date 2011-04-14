@@ -75,7 +75,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
             ->count();
 
         $this->view->datastreams
-            = FedoraConnector_Datastream::getDatastream($currentPage);
+            = FedoraConnector_Datastream::getDatastreamsForPage($currentPage);
         $this->view->count = $count;
         $this->view->deleteUrl = $deleteUrl;
 
