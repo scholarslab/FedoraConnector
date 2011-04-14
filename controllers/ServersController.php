@@ -39,6 +39,7 @@
 
 require "Zend/Form/Element.php";
 include_once '../form_utils.php';
+include_once '../form_db.php';
 
 /**
  * This class defines actions for the servers.
@@ -62,7 +63,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $count = $db
             ->getTable('FedoraConnector_Server')
             ->count();
-    	$this->view->servers =  FedoraConnector_Server::getServer($currentPage);
+        $this->view->servers = Fedora_Db_getDataForPage(
+            'FedoraConnector_Server',
+            $currentPage
+        );
     	$this->view->count = $count;
 
         // Now process the pagination

@@ -39,14 +39,23 @@
 
 
 /**
- * This is the model class for datastream objects.
+ * This returns the items in a table that should appear on a given page.
  *
- * Right now, the class is empty, but I plan to fill it up with crunchy model 
- * goodness.
+ * TODO: I should probably add handling for WHERE clause filtering to this.
+ *
+ * @param string  $table     The name of the table.
+ * @param integer $page      The page number.
+ * @param integer $pageSize  The number of items to return. Default is 10.
+ * @param string  $sortField The field to sort the results by. Default is 'id'.
+ *
+ * @return array|null The set of objects returned.
  */
-class FedoraConnector_Datastream extends Omeka_Record
-{ 
-
+function Fedora_Db_getDataForPage($table, $page, $pageSize=10, $sortField='id')
+{
+    $data = get_db()
+        ->getTable($table)
+        ->findBy(array('sort_field' => $sortField), $pageSize, $page);
+    return $data;
 }
 
 

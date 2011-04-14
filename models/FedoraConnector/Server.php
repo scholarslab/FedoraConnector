@@ -39,25 +39,12 @@
 
 /**
  * This is the model class for servers.
+ *
+ * Right now, the class is empty, but I plan to fill it up with crunchy model 
+ * goodness.
  */
 class FedoraConnector_Server extends Omeka_Record { 
 
-    /**
-     * This returns the servers listed on a page.
-     *
-     * @param integer $page The page number.
-     * @param integer $pageSize The number of items to return. Default is 10.
-     *
-     * @return void
-     */
-	public static function getServersForPage($page, $pageSize=10)
-	{
-        // XXX Perhaps this needs to become a function in a utilities file.
-        $entries = get_db()
-            ->getTable('FedoraConnector_Server')
-            ->findBy(array('id'=>'id'), $pageSize, $page);
-        return $entries;
-	}
 }
 
 

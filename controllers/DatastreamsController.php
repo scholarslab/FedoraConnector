@@ -38,7 +38,8 @@
  */
 
 require "Zend/Form/Element.php";
-include_once '../form_Utils.php';
+include_once '../form_utils.php';
+include_once '../db_utils.php';
 
 /**
  * This class defines actions for datastream items.
@@ -74,8 +75,10 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
             ->getTable('FedoraConnector_Datastream')
             ->count();
 
-        $this->view->datastreams
-            = FedoraConnector_Datastream::getDatastreamsForPage($currentPage);
+        $this->view->datastreams = Fedora_Db_getDataForPage(
+            'FedoraConnector_Datastream',
+            $currentPage
+        );
         $this->view->count = $count;
         $this->view->deleteUrl = $deleteUrl;
 
