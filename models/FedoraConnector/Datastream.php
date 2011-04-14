@@ -54,7 +54,7 @@ class FedoraConnector_Datastream extends Omeka_Record
      */
 	public static function getDatastreamsForPage($page, $pageSize=10)
 	{
-        // XXX This needs to become a function in a utility file.
+        // XXX Perhaps this needs to become a function in a utility file.
         $entries = get_db()
             ->getTable('FedoraConnector_Datastream')
             ->findBy(array('id' => 'id'), $pageSize, $page);
