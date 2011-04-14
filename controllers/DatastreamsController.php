@@ -38,6 +38,7 @@
  */
 
 require "Zend/Form/Element.php";
+include_once '../form_Utils.php';
 
 /**
  * This class defines actions for datastream items.
@@ -52,18 +53,19 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function indexAction(){
         $item_id = $this->_getParam('id');
-        $form = $this->getPidForm($item_id);
+        $form = $this->_getPidForm($item_id);
         $this->view->id = $item_id;
         $this->view->form = $form;
     }
 
     /**
-     * Retrieve and renders a set of datastream records.
+     * This retrieves and renders a set of datastream records.
      *
      * @return void
      */
     public function browseAction()
     {
+        // XXX some -> view
         $db = get_db();
 
         $deleteUrl = WEB_ROOT . '/admin/fedora-connector/datastreams/delete/';
@@ -94,14 +96,14 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
-     * Retrieve and renders a set of datastream
+     * This retrieves and renders a set of datastream
      *
      * @return void
      */
     public function selectAction()
     {
         if ($_POST) {
-            $form = $this->getPidForm();
+            $form = $this->_getPidForm();
 
             if ($form->isValid($this->_request->getPost())) {
                 // Get posted values.
@@ -112,7 +114,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                 $pid = $uploadedData['fedora_connector_pid'];
                 $server_id = $uploadedData['fedora_connector_server_id'];
 
-                $datastreamsForm = $this->datastreamsForm(
+                $datastreamsForm = $this->_getDatastreamsForm(
                     $item_id,
                     $pid,
                     $server_id
@@ -125,13 +127,14 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
-     * Handle updating the form.
+     * This handles updating the form.
      *
      * @return void
      */
     public function updateAction()
     {
-        $form = $this->datastreamsForm();
+        // XXX some -> model
+        $form = $this->_getDatastreamsForms();
 
         if ($_POST) {
             $uploadedData = $this->_request->getPost();
@@ -165,7 +168,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                             'server_id'       => $server_id
                         );
 
-                        if ($this->updateDb($db, $datastream, $v, $data)) {
+                        if ($this->_updateDb($db, $datastream, $v, $data)) {
                             $posted += 1;
                         }
 
@@ -199,7 +202,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return boolean True if the information was added successfully.
      */
-    private function updateDb($db, $datastream, $value, $data)
+    private function _updateDb($db, $datastream, $value, $data)
     {
         // XXX -> model ?
         try {
@@ -216,7 +219,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                 && $datastream == 'TEI'
                 && strpos($value, 'text/xml') !== false
             ) {
-                $this->addTeiDatastream(
+                $this->_addTeiDatastream(
                     $db,
                     $datastream,
                     $fedoraconnector_id
@@ -247,7 +250,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return void
      */
-    private function addTeiDatastream($db, $datastream, $fcId)
+    private function _addTeiDatastream($db, $datastream, $fcId)
     {
         // XXX -> model?
 
@@ -291,7 +294,8 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
-     * Delete an datastream and forwards to edit the item it was attached to.
+     * This deletes an datastream and forwards to edit the item it was attached 
+     * to.
      *
      * This only passes if the user is the current user.
      *
@@ -299,6 +303,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function deleteAction()
     {
+        // XXX some -> model
         if ($user = $this->getCurrentUser()) {
             $datastreamId = $this->_getParam('id');
             $datastream = get_db()
@@ -317,7 +322,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
-     * Import an item's metadata.
+     * This imports an item's metadata.
      *
      * After successfully importing the metadata, this redirects to the item's 
      * edit page.
@@ -326,6 +331,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function importAction()
     {
+        // XXX some -> model ?
         $id = $this->_getParam('id');
         $datastream = get_db()
             ->getTable('FedoraConnector_Datastream')
@@ -344,7 +350,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return Zend_Form The PID form object.
      */
-    private function getPidForm($item_id)
+    private function _getPidForm($item_id)
     {
         // XXX -> view
         $servers = get_db()
@@ -399,8 +405,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return Zend_Form The form object.
      */
-    private function datastreamsForm($item_id, $pid, $server_id)
+    private function _getDatastreamsForms($item_id, $pid, $server_id)
     {
+        // XXX -> view
         // Get the server from the FedoraConnecter_Server table.
         $server = get_db()
             ->getTable('FedoraConnector_Server')
@@ -411,24 +418,24 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         $omittedString = get_option('fedora_connector_omitted_datastreams');
 
         // Get the datastreams from Fedora REST.
-        $datastreams = $this->getDatastreamNodes($server, $pid);
+        $datastreams = $this->_getDatastreamNodes($server, $pid);
 
-        $form = $this->initForm('update', 'post', 'multipart/form-data');
+        $form = Fedora_initForm('update', 'post', 'multipart/form-data');
 
         // List available datastreams to attach.
         foreach ($datastreams as $datastream) {
             // Skip datastream if in omitted list, e.g, RELS-INT, RELS-EXT, 
             // AUDIT.
-            if (! $this->isOmitted($datastream, $omittedString)) {
-                $this->addDatastreamInput($datastream, $form);
+            if (! $this->_isOmitted($datastream, $omittedString)) {
+                $this->_addDatastreamInput($datastream, $form);
             }
         }
 
-        $this->addObjectMetadataSelect($datastreams, $omittedString, $form);
-        $this->addSubmit($form);
-        $this->addHidden($form, 'fedora_connector_item_id', $item_id);
-        $this->addHidden($form, 'fedora_connector_pid', $pid);
-        $this->addHidden($form, 'fedora_connector_server_id', $server_id);
+        $this->_addObjectMetadataSelect($datastreams, $omittedString, $form);
+        Fedora_Form_addSubmit($form);
+        Fedora_Form_addHidden($form, 'fedora_connector_item_id', $item_id);
+        Fedora_Form_addHidden($form, 'fedora_connector_pid', $pid);
+        Fedora_Form_addHidden($form, 'fedora_connector_server_id', $server_id);
 
         return $form;
     }
@@ -443,8 +450,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      * @return DOMNodeList The XML nodes for datastreams associated with the 
      * item.
      */
-    private function getDatastreamNodes($server, $pid)
+    private function _getDatastreamNodes($server, $pid)
     {
+        // XXX -> view or model
         $datastreamXmlPath = "{$server}objects/$pid/datastreams?format=xml";
 
         $xml_doc = new DomDocument();
@@ -463,8 +471,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return Zend_Form_Element_Checkbox The widget added to the form.
      */
-    private function addDatastreamInput($node, $form)
+    private function _addDatastreamInput($node, $form)
     {
+        // XXX -> view
         $dsid = $node->getAttribute('dsid');
 
         $input = new Zend_Form_Element_Checkbox(
@@ -486,8 +495,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return boolean True if the node should be omitted.
      */
-    private function isOmitted($node, $omit)
+    private function _isOmitted($node, $omit)
     {
+        // XXX -> model ?
         return (strpos($omit, $node->getAttribute('dsid')) !== false);
     }
 
@@ -501,8 +511,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return Zend_Form_Element_Select The select node added to the form.
      */
-    private function addObjectMetadataSelect($nodes, $omit, $form)
+    private function _addObjectMetadataSelect($nodes, $omit, $form)
     {
+        // XXX -> view
         $select = new Zend_Form_Element_Select(
             'fedora_connector_metadata'
         );
@@ -510,7 +521,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         foreach ($nodes as $node) {
             if (strpos($node->getAttribute('mimeType'), 'text/xml') !== false
-                && ! $this->isOmitted($node, $omit)
+                && ! $this->_isOmitted($node, $omit)
             ) {
                 $dsid = $datastream->getAttribute('dsid');
                 $select->addMultiOption($dsid, $dsid);
@@ -523,66 +534,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         $form->addElement($select);
 
         return $select;
-    }
-
-    /**
-     * This initializes a form.
-     *
-     * @param string $action  The action to take on the form.
-     * @param string $method  The method to use submitting the form.
-     * @param string $encType The enctype to use with the form. (Optional.)
-     *
-     * @return Zend_Form The initializes the form.
-     */
-    private function initForm($action, $method, $encType=null)
-    {
-        $form = new Zend_Form();
-
-        $form->setAction($action);
-        $form->setMethod($method);
-        if ($encType !== null) {
-            $form->setAttrib('enctype', $encType);
-        }
-
-        return $form;
-    }
-
-    /**
-     * This adds the submit button to the form.
-     *
-     * @param Zend_Form $form  The form to add the button to.
-     * @param string    $label The label for the button. Defaults to 'Submit.'
-     * @param string    $name  The name for the button. Defaults to 'submit.'
-     *
-     * @return Zend_Form_Element The submit button that was added.
-     */
-    private function addSubmit($form, $label='Submit', $name='submit')
-    {
-        $form->addElement($name, $name);
-
-        $submit = $form->getElement($name);
-        $submit->setLabel($label);
-
-        return $submit;
-    }
-
-    /**
-     * This adds a hidden element to the form.
-     *
-     * @param Zend_Form $form  The form to add the button to.
-     * @param string    $name  The name of the input element.
-     * @param string    $value The value of the input element.
-     *
-     * @return Zend_Form_Element_Hidden The hidden form element.
-     */
-    private function addHidden($form, $name, $value)
-    {
-        $hidden = new Zend_Form_Element_Hidden($name);
-        $hidden->setValue($value);
-
-        $form->addElement($hidden);
-
-        return $hidden;
     }
 
 }
