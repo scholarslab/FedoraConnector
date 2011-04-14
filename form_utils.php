@@ -123,11 +123,11 @@ function Fedora_Form_addText($form, $name, $label, $value, $required=false) {
 /**
  * This adds a checkbox element to the form.
  *
- * @param Zend_Form $form The form to add the checkbox to.
- * @param string $name The name of the checkbox.
- * @param string $label The label for the checkbox.
- * @param string $value The value for the checkbox.
- * @param boolean $required Is the value required? Default is false.
+ * @param Zend_Form $form     The form to add the checkbox to.
+ * @param string    $name     The name of the checkbox.
+ * @param string    $label    The label for the checkbox.
+ * @param string    $value    The value for the checkbox.
+ * @param boolean   $required Is the value required? Default is false.
  *
  * @return Zend_Form_Element_Checkbox
  */
