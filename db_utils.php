@@ -38,6 +38,8 @@
  */
 
 
+// XXX fix namespace
+
 /**
  * This returns the items in a table that should appear on a given page.
  *

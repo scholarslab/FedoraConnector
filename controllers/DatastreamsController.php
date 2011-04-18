@@ -66,7 +66,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function browseAction()
     {
-        // XXX some -> view
         $db = get_db();
 
         $deleteUrl = WEB_ROOT . '/admin/fedora-connector/datastreams/delete/';
@@ -136,7 +135,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function updateAction()
     {
-        // XXX some -> model
+        // XXX some -> models/FedoraConnector/Datastream.php (updateFromArray)
         $form = $this->_getDatastreamsForms();
 
         if ($_POST) {
@@ -207,7 +206,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _updateDb($db, $datastream, $value, $data)
     {
-        // XXX -> model ?
+        // XXX -> models/FedoraConnector/Datastream.php
         try {
             // Update the database with new values.
             $db = get_db();
@@ -255,7 +254,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _addTeiDatastream($db, $datastream, $fcId)
     {
-        // XXX -> model?
+        // XXX -> models/FedoraConnector/Datastream.php
 
         $newDatastream = $db
             ->getTable('FedoraConnector_Datastream')
@@ -306,7 +305,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function deleteAction()
     {
-        // XXX some -> model
         if ($user = $this->getCurrentUser()) {
             $datastreamId = $this->_getParam('id');
             $datastream = get_db()
@@ -334,7 +332,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function importAction()
     {
-        // XXX some -> model ?
+        // XXX some -> libraries/FedoraConnector/Importer.php
         $id = $this->_getParam('id');
         $datastream = get_db()
             ->getTable('FedoraConnector_Datastream')
@@ -355,7 +353,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _getPidForm($item_id)
     {
-        // XXX -> view
+        // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
         $servers = get_db()
             ->getTable('FedoraConnector_Server')
             ->findAll();
@@ -410,7 +408,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _getDatastreamsForms($item_id, $pid, $server_id)
     {
-        // XXX -> view
+        // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
         // Get the server from the FedoraConnecter_Server table.
         $server = get_db()
             ->getTable('FedoraConnector_Server')
@@ -455,7 +453,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _getDatastreamNodes($server, $pid)
     {
-        // XXX -> view or model
+        // XXX -> xml utils
         $datastreamXmlPath = "{$server}objects/$pid/datastreams?format=xml";
 
         $xml_doc = new DomDocument();
@@ -476,7 +474,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _addDatastreamInput($node, $form)
     {
-        // XXX -> view
+        // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
         $dsid = $node->getAttribute('dsid');
 
         $input = new Zend_Form_Element_Checkbox(
@@ -500,7 +498,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _isOmitted($node, $omit)
     {
-        // XXX -> model ?
+        // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
         return (strpos($omit, $node->getAttribute('dsid')) !== false);
     }
 
@@ -516,7 +514,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _addObjectMetadataSelect($nodes, $omit, $form)
     {
-        // XXX -> view
+        // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
         $select = new Zend_Form_Element_Select(
             'fedora_connector_metadata'
         );

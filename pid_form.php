@@ -37,6 +37,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
+// XXX -> libraries/FedoraConnector/Viewer/PidForm.php
+
 require_once './fedora_utils.php';
 
 /**
@@ -119,8 +121,6 @@ function fedora_connector_pid_form_ds_row($dataStream, $deleteUrl)
         . "</td><td><a href='$deleteUrl?id={$dataStream->id}'>"
         . 'Delete</a></td></tr>';
 }
-
-//  fedora_connector_importer_link
 
 /*
  * Local variables:

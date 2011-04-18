@@ -37,6 +37,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
+// XXX fix namespace
+
 /**
  * This returns 'active' when called.
  *
@@ -58,7 +60,7 @@ function fedora_connector_installed()
  */
 function link_to_fedora_datastream($id)
 {
-    // XXX: -> view
+    // XXX: -> libraries/FedoraConnector/Viewer/Datastream.php
     $db = get_db();
     $datastream = $db->getTable('FedoraConnector_Datastream')->find($id);
     $url = fedora_connector_content_url($datastream);
@@ -79,8 +81,8 @@ function link_to_fedora_datastream($id)
  */
 function list_fedora_datastreams($item)
 {
-    // XXX: Can I separate this into model (get the datastreams) and view
-    // (render the list)?
+    // XXX -> models/FedoraConnector/Datastream.php (static method)
+    // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
     $db = get_db();
     $datastreams = $db
         ->getTable('FedoraConnector_Datastream')
@@ -118,6 +120,7 @@ function list_fedora_datastreams($item)
  */
 function fedora_connector_get_server($datastream)
 {
+    // XXX -> models/FedoraConnector/Datastream.php
     $server = get_db()
         ->getTable('FedoraConnector_Server')
         ->find($datastream->server_id)
@@ -138,7 +141,7 @@ function fedora_connector_get_server($datastream)
  * @return string The base URL.
  */
 function fedora_connector_datastream_base_url($datastream) {
-    // XXX -> model
+    // XXX -> models/FedoraConnector/Datastream.php
     $server = get_db()
         ->getTable('FedoraConnector_Server')
         ->find($datastream->server_id);
@@ -166,7 +169,7 @@ function fedora_connector_datastream_base_url($datastream) {
  */
 function fedora_connector_content_url($datastream)
 {
-    // XXX -> model
+    // XXX -> models/FedoraConnector/Datastream.php
     $baseUrl = fedora_connector_datastream_base_url($datastream);
     return "{$baseUrl}{$datastream->datastream}/content";
 }
@@ -185,7 +188,7 @@ function fedora_connector_content_url($datastream)
  */
 function fedora_connector_metadata_url($datastream)
 {
-    // XXX -> model
+    // XXX -> models/FedoraConnector/Datastream.php
     $baseUrl = fedora_connector_datastream_base_url($datastream);
     return "{$baseUrl}{$datastream->metadata_stream}/content";
 }
@@ -202,7 +205,7 @@ function fedora_connector_metadata_url($datastream)
  */
 function fedora_connector_importer_link($datastream)
 {
-    // XXX -> view
+    // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
     $importUrl = html_escape(WEB_ROOT)
         . '/admin/fedora-connector/datastreams/import/';
     $importers = fedora_connector_list_importers();
@@ -225,7 +228,7 @@ function fedora_connector_importer_link($datastream)
  */
 function render_fedora_datastream_preview($datastream)
 {
-    // XXX -> view
+    // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
     $mimeType = $datastream->mime_type;
 
     if ($mimeType == 'image/jp2') {
@@ -259,7 +262,7 @@ function render_fedora_datastream_preview($datastream)
  */
 function render_fedora_datastream($id, $options=array())
 {
-    // XXX -> view, obviously
+    // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
     $datastream = get_db()
         ->getTable('FedoraConnector_Datastream')
         ->find($id);
@@ -295,7 +298,7 @@ function render_fedora_datastream($id, $options=array())
  */
 function fedora_connector_list_importers()
 {
-    // XXX -> controller, probably. Or maybe leave here.
+    // XXX -> libraries/FedoraConnector/Importers.php
     $pathToFile =
         FEDORA_CONNECTOR_PLUGIN_DIR . DIRECTORY_SEPARATOR . "Importers.php";
     $string = file_get_contents($pathToFile);
@@ -322,7 +325,7 @@ function fedora_connector_list_importers()
  */
 function fedora_connector_import_metadata($datastream)
 {
-    // XXX -> controller, maybe.
+    // XXX -> libraries/FedoraConnector/Importers.php
     $importerFunction = "fedora_importer_{$datastream->metadata_stream}";
     return $importerFunction($datastream);
 }

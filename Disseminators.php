@@ -37,7 +37,9 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-// XXX -> view
+// XXX -> Disseminators/{Jpeg,Jp2,Tei,Default}.php
+// XXX -> libraries/FedoraConnector/Disseminators.php (introspection and loading)
+// XXX -> libraries/FedoraConnector/BaseDisseminator.php (handle, canHandle, preview, canPreview)
 
 
 /**

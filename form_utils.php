@@ -38,6 +38,8 @@
  */
 
 
+// XXX Fix namespaces
+
 /**
  * This initializes a form.
  *

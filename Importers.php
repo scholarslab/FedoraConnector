@@ -37,11 +37,10 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-// XXX change this to some kind of class-based pattern that factors out common 
-// code from the functions below.
-
-// ERR: If you refactor this somewhere else, be sure to update
-// fedora_connector_list_importers.
+// XXX -> Importers/{DublinCore,MODS}.php
+// XXX -> libraries/FedoraConnector/Importers.php (introspection and loading)
+// XXX -> libraries/FedoraConnector/BaseImporter.php (ABC)
+// XXX -> fedora_connector_list_importers
 
 /**
  * This imports Dublin Core metadata into the metadata for an object.

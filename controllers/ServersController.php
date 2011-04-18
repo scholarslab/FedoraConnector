@@ -54,7 +54,6 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function indexAction()
     {
-        // XXX some -> view
 		$db = get_db();
 
     	$currentPage = $this->_getParam('page', 1);
@@ -124,7 +123,6 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function deleteAction()
     {
-        // XXX some -> view
         if ($user = $this->getCurrentUser()) {
 			$db = get_db();
 
@@ -151,7 +149,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      * @return Omeka_Record The record for the server or null.
      */
     private function _getFormServer($db=null, $key='id') {
-        // XXX -> view
+        // XXX -> libraries/FedoraConnector/Viewer/Server.php
         if ($db === null) {
             $db = get_db();
         }
@@ -199,7 +197,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      * @return Omeka_Record The new/updated server instance.
      */
     private function _updateServer($form) {
-        // XXX some -> model
+        // XXX some -> models/FedoraConnector/Server.php
         $data = $form->getValues();
 
         $version = $this->_getServerVersion($data['url']);
@@ -249,7 +247,8 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      * @return string The repository's server string, or null if none is found.
      */
     private function _getServerVersion($url) {
-        // XXX -> model
+        // XXX -> models/FedoraConnector/Server.php
+        // XXX -> xml utils
         $describeUrl = "{$url}describe?xml=true";
 
         $xml_doc = new DomDocument();
@@ -275,7 +274,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      * @return void
      */
     private function _resetIsDefault($db) {
-        // XXX -> model
+        // XXX -> models/FedoraConnector/ServerTable.php
         $db
             ->getTable('FedoraConnector_Server')
             ->update(
@@ -292,7 +291,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      * @return Zend_Form The form for the server.
      */
     private function _createServerForm($server) {
-        // XXX -> view
+        // XXX -> libraries/FedoraConnector/Viewer/Server.php
         $hasServer = ($server !== null);
 
         $form = Fedora_initForm('update', 'post', 'multipart/form-data');
