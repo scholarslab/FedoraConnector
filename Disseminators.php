@@ -37,8 +37,6 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-// XXX -> Disseminators/{Jpeg,Jp2,Tei,Default}.php
-
 
 /**
  * This creates the HTML to display a JPEG image represented in a datastream.
@@ -98,10 +96,6 @@ function fedora_disseminator_imagejp2($datastream,$options)
  * datastream.
  *
  * This just dispatches to the TeiDisplay plugin.
- *
- * XXX: Oh, wow. This needs to reflect on whether TeiDisplay is installed, and
- * only exist if it does. I probably need to move these display functions into
- * a small framework that can tell whether they need to be used or not.
  *
  * @param Omeka_Record $datastream This is the datastream representing the
  * document.

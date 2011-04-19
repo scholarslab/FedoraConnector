@@ -40,8 +40,6 @@
 //include the disseminators and importers which are stored in separate files
 require_once "Disseminators.php";
 require_once "Importers.php";
-require_once './pid_form.php';
-require_once './fedora_utils.php';
 
 // {{{ constants
 define(
@@ -50,6 +48,9 @@ define(
 );
 define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 // }}}
+
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
 
 
 // {{{ plugin_hooks

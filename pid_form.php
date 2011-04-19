@@ -39,7 +39,7 @@
 
 // XXX -> libraries/FedoraConnector/Viewer/PidForm.php
 
-require_once './fedora_utils.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
 
 /**
  * This returns the connector PID form.
