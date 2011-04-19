@@ -330,6 +330,59 @@ function fedora_connector_import_metadata($datastream)
     return $importerFunction($datastream);
 }
 
+/**
+ * This walks a DOM node and returns the data from all the text nodes under it.
+ *
+ * @param DomNode $node The DOM node to get the text content for.
+ *
+ * @return string The text content for the DOM node passed in.
+ */
+function getNodeText($node)
+{
+    $text = '';
+
+    switch ($node->nodeType) {
+    case XML_DOCUMENT_NODE:
+    case XML_ELEMENT_NODE:
+        foreach ($node->childNodes as $child) {
+            $text .= getNodeText($child);
+        }
+        break;
+
+    case XML_TEXT_NODE:
+    case XML_CDATA_SECTION_NODE:
+        $text .= $node->nodeValue;
+        break;
+
+    case XML_ATTRIBUTE_NODE:
+    case XML_ENTITY_REF_NODE:
+    case XML_ENTITY_NODE:
+    case XML_PI_NODE:
+    case XML_COMMENT_NODE:
+        break;
+        
+    }
+
+    return $text;
+}
+
+/**
+ * This takes the URI for an XML file and an XPath query and returns the nodes 
+ * in the file that match the query.
+ *
+ * @param string $uri   The URI for the XML file.
+ * @param string $xpath The XPath expression to search for in the file.
+ *
+ * @return DOMNodeList The nodes in the file that match the XPath query.
+ */
+function getQueryNodes($uri, $xpath)
+{
+    $xml = new DomDocument();
+    $xml->load($uri);
+    $query = new DOMXPath($xml);
+    return $query->query($xpath);
+}
+
 /*
  * Local variables:
  * tab-width: 4

@@ -263,7 +263,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         $teiFile = fedora_connector_content_url($newDatastream, $server);
 
         // Get the TEI ID.
-        $xml_doc = new DomDocument;
+        $xml_doc = new DomDocument();
         $xml_doc->load($teiFile);
 
         $teiNode = $xml_doc->getElementsByTagName('TEI');
@@ -453,14 +453,10 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     private function _getDatastreamNodes($server, $pid)
     {
-        // XXX -> xml utils
-        $datastreamXmlPath = "{$server}objects/$pid/datastreams?format=xml";
-
-        $xml_doc = new DomDocument();
-        $xml_doc->load($datastreamXmlPath);
-        $xpath = new DOMXPath($xml_doc);
-
-        $datastreams = $xpath->query("//*[local-name() = 'datastream']");
+        $datastreams = getQueryNodes(
+            "{$server}objects/$pid/datastreams?format=xml",
+            "//*[local-name() = 'datastream']"
+        );
         return $datastreams;
     }
 

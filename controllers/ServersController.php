@@ -248,15 +248,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     private function _getServerVersion($url) {
         // XXX -> models/FedoraConnector/Server.php
-        // XXX -> xml utils
-        $describeUrl = "{$url}describe?xml=true";
-
-        $xml_doc = new DomDocument();
-        $xml_doc->load($describeUrl);
-        $xpath = new DOMXPath($xml_doc);
-
-        $query = "//*[local-name() = 'repositoryVersion']";
-        $nodes = $xpath->query($query);
+        $nodes = getQueryNodes(
+            "{$url}describe?xml=true",
+            "//*[local-name() = 'repositoryVersion']"
+        );
 
         $version = null;
         foreach ($nodes as $node) {

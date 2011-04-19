@@ -59,7 +59,7 @@ function fedora_importer_DC($datastream)
 
 	// Get the datastream from Fedora REST.
 	$dcUrl = fedora_connector_metadata_url($datastream);
-	$xml_doc = new DomDocument;
+	$xml_doc = new DomDocument();
 	$xml_doc->load($dcUrl);
 	$xpath = new DOMXPath($xml_doc);
 

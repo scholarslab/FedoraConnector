@@ -46,8 +46,52 @@ class FedoraConnector_Utils_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('active', fedora_connector_installed());
     }
 
-}
+    public function testGetNodeText() {
+        $xmlFile = __DIR__ . '/test.xml';
+        $xml = new DomDocument();
+        $xml->load($xmlFile);
 
+        $this->assertEquals(<<<EOF
+
+  A
+  B
+  C
+  D E
+  F G
+  H
+
+EOF
+        , getNodeText($xml->documentElement));
+
+        $children = array();
+        foreach ($xml->documentElement->childNodes as $child) {
+            if ($child->nodeType == XML_ELEMENT_NODE) {
+                array_push($children, $child);
+            }
+        }
+
+        $this->assertEquals('A',   getNodeText($children[0]));
+        $this->assertEquals('B',   getNodeText($children[1]));
+        $this->assertEquals('C',   getNodeText($children[2]));
+        $this->assertEquals('D E', getNodeText($children[3]));
+        $this->assertEquals('F G', getNodeText($children[4]));
+        $this->assertEquals('H',   getNodeText($children[5]));
+    }
+
+    public function testGetQueryNodes() {
+        $xmlFile = __DIR__ . '/test.xml';
+        $query = "//*[local-name() = 'hit']";
+        $nodes = getQueryNodes($xmlFile, $query);
+
+        $this->assertEquals(4, $nodes->length);
+
+        $this->assertEquals('C',  getNodeText($nodes->item(0)));
+        $this->assertEquals('D E', getNodeText($nodes->item(1)));
+        $this->assertEquals('E',  getNodeText($nodes->item(2)));
+        $this->assertEquals('G',  getNodeText($nodes->item(3)));
+    }
+
+}
 
 
 /*
