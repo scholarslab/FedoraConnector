@@ -37,8 +37,7 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-//include the disseminators and importers which are stored in separate files
-require_once "Disseminators.php";
+//include the importers which are stored in separate files
 require_once "Importers.php";
 
 // {{{ constants

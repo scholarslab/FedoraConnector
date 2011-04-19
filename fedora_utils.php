@@ -39,6 +39,9 @@
 
 // XXX fix namespace
 
+require_once FEDORA_CONNECTOR_PLUGIN_DIR
+    . '/libraries/FedoraConnector/Disseminators.php';
+
 /**
  * This returns 'active' when called.
  *
@@ -229,23 +232,8 @@ function fedora_connector_importer_link($datastream)
 function render_fedora_datastream_preview($datastream)
 {
     // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
-    $mimeType = $datastream->mime_type;
-
-    if ($mimeType == 'image/jp2') {
-        $html = fedora_disseminator_imagejp2(
-            $datastream,
-            array('size' => 'thumb')
-        );
-
-    } else if (preg_match('/^image\//', $mimeType)) {
-        $url = fedora_connector_content_url($datastream);
-        $html = "<img alt='image' src='$url' class='fedora-preview' />";
-
-    } else {
-        $html = null;
-    }
-
-    return $html;
+    $diss = new FedoraConnector_Disseminators();
+    return $diss->preview($datastream->mime_type, $datastream);
 }
 
 /**
@@ -255,8 +243,7 @@ function render_fedora_datastream_preview($datastream)
  * this handles for these cases: image/jp2, image/jpeg, and text/xml (TEI).
  *
  * @param integer $id The ID of the datastream to render.
- * @param array $options An array of rendering options. See the
- * fedora_disseminator_* functions for more information on the values here.
+ * @param array $options An array of rendering options.
  *
  * @return string The HTML for the datastream.
  */
@@ -266,28 +253,8 @@ function render_fedora_datastream($id, $options=array())
     $datastream = get_db()
         ->getTable('FedoraConnector_Datastream')
         ->find($id);
-    $mimeType = $datastream->mime_type;
-
-    $html = '';
-
-    if ($mimeType == 'image/jp2') {
-        $html = fedora_disseminator_imagejp2($datastream, $options);
-
-    } else if ($mimeType == 'image/jpeg') {
-        $html = fedora_disseminator_imagejpeg($datastream, $options);
-
-    } else if (strpos($mimeType, 'text/xml') !== false
-        && $datastream->datastream == 'TEI'
-        && function_exists('tei_display_installed')
-    ) {
-        $html = fedora_disseminator_tei($datastream, $options);
-
-    } else {
-        $html = '<b>FedoraConnector does not know how to display objects '
-            . 'of like this.</b>';
-    }
-
-    return $html;
+    $diss = new FedoraConnector_Disseminators();
+    return $diss->preview($datastream->mime_type, $datastream);
 }
 
 /**
