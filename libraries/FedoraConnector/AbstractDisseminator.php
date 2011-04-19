@@ -40,6 +40,46 @@
 
 abstract class FedoraConnector_AbstractDisseminator
 {
+    /**
+     * This tests whether this disseminator can display a datastream.
+     *
+     * @param string       $mime       The data stream's MIME type.
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return boolean True if this can display the datastream.
+     */
+    abstract function canHandle($mime, $datastream);
+
+    /**
+     * This tests whether this disseminator can preview a datastream.
+     *
+     * @param string       $mime       The data stream's MIME type.
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return boolean True if this can display the datastream.
+     */
+    abstract function canPreview($mime, $datastream);
+
+    /**
+     * This displays a datastream.
+     *
+     * @param string       $mime       The data stream's MIME type.
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return string The display HTML for the datastream.
+     */
+    abstract function handle($mime, $datastream);
+
+    /**
+     * This displays a datastream's preview.
+     *
+     * @param string       $mime       The data stream's MIME type.
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return string The preview HTML for the datastream.
+     */
+    abstract function preview($mime, $datastream);
+
 }
 
 
