@@ -39,57 +39,67 @@
 
 
 require_once __DIR__ . '/DatastreamMock.php';
-require_once __DIR__ . '/../../Disseminators/100-Image.php';
+require_once __DIR__ . '/../../Renderers/200-TeiXml.php';
+
+if (! function_exists('tei_display_installed')) {
+    require_once __DIR__ . '/tei_display_mock.php';
+}
 
 
-class FedoraConnector_Image_Disseminator_Test extends PHPUnit_Framework_TestCase
+class FedoraConnector_TeiXml_Renderer_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
-    var $mocks;
+    var $jpeg;
+    var $xml;
 
     function setUp() {
-        $this->diss = new Image_Disseminator();
-        $server = 'http://localhost:8000/';
-        $this->mocks = array(
-            'text/plain' => new Datastream_Mock('m:0', $server, 'text/plain'),
-            'image/jp2' => new Datastream_Mock('m:0', $server, 'image/jp2'),
-            'image/jpeg' => new Datastream_Mock('m:0', $server, 'image/jpeg'),
-            'image/gif' => new Datastream_Mock('m:0', $server, 'image/gif'),
-            'picture/gif' => new Datastream_Mock('m:0', $server, 'picture/gif'),
-            'text/xml' => new Datastream_Mock('m:0', $server, 'text/xml'),
-            'text/unknown' => new Datastream_Mock('m:0', $server, 'text/unknown'),
-            'text/something' => new Datastream_Mock('m:0', $server, 'text/something'),
-            'something/else' => new Datastream_Mock('m:0', $server, 'something/else')
+        $this->diss = new TeiXml_Renderer();
+        $this->jpeg = new Datastream_Mock(
+            'mock:1234',
+            'http://localhost:8000/',
+            'image/jpeg',
+            'TEI'
+        );
+        $this->xml = new Datastream_Mock(
+            'mock:1234',
+            'http://localhost:8000/',
+            'text/xml',
+            'TEI'
         );
     }
 
     function testCanDisplay() {
-        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jp2']));
-        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jpeg']));
-        $this->assertTrue($this->diss->canDisplay($this->mocks['image/gif']));
-        $this->assertFalse($this->diss->canDisplay($this->mocks['picture/gif']));
+        $this->assertFalse($this->diss->canDisplay($this->jpeg));
+        $this->assertTrue($this->diss->canDisplay($this->xml));
+
+        $this->xml->datastream = 'Other';
+        $this->assertFalse($this->diss->canDisplay($this->xml));
     }
 
     function testCanPreview() {
-        $this->assertTrue($this->diss->canPreview($this->mocks['image/jp2']));
-        $this->assertTrue($this->diss->canPreview($this->mocks['image/jpeg']));
-        $this->assertTrue($this->diss->canPreview($this->mocks['image/gif']));
-        $this->assertFalse($this->diss->canPreview($this->mocks['picture/gif']));
+        $this->assertFalse($this->diss->canPreview($this->jpeg));
+        $this->assertFalse($this->diss->canPreview($this->xml));
+
+        $this->xml->datastream = 'Other';
+        $this->assertFalse($this->diss->canPreview($this->xml));
     }
 
+    /*
+     * Since this really just shells out to TeiDisplay, and since it appears 
+     * that it will try to pull the document from a Fedora server, I'm not 
+     * setting all that up to test this.
+     *
     function testDisplay() {
         $this->assertEquals(
-            "<img alt='image' src='http://localhost:8000/get/' />",
-            $this->diss->display($this->mocks['image/jp2'])
+            "<img alt='image' src='http://localhost:8000/get/mock:1234/"
+            . "djatoka:jp2SDef/getRegion?scale=400,400' />",
+            $this->diss->display('image/jp2', $this->ds)
         );
     }
+     */
 
     function testPreview() {
-        $this->assertEquals(
-            "<img alt='image' src='http://localhost:8000/get/' "
-            . "class='fedora-preview' />",
-            $this->diss->preview($this->mocks['image/jp2'])
-        );
+        $this->assertEquals('', $this->diss->preview($this->xml));
     }
 
 }

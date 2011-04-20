@@ -38,33 +38,36 @@
  */
 
 require_once dirname(__FILE__)
-    . '/../libraries/FedoraConnector/AbstractDisseminator.php';
+    . '/../libraries/FedoraConnector/AbstractRenderer.php';
 
 /**
  * This class defines a display adapter for an image.
  */
-class Image_Disseminator extends FedoraConnector_AbstractDisseminator
+class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
 {
+
     /**
-     * This tests whether this disseminator can display a datastream.
+     * This tests whether this renderer can display a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *
      * @return boolean True if this can display the datastream.
      */
     function canDisplay($datastream) {
-        return (bool)(preg_match('/^image\//', $datastream->mime_type));
+        return (strpos($datastream->mime_type, 'text/xml') !== false
+            && $datastream->datastream == 'TEI'
+            && function_exists('tei_display_installed'));
     }
 
     /**
-     * This tests whether this disseminator can preview a datastream.
+     * This tests whether this renderer can preview a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *
      * @return boolean True if this can display the datastream.
      */
     function canPreview($datastream) {
-        return $this->canDisplay($datastream);
+        return false;
     }
 
     /**
@@ -75,8 +78,17 @@ class Image_Disseminator extends FedoraConnector_AbstractDisseminator
      * @return string The display HTML for the datastream.
      */
     function display($datastream) {
-        $url = $datastream->getContentUrl();
-        $html = "<img alt='image' src='{$url}' />";
+        $teiFiles = get_db()
+            ->getTable('TeiDisplay_Config')
+            ->findbySql('item_id = ?', array($datastream->item_id));
+
+        ob_start();
+        foreach ($teiFiles as $teiFile) {
+            echo render_tei_file($teiFile->id, $_GET['section']);
+        }
+        $html = ob_get_contents();
+        ob_end_clean();
+
         return $html;
     }
 
@@ -88,9 +100,7 @@ class Image_Disseminator extends FedoraConnector_AbstractDisseminator
      * @return string The preview HTML for the datastream.
      */
     function preview($datastream) {
-        $url = $datastream->getContentUrl();
-        $html = "<img alt='image' src='{$url}' class='fedora-preview' />";
-        return $html;
+        return '';
     }
 
 }

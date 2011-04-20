@@ -39,7 +39,7 @@
 
 // XXX fix namespace
 
-require_once dirname(__FILE__) . '/libraries/FedoraConnector/Disseminators.php';
+require_once dirname(__FILE__) . '/libraries/FedoraConnector/Renderers.php';
 
 /**
  * This returns 'active' when called.
@@ -231,7 +231,7 @@ function fedora_connector_importer_link($datastream)
 function render_fedora_datastream_preview($datastream)
 {
     // XXX -> libraries/FedoraConnector/Viewer/Datastream.php
-    $diss = new FedoraConnector_Disseminators();
+    $diss = new FedoraConnector_Renderers();
     return $diss->preview($datastream->mime_type, $datastream);
 }
 
@@ -252,7 +252,7 @@ function render_fedora_datastream($id, $options=array())
     $datastream = get_db()
         ->getTable('FedoraConnector_Datastream')
         ->find($id);
-    $diss = new FedoraConnector_Disseminators();
+    $diss = new FedoraConnector_Renderers();
     return $diss->preview($datastream->mime_type, $datastream);
 }
 

@@ -38,40 +38,38 @@
  */
 
 
-require_once dirname(__FILE__) . '/AbstractDisseminator.php';
+require_once dirname(__FILE__) . '/AbstractRenderer.php';
 require_once dirname(__FILE__) . '/PluginDir.php';
 
 
 /**
- * This class handles discovering and instatiating the various disseminators 
+ * This class handles discovering and instatiating the various renderers 
  * (displayers) for the datastreams.
  *
- * Disseminators are discovered from the files in the $disseminatorDir. By 
- * default, this is FedoraConnector/Disseminators/. Files are loaded in sorted 
- * order, so you can establish a precedence for disseminators by adding a 
- * three-digit number to the front of each file name, for example, 
- * "100-ImageJpeg_Disseminator.php."
+ * Renderers are discovered from the files in the $rendererDir. By default, 
+ * this is FedoraConnector/Renderers/. Files are loaded in sorted order, so you 
+ * can establish a precedence for renderers by adding a three-digit number 
+ * to the front of each file name, for example, "100-ImageJpeg.php."
  *
- * Each file in the disseminator directory should have a class that implements 
- * FedoraConnector_AbstractDisseminator with a name like 
- * 'FILENAME_Disseminator'.  (If the filename began with a numeric prefix and 
- * some punctuation, that's stripped off.) See the documentation for the 
- * abstract base class for information on what interface the disseminator 
- * should publish.
+ * Each file in the renderer directory should have a class that implements 
+ * FedoraConnector_AbstractRenderer with a name like 'FILENAME_Renderer'.  
+ * (If the filename began with a numeric prefix and some punctuation, that's 
+ * stripped off.) See the documentation for the abstract base class for 
+ * information on what interface the renderer should publish.
  *
  * @package FedoraConnector
  * @subpackage Libraries
  */
-class FedoraConnector_Disseminators
+class FedoraConnector_Renderers
 {
     //{{{properties
 
     /**
-     * The directory containing the disseminators.
+     * The directory containing the renderers.
      *
      * @var string
      */
-    var $disseminatorDir;
+    var $rendererDir;
 
     /**
      * This is the plugin manager for previews.
@@ -88,124 +86,124 @@ class FedoraConnector_Disseminators
     var $displayPlugs;
 
     /**
-     * The list of disseminator classes in the order they should be loaded.
+     * The list of renderer classes in the order they should be loaded.
      *
      * @var array
      */
-    var $disseminators;
+    var $renderers;
 
     //}}}
 
     /**
-     * This constructs an instance of FedoraConnector_Disseminators.
+     * This constructs an instance of FedoraConnector_Renderers.
      *
-     * @param string $disseminatorDir This is the directory containing the 
-     * disseminators. It defaults to FedoraConnector/Disseminators.
+     * @param string $rendererDir This is the directory containing the 
+     * renderers. It defaults to FedoraConnector/Renderers.
      */
-    function __construct($disseminatorDir=null) {
-        if ($disseminatorDir === null) {
-            $disseminatorDir = dirname(__FILE__) . '/../../Disseminators/';
+    function __construct($rendererDir=null) {
+        if ($rendererDir === null) {
+            $rendererDir = dirname(__FILE__) . '/../../Renderers/';
         }
 
-        $this->disseminatorDir = $disseminatorDir;
+        $this->rendererDir = $rendererDir;
 
         $this->previewPlugs = new FedoraConnector_PluginDir(
-            $disseminatorDir,
-            'Disseminator',
+            $rendererDir,
+            'Renderer',
             'canPreview',
             'preview'
         );
         $this->displayPlugs = new FedoraConnector_PluginDir(
-            $disseminatorDir,
-            'Disseminator',
+            $rendererDir,
+            'Renderer',
             'canDisplay',
             'display'
         );
     }
 
     /**
-     * This returns the list of disseminator classes found.
+     * This returns the list of renderer classes found.
      *
-     * @return array A list of disseminator classes in order of use.
+     * @return array A list of renderer classes in order of use.
      */
-    function getDisseminators() {
+    function getRenderers() {
         return $this->displayPlugs->getPlugins();
     }
 
     /**
-     * This tests whether a disseminator is installed that can handle the MIME 
+     * This tests whether a renderer is installed that can handle the MIME 
      * type and datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      * @param boolean      $isPreview  Is this for a preview? The default is 
      * no.
      *
-     * @return boolean True if the datastream can be disseminated.
+     * @return boolean True if the datastream can be rendered.
      */
-    function hasDisseminatorFor($datastream, $isPreview=false) {
+    function hasRendererFor($datastream, $isPreview=false) {
         $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
         return $plugs->hasPlugin($datastream);
     }
 
     /**
-     * This tests whether a disseminator can handle displaying a datastream.
+     * This tests whether a renderer can handle displaying a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *
-     * @return boolean True if the datastream can be disseminated.
+     * @return boolean True if the datastream can be rendered.
      */
     function canDisplay($datastream) {
-        return $this->hasDisseminatorFor($datastream, false);
+        return $this->hasRendererFor($datastream, false);
     }
 
     /**
-     * This tests whether a disseminator can handle previewing a datastream.
+     * This tests whether a renderer can handle previewing a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *
-     * @return boolean True if the datastream can be disseminated.
+     * @return boolean True if the datastream can be rendered.
      */
     function canPreview($datastream) {
-        return $this->hasDisseminatorFor($datastream, true);
+        return $this->hasRendererFor($datastream, true);
     }
 
     /**
-     * This returns the first disseminator that says it can handle the 
+     * This returns the first renderer that says it can handle the 
      * datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      * @param boolean      $isPreview  Is this for a preview? The default is 
      * no.
      *
-     * @return FedoraConnector_AbstractDisseminator|null The disseminator that 
+     * @return FedoraConnector_AbstractRenderer|null The renderer that 
      * can handle the input datastream.
      */
-    function getDisseminator($datastream, $isPreview=false) {
+    function getRenderer($datastream, $isPreview=false) {
         $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
         return $plugs->getPlugin($datastream);
     }
 
     /**
-     * This disseminates a datastream.
+     * This renders a datastream.
      *
      * If no datastream currently installed can handle this, it returns null.
      *
      * @param Omeka_Record $datastream The data stream.
      *
-     * @return string|null The output of the disseminator.
+     * @return string|null The output of the renderer.
      */
     function display($datastream) {
         return $this->displayPlugs->callFirst($datastream);
     }
 
     /**
-     * This disseminates a preview for a datastream.
+     * This renders a preview for a datastream.
      *
      * If no datastream can preview this, it returns null.
      *
      * @param Omeka_Record $datastream The data stream.
      *
-     * @return string|null The output of the disseminator.
+     * @return string|null The output of the renderer.
      */
     function preview($datastream) {
         return $this->previewPlugs->callFirst($datastream);

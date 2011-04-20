@@ -38,13 +38,13 @@
  */
 
 require_once dirname(__FILE__)
-    . '/../libraries/FedoraConnector/AbstractDisseminator.php';
+    . '/../libraries/FedoraConnector/AbstractRenderer.php';
 
 
 /**
  * This class defines a display adapter for an image.
  */
-class Jp2_Disseminator extends FedoraConnector_AbstractDisseminator
+class Jp2_Renderer extends FedoraConnector_AbstractRenderer
 {
     /**
      * This contains the sizes for image rescaling.
@@ -65,7 +65,7 @@ class Jp2_Disseminator extends FedoraConnector_AbstractDisseminator
     }
 
     /**
-     * This tests whether this disseminator can display a datastream.
+     * This tests whether this renderer can display a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *
@@ -76,7 +76,7 @@ class Jp2_Disseminator extends FedoraConnector_AbstractDisseminator
     }
 
     /**
-     * This tests whether this disseminator can preview a datastream.
+     * This tests whether this renderer can preview a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *

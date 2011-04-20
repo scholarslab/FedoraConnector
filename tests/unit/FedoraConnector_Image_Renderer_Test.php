@@ -39,16 +39,16 @@
 
 
 require_once __DIR__ . '/DatastreamMock.php';
-require_once __DIR__ . '/../../Disseminators/000-Jp2.php';
+require_once __DIR__ . '/../../Renderers/100-Image.php';
 
 
-class FedoraConnector_Jp2_Disseminator_Test extends PHPUnit_Framework_TestCase
+class FedoraConnector_Image_Renderer_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
     var $mocks;
 
     function setUp() {
-        $this->diss = new Jp2_Disseminator();
+        $this->diss = new Image_Renderer();
         $server = 'http://localhost:8000/';
         $this->mocks = array(
             'text/plain' => new Datastream_Mock('m:0', $server, 'text/plain'),
@@ -65,26 +65,29 @@ class FedoraConnector_Jp2_Disseminator_Test extends PHPUnit_Framework_TestCase
 
     function testCanDisplay() {
         $this->assertTrue($this->diss->canDisplay($this->mocks['image/jp2']));
-        $this->assertFalse($this->diss->canDisplay($this->mocks['image/jpeg']));
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jpeg']));
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/gif']));
+        $this->assertFalse($this->diss->canDisplay($this->mocks['picture/gif']));
     }
 
     function testCanPreview() {
         $this->assertTrue($this->diss->canPreview($this->mocks['image/jp2']));
-        $this->assertFalse($this->diss->canPreview($this->mocks['image/jpeg']));
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/jpeg']));
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/gif']));
+        $this->assertFalse($this->diss->canPreview($this->mocks['picture/gif']));
     }
 
     function testDisplay() {
         $this->assertEquals(
-            "<img alt='image' src='http://localhost:8000/get/m:0/"
-            . "djatoka:jp2SDef/getRegion?scale=400,400' />",
+            "<img alt='image' src='http://localhost:8000/get/' />",
             $this->diss->display($this->mocks['image/jp2'])
         );
     }
 
     function testPreview() {
         $this->assertEquals(
-            "<img alt='image' src='http://localhost:8000/get/m:0/"
-            . "djatoka:jp2SDef/getRegion?scale=120,120' />",
+            "<img alt='image' src='http://localhost:8000/get/' "
+            . "class='fedora-preview' />",
             $this->diss->preview($this->mocks['image/jp2'])
         );
     }

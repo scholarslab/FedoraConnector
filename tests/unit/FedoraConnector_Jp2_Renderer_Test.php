@@ -37,73 +37,60 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once dirname(__FILE__)
-    . '/../libraries/FedoraConnector/AbstractDisseminator.php';
 
-/**
- * This class defines a display adapter for an image.
- */
-class TeiXml_Disseminator extends FedoraConnector_AbstractDisseminator
+require_once __DIR__ . '/DatastreamMock.php';
+require_once __DIR__ . '/../../Renderers/000-Jp2.php';
+
+
+class FedoraConnector_Jp2_Renderer_Test extends PHPUnit_Framework_TestCase
 {
+    var $diss;
+    var $mocks;
 
-    /**
-     * This tests whether this disseminator can display a datastream.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return boolean True if this can display the datastream.
-     */
-    function canDisplay($datastream) {
-        return (strpos($datastream->mime_type, 'text/xml') !== false
-            && $datastream->datastream == 'TEI'
-            && function_exists('tei_display_installed'));
+    function setUp() {
+        $this->diss = new Jp2_Renderer();
+        $server = 'http://localhost:8000/';
+        $this->mocks = array(
+            'text/plain' => new Datastream_Mock('m:0', $server, 'text/plain'),
+            'image/jp2' => new Datastream_Mock('m:0', $server, 'image/jp2'),
+            'image/jpeg' => new Datastream_Mock('m:0', $server, 'image/jpeg'),
+            'image/gif' => new Datastream_Mock('m:0', $server, 'image/gif'),
+            'picture/gif' => new Datastream_Mock('m:0', $server, 'picture/gif'),
+            'text/xml' => new Datastream_Mock('m:0', $server, 'text/xml'),
+            'text/unknown' => new Datastream_Mock('m:0', $server, 'text/unknown'),
+            'text/something' => new Datastream_Mock('m:0', $server, 'text/something'),
+            'something/else' => new Datastream_Mock('m:0', $server, 'something/else')
+        );
     }
 
-    /**
-     * This tests whether this disseminator can preview a datastream.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return boolean True if this can display the datastream.
-     */
-    function canPreview($datastream) {
-        return false;
+    function testCanDisplay() {
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jp2']));
+        $this->assertFalse($this->diss->canDisplay($this->mocks['image/jpeg']));
     }
 
-    /**
-     * This displays a datastream.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return string The display HTML for the datastream.
-     */
-    function display($datastream) {
-        $teiFiles = get_db()
-            ->getTable('TeiDisplay_Config')
-            ->findbySql('item_id = ?', array($datastream->item_id));
-
-        ob_start();
-        foreach ($teiFiles as $teiFile) {
-            echo render_tei_file($teiFile->id, $_GET['section']);
-        }
-        $html = ob_get_contents();
-        ob_end_clean();
-
-        return $html;
+    function testCanPreview() {
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/jp2']));
+        $this->assertFalse($this->diss->canPreview($this->mocks['image/jpeg']));
     }
 
-    /**
-     * This displays a datastream's preview.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return string The preview HTML for the datastream.
-     */
-    function preview($datastream) {
-        return '';
+    function testDisplay() {
+        $this->assertEquals(
+            "<img alt='image' src='http://localhost:8000/get/m:0/"
+            . "djatoka:jp2SDef/getRegion?scale=400,400' />",
+            $this->diss->display($this->mocks['image/jp2'])
+        );
+    }
+
+    function testPreview() {
+        $this->assertEquals(
+            "<img alt='image' src='http://localhost:8000/get/m:0/"
+            . "djatoka:jp2SDef/getRegion?scale=120,120' />",
+            $this->diss->preview($this->mocks['image/jp2'])
+        );
     }
 
 }
+
 
 /*
  * Local variables:

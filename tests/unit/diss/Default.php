@@ -1,13 +1,13 @@
 <?php
 
-class Default_Disseminator extends FedoraConnector_AbstractDisseminator
+class Default_Renderer extends FedoraConnector_AbstractRenderer
 {
     function canDisplay($datastream) {
         return ($datastream->mime_type == 'text/unknown');
     }
 
     function display($datastream) {
-        return 'Default_Disseminator';
+        return 'Default_Renderer';
     }
 
     function canPreview($datastream) {
@@ -15,7 +15,7 @@ class Default_Disseminator extends FedoraConnector_AbstractDisseminator
     }
 
     function preview($datastream) {
-        return 'Default_Disseminator Preview';
+        return 'Default_Renderer Preview';
     }
 }
 

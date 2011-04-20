@@ -1,13 +1,13 @@
 <?php
 
-class ImageGif_Disseminator extends FedoraConnector_AbstractDisseminator
+class ImageGif_Renderer extends FedoraConnector_AbstractRenderer
 {
     function canDisplay($datastream) {
         return ($datastream->mime_type == 'image/gif');
     }
 
     function display($datastream) {
-        return 'ImageGif_Disseminator';
+        return 'ImageGif_Renderer';
     }
 
     function canPreview($datastream) {
@@ -15,7 +15,7 @@ class ImageGif_Disseminator extends FedoraConnector_AbstractDisseminator
     }
 
     function preview($datastream) {
-        return 'ImageGif_Disseminator Preview';
+        return 'ImageGif_Renderer Preview';
     }
 }
 

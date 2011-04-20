@@ -38,10 +38,10 @@
  */
 
 
-abstract class FedoraConnector_AbstractDisseminator
+abstract class FedoraConnector_AbstractRenderer
 {
     /**
-     * This tests whether this disseminator can display a datastream.
+     * This tests whether this renderer can display a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *
@@ -50,7 +50,7 @@ abstract class FedoraConnector_AbstractDisseminator
     abstract function canDisplay($datastream);
 
     /**
-     * This tests whether this disseminator can preview a datastream.
+     * This tests whether this renderer can preview a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
      *

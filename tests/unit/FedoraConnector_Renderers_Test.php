@@ -37,17 +37,17 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once __DIR__ . '/../../libraries/FedoraConnector/Disseminators.php';
+require_once __DIR__ . '/../../libraries/FedoraConnector/Renderers.php';
 require_once __DIR__ . '/DatastreamMock.php';
 
 
-class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
+class FedoraConnector_Renderers_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
     var $mocks;
 
     function setUp() {
-        $this->diss = new FedoraConnector_Disseminators(__DIR__ . '/diss');
+        $this->diss = new FedoraConnector_Renderers(__DIR__ . '/diss');
 
         $server = 'http://localhost:8000/';
         $this->mocks = array(
@@ -60,15 +60,15 @@ class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
         );
     }
 
-    function testGetDisseminators() {
-        $dissList = $this->diss->getDisseminators();
+    function testGetRenderers() {
+        $dissList = $this->diss->getRenderers();
         $this->assertEquals(4, count($dissList));
 
         $expected = array(
-            'TextPlain_Disseminator',
-            'ImageGif_Disseminator',
-            'XmlTei_Disseminator',
-            'Default_Disseminator'
+            'TextPlain_Renderer',
+            'ImageGif_Renderer',
+            'XmlTei_Renderer',
+            'Default_Renderer'
         );
 
         for ($i=0; $i<count($dissList); $i++) {
@@ -77,40 +77,40 @@ class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
         }
     }
 
-    function testHasDisseminatorFor() {
+    function testHasRendererFor() {
         $this->assertTrue(
-            $this->diss->hasDisseminatorFor($this->mocks['text/plain'])
+            $this->diss->hasRendererFor($this->mocks['text/plain'])
         );
         $this->assertTrue(
-            $this->diss->hasDisseminatorFor($this->mocks['image/gif'])
+            $this->diss->hasRendererFor($this->mocks['image/gif'])
         );
         $this->assertTrue(
-            $this->diss->hasDisseminatorFor($this->mocks['text/xml'])
+            $this->diss->hasRendererFor($this->mocks['text/xml'])
         );
         $this->assertFalse(
-            $this->diss->hasDisseminatorFor($this->mocks['something/else'])
+            $this->diss->hasRendererFor($this->mocks['something/else'])
         );
     }
 
-    function testGetDisseminator() {
+    function testGetRenderer() {
         $this->assertEquals(
-            'TextPlain_Disseminator',
-            get_class($this->diss->getDisseminator($this->mocks['text/plain']))
+            'TextPlain_Renderer',
+            get_class($this->diss->getRenderer($this->mocks['text/plain']))
         );
         $this->assertEquals(
-            'ImageGif_Disseminator',
-            get_class($this->diss->getDisseminator($this->mocks['image/gif']))
+            'ImageGif_Renderer',
+            get_class($this->diss->getRenderer($this->mocks['image/gif']))
         );
         $this->assertEquals(
-            'XmlTei_Disseminator',
-            get_class($this->diss->getDisseminator($this->mocks['text/xml']))
+            'XmlTei_Renderer',
+            get_class($this->diss->getRenderer($this->mocks['text/xml']))
         );
         $this->assertEquals(
-            'Default_Disseminator',
-            get_class($this->diss->getDisseminator($this->mocks['text/unknown']))
+            'Default_Renderer',
+            get_class($this->diss->getRenderer($this->mocks['text/unknown']))
         );
         $this->assertNull(
-            $this->diss->getDisseminator($this->mocks['something/else'])
+            $this->diss->getRenderer($this->mocks['something/else'])
         );
     }
 
@@ -137,19 +137,19 @@ class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
 
     function testHandle() {
         $this->assertEquals(
-            'TextPlain_Disseminator',
+            'TextPlain_Renderer',
             $this->diss->display($this->mocks['text/plain'])
         );
         $this->assertEquals(
-            'ImageGif_Disseminator',
+            'ImageGif_Renderer',
             $this->diss->display($this->mocks['image/gif'])
         );
         $this->assertEquals(
-            'XmlTei_Disseminator',
+            'XmlTei_Renderer',
             $this->diss->display($this->mocks['text/xml'])
         );
         $this->assertEquals(
-            'Default_Disseminator',
+            'Default_Renderer',
             $this->diss->display($this->mocks['text/unknown'])
         );
     }
@@ -183,19 +183,19 @@ class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
 
     function testPreview() {
         $this->assertEquals(
-            'TextPlain_Disseminator Preview',
+            'TextPlain_Renderer Preview',
             $this->diss->preview($this->mocks['text/plain'])
         );
         $this->assertEquals(
-            'ImageGif_Disseminator Preview',
+            'ImageGif_Renderer Preview',
             $this->diss->preview($this->mocks['image/gif'])
         );
         $this->assertEquals(
-            'XmlTei_Disseminator Preview',
+            'XmlTei_Renderer Preview',
             $this->diss->preview($this->mocks['text/xml'])
         );
         $this->assertEquals(
-            'Default_Disseminator Preview',
+            'Default_Renderer Preview',
             $this->diss->preview($this->mocks['text/unknown'])
         );
     }
