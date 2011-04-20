@@ -2,19 +2,19 @@
 
 class Default_Disseminator extends FedoraConnector_AbstractDisseminator
 {
-    function canHandle($mime, $datastream) {
-        return ($mime == 'text/unknown');
+    function canDisplay($datastream) {
+        return ($datastream->mime_type == 'text/unknown');
     }
 
-    function handle($mime, $datastream) {
+    function display($datastream) {
         return 'Default_Disseminator';
     }
 
-    function canPreview($mime, $datastream) {
-        return Default_Disseminator::canHandle($mime, $datastream);
+    function canPreview($datastream) {
+        return $this->canDisplay($datastream);
     }
 
-    function preview($mime, $datastream) {
+    function preview($datastream) {
         return 'Default_Disseminator Preview';
     }
 }

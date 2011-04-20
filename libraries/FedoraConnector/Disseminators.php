@@ -38,7 +38,8 @@
  */
 
 
-require_once __DIR__ . '/AbstractDisseminator.php';
+require_once dirname(__FILE__) . '/AbstractDisseminator.php';
+require_once dirname(__FILE__) . '/PluginDir.php';
 
 
 /**
@@ -73,6 +74,20 @@ class FedoraConnector_Disseminators
     var $disseminatorDir;
 
     /**
+     * This is the plugin manager for previews.
+     *
+     * @var FedoraConnector_PluginDir
+     */
+    var $previewPlugs;
+
+    /**
+     * This is the plugin manager for displays.
+     *
+     * @var FedoraConnector_PluginDir
+     */
+    var $displayPlugs;
+
+    /**
      * The list of disseminator classes in the order they should be loaded.
      *
      * @var array
@@ -89,41 +104,23 @@ class FedoraConnector_Disseminators
      */
     function __construct($disseminatorDir=null) {
         if ($disseminatorDir === null) {
-            $disseminatorDir = __DIR__ . '/../../Disseminators/';
+            $disseminatorDir = dirname(__FILE__) . '/../../Disseminators/';
         }
 
         $this->disseminatorDir = $disseminatorDir;
-        $this->disseminators = $this->_discoverDisseminators();
-    }
 
-    /**
-     * This walks the disseminator directory and returns the classes for the 
-     * disseminators.
-     *
-     * @return array The list of disseminator classes.
-     */
-    private function _discoverDisseminators() {
-        $dir = new DirectoryIterator($this->disseminatorDir);
-
-        $fileList = array();
-        foreach ($dir as $file) {
-            if ($file->isFile() && !$file->isDot()) {
-                $filename = $file->getFilename();
-                $pathname = $file->getPathname();
-
-                $matches = array();
-                if (preg_match('/^(\d+\W*)?(\w+)\.php$/', $filename, $matches)) {
-                    require_once($pathname);
-                    $className = "{$matches[2]}_Disseminator";
-                    $fileList[$filename] = new $className();
-                }
-            }
-        }
-
-        ksort($fileList);
-        $dissList = array_values($fileList);
-
-        return $dissList;
+        $this->previewPlugs = new FedoraConnector_PluginDir(
+            $disseminatorDir,
+            'Disseminator',
+            'canPreview',
+            'preview'
+        );
+        $this->displayPlugs = new FedoraConnector_PluginDir(
+            $disseminatorDir,
+            'Disseminator',
+            'canDisplay',
+            'display'
+        );
     }
 
     /**
@@ -132,55 +129,50 @@ class FedoraConnector_Disseminators
      * @return array A list of disseminator classes in order of use.
      */
     function getDisseminators() {
-        return $this->disseminators;
+        return $this->displayPlugs->getPlugins();
     }
 
     /**
      * This tests whether a disseminator is installed that can handle the MIME 
      * type and datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      * @param boolean      $isPreview  Is this for a preview? The default is 
      * no.
      *
      * @return boolean True if the datastream can be disseminated.
      */
-    function hasDisseminatorFor($mime, $datastream, $isPreview=false) {
-        return (
-            $this->getDisseminator($mime, $datastream, $isPreview) !== null
-        );
+    function hasDisseminatorFor($datastream, $isPreview=false) {
+        $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
+        return $plugs->hasPlugin($datastream);
     }
 
     /**
      * This tests whether a disseminator can handle displaying a datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return boolean True if the datastream can be disseminated.
      */
-    function canHandle($mime, $datastream) {
-        return $this->hasDisseminatorFor($mime, $datastream, false);
+    function canDisplay($datastream) {
+        return $this->hasDisseminatorFor($datastream, false);
     }
 
     /**
      * This tests whether a disseminator can handle previewing a datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return boolean True if the datastream can be disseminated.
      */
-    function canPreview($mime, $datastream) {
-        return $this->hasDisseminatorFor($mime, $datastream, true);
+    function canPreview($datastream) {
+        return $this->hasDisseminatorFor($datastream, true);
     }
 
     /**
      * This returns the first disseminator that says it can handle the 
      * datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      * @param boolean      $isPreview  Is this for a preview? The default is 
      * no.
@@ -188,16 +180,9 @@ class FedoraConnector_Disseminators
      * @return FedoraConnector_AbstractDisseminator|null The disseminator that 
      * can handle the input datastream.
      */
-    function getDisseminator($mime, $datastream, $isPreview=false) {
-        $predicate = ($isPreview) ? 'canPreview' : 'canHandle';
-
-        foreach ($this->getDisseminators() as $diss) {
-            if ($diss->$predicate($mime, $datastream)) {
-                return $diss;
-            }
-        }
-
-        return null;
+    function getDisseminator($datastream, $isPreview=false) {
+        $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
+        return $plugs->getPlugin($datastream);
     }
 
     /**
@@ -205,18 +190,12 @@ class FedoraConnector_Disseminators
      *
      * If no datastream currently installed can handle this, it returns null.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return string|null The output of the disseminator.
      */
-    function handle($mime, $datastream) {
-        $diss = $this->getDisseminator($mime, $datastream, false);
-        if ($diss === null) {
-            return null;
-        } else {
-            return $diss->handle($mime, $datastream);
-        }
+    function display($datastream) {
+        return $this->displayPlugs->callFirst($datastream);
     }
 
     /**
@@ -224,18 +203,12 @@ class FedoraConnector_Disseminators
      *
      * If no datastream can preview this, it returns null.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return string|null The output of the disseminator.
      */
-    function preview($mime, $datastream) {
-        $diss = $this->getDisseminator($mime, $datastream, true);
-        if ($diss === null) {
-            return null;
-        } else {
-            return $diss->preview($mime, $datastream);
-        }
+    function preview($datastream) {
+        return $this->previewPlugs->callFirst($datastream);
     }
 
 }

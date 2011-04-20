@@ -49,31 +49,39 @@ if (! function_exists('tei_display_installed')) {
 class FedoraConnector_TeiXml_Disseminator_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
-    var $ds;
+    var $jpeg;
+    var $xml;
 
     function setUp() {
         $this->diss = new TeiXml_Disseminator();
-        $this->ds = new Datastream_Mock(
+        $this->jpeg = new Datastream_Mock(
             'mock:1234',
             'http://localhost:8000/',
+            'image/jpeg',
+            'TEI'
+        );
+        $this->xml = new Datastream_Mock(
+            'mock:1234',
+            'http://localhost:8000/',
+            'text/xml',
             'TEI'
         );
     }
 
-    function testCanHandle() {
-        $this->assertFalse($this->diss->canHandle('image/jpeg', $this->ds));
-        $this->assertTrue($this->diss->canHandle('text/xml', $this->ds));
+    function testCanDisplay() {
+        $this->assertFalse($this->diss->canDisplay($this->jpeg));
+        $this->assertTrue($this->diss->canDisplay($this->xml));
 
-        $this->ds->datastream = 'Other';
-        $this->assertFalse($this->diss->canHandle('text/xml', $this->ds));
+        $this->xml->datastream = 'Other';
+        $this->assertFalse($this->diss->canDisplay($this->xml));
     }
 
     function testCanPreview() {
-        $this->assertFalse($this->diss->canPreview('image/jpeg', $this->ds));
-        $this->assertFalse($this->diss->canPreview('text/xml', $this->ds));
+        $this->assertFalse($this->diss->canPreview($this->jpeg));
+        $this->assertFalse($this->diss->canPreview($this->xml));
 
-        $this->ds->datastream = 'Other';
-        $this->assertFalse($this->diss->canPreview('text/xml', $this->ds));
+        $this->xml->datastream = 'Other';
+        $this->assertFalse($this->diss->canPreview($this->xml));
     }
 
     /*
@@ -81,17 +89,17 @@ class FedoraConnector_TeiXml_Disseminator_Test extends PHPUnit_Framework_TestCas
      * that it will try to pull the document from a Fedora server, I'm not 
      * setting all that up to test this.
      *
-    function testHandle() {
+    function testDisplay() {
         $this->assertEquals(
             "<img alt='image' src='http://localhost:8000/get/mock:1234/"
             . "djatoka:jp2SDef/getRegion?scale=400,400' />",
-            $this->diss->handle('image/jp2', $this->ds)
+            $this->diss->display('image/jp2', $this->ds)
         );
     }
      */
 
     function testPreview() {
-        $this->assertEquals('', $this->diss->preview('text/xml', $this->ds));
+        $this->assertEquals('', $this->diss->preview($this->xml));
     }
 
 }

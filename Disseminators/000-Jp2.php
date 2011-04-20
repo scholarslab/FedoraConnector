@@ -37,6 +37,9 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
+require_once dirname(__FILE__)
+    . '/../libraries/FedoraConnector/AbstractDisseminator.php';
+
 
 /**
  * This class defines a display adapter for an image.
@@ -64,36 +67,33 @@ class Jp2_Disseminator extends FedoraConnector_AbstractDisseminator
     /**
      * This tests whether this disseminator can display a datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return boolean True if this can display the datastream.
      */
-    function canHandle($mime, $datastream) {
-        return ($mime == 'image/jp2');
+    function canDisplay($datastream) {
+        return ($datastream->mime_type == 'image/jp2');
     }
 
     /**
      * This tests whether this disseminator can preview a datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return boolean True if this can display the datastream.
      */
-    function canPreview($mime, $datastream) {
-        return $this->canHandle($mime, $datastream);
+    function canPreview($datastream) {
+        return $this->canDisplay($datastream);
     }
 
     /**
      * This displays a datastream.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return string The display HTML for the datastream.
      */
-    function handle($mime, $datastream) {
+    function display($datastream) {
         $html = $this->_display($datastream, '*');
         return $html;
     }
@@ -101,12 +101,11 @@ class Jp2_Disseminator extends FedoraConnector_AbstractDisseminator
     /**
      * This displays a datastream's preview.
      *
-     * @param string       $mime       The data stream's MIME type.
      * @param Omeka_Record $datastream The data stream.
      *
      * @return string The preview HTML for the datastream.
      */
-    function preview($mime, $datastream) {
+    function preview($datastream) {
         $html = $this->_display($datastream, 'thumb');
         return $html;
     }

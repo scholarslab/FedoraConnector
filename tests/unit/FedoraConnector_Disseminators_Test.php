@@ -38,14 +38,26 @@
  */
 
 require_once __DIR__ . '/../../libraries/FedoraConnector/Disseminators.php';
+require_once __DIR__ . '/DatastreamMock.php';
 
 
 class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
+    var $mocks;
 
     function setUp() {
         $this->diss = new FedoraConnector_Disseminators(__DIR__ . '/diss');
+
+        $server = 'http://localhost:8000/';
+        $this->mocks = array(
+            'text/plain' => new Datastream_Mock('m:0', $server, 'text/plain'),
+            'image/gif' => new Datastream_Mock('m:0', $server, 'image/gif'),
+            'text/xml' => new Datastream_Mock('m:0', $server, 'text/xml'),
+            'text/unknown' => new Datastream_Mock('m:0', $server, 'text/unknown'),
+            'text/something' => new Datastream_Mock('m:0', $server, 'text/something'),
+            'something/else' => new Datastream_Mock('m:0', $server, 'something/else')
+        );
     }
 
     function testGetDisseminators() {
@@ -67,130 +79,130 @@ class FedoraConnector_Disseminators_Test extends PHPUnit_Framework_TestCase
 
     function testHasDisseminatorFor() {
         $this->assertTrue(
-            $this->diss->hasDisseminatorFor('text/plain', null)
+            $this->diss->hasDisseminatorFor($this->mocks['text/plain'])
         );
         $this->assertTrue(
-            $this->diss->hasDisseminatorFor('image/gif', null)
+            $this->diss->hasDisseminatorFor($this->mocks['image/gif'])
         );
         $this->assertTrue(
-            $this->diss->hasDisseminatorFor('text/xml', null)
+            $this->diss->hasDisseminatorFor($this->mocks['text/xml'])
         );
         $this->assertFalse(
-            $this->diss->hasDisseminatorFor('something/else', null)
+            $this->diss->hasDisseminatorFor($this->mocks['something/else'])
         );
     }
 
     function testGetDisseminator() {
         $this->assertEquals(
             'TextPlain_Disseminator',
-            get_class($this->diss->getDisseminator('text/plain', null))
+            get_class($this->diss->getDisseminator($this->mocks['text/plain']))
         );
         $this->assertEquals(
             'ImageGif_Disseminator',
-            get_class($this->diss->getDisseminator('image/gif', null))
+            get_class($this->diss->getDisseminator($this->mocks['image/gif']))
         );
         $this->assertEquals(
             'XmlTei_Disseminator',
-            get_class($this->diss->getDisseminator('text/xml', null))
+            get_class($this->diss->getDisseminator($this->mocks['text/xml']))
         );
         $this->assertEquals(
             'Default_Disseminator',
-            get_class($this->diss->getDisseminator('text/unknown', null))
+            get_class($this->diss->getDisseminator($this->mocks['text/unknown']))
         );
         $this->assertNull(
-            $this->diss->getDisseminator('something/else', null)
+            $this->diss->getDisseminator($this->mocks['something/else'])
         );
     }
 
     function testCanHandle() {
         $this->assertTrue(
-            $this->diss->canHandle('text/plain', null)
+            $this->diss->canDisplay($this->mocks['text/plain'])
         );
         $this->assertTrue(
-            $this->diss->canHandle('image/gif', null)
+            $this->diss->canDisplay($this->mocks['image/gif'])
         );
         $this->assertTrue(
-            $this->diss->canHandle('text/xml', null)
+            $this->diss->canDisplay($this->mocks['text/xml'])
         );
         $this->assertTrue(
-            $this->diss->canHandle('text/unknown', null)
+            $this->diss->canDisplay($this->mocks['text/unknown'])
         );
     }
 
     function testCanHandleFalse() {
         $this->assertFalse(
-            $this->diss->canHandle('something/else', null)
+            $this->diss->canDisplay($this->mocks['something/else'])
         );
     }
 
     function testHandle() {
         $this->assertEquals(
             'TextPlain_Disseminator',
-            $this->diss->handle('text/plain', null)
+            $this->diss->display($this->mocks['text/plain'])
         );
         $this->assertEquals(
             'ImageGif_Disseminator',
-            $this->diss->handle('image/gif', null)
+            $this->diss->display($this->mocks['image/gif'])
         );
         $this->assertEquals(
             'XmlTei_Disseminator',
-            $this->diss->handle('text/xml', null)
+            $this->diss->display($this->mocks['text/xml'])
         );
         $this->assertEquals(
             'Default_Disseminator',
-            $this->diss->handle('text/unknown', null)
+            $this->diss->display($this->mocks['text/unknown'])
         );
     }
 
     function testHandleNull() {
         $this->assertNull(
-            $this->diss->handle('text/something', null)
+            $this->diss->display($this->mocks['text/something'])
         );
     }
 
     function testCanPreview() {
         $this->assertTrue(
-            $this->diss->canPreview('text/plain', null)
+            $this->diss->canPreview($this->mocks['text/plain'])
         );
         $this->assertTrue(
-            $this->diss->canPreview('image/gif', null)
+            $this->diss->canPreview($this->mocks['image/gif'])
         );
         $this->assertTrue(
-            $this->diss->canPreview('text/xml', null)
+            $this->diss->canPreview($this->mocks['text/xml'])
         );
         $this->assertTrue(
-            $this->diss->canPreview('text/unknown', null)
+            $this->diss->canPreview($this->mocks['text/unknown'])
         );
     }
 
     function testCanPreviewFalse() {
         $this->assertFalse(
-            $this->diss->canPreview('something/else', null)
+            $this->diss->canPreview($this->mocks['something/else'])
         );
     }
 
     function testPreview() {
         $this->assertEquals(
             'TextPlain_Disseminator Preview',
-            $this->diss->preview('text/plain', null)
+            $this->diss->preview($this->mocks['text/plain'])
         );
         $this->assertEquals(
             'ImageGif_Disseminator Preview',
-            $this->diss->preview('image/gif', null)
+            $this->diss->preview($this->mocks['image/gif'])
         );
         $this->assertEquals(
             'XmlTei_Disseminator Preview',
-            $this->diss->preview('text/xml', null)
+            $this->diss->preview($this->mocks['text/xml'])
         );
         $this->assertEquals(
             'Default_Disseminator Preview',
-            $this->diss->preview('text/unknown', null)
+            $this->diss->preview($this->mocks['text/unknown'])
         );
     }
 
     function testPreviewNull() {
         $this->assertNull(
-            $this->diss->preview('text/something', null)
+            $this->diss->preview($this->mocks['text/something'])
         );
     }
 

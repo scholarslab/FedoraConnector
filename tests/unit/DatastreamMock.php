@@ -42,11 +42,13 @@ class Datastream_Mock {
 
     var $pid;
     var $server;
+    var $mime_type;
     var $datastream;
 
-    function __construct($pid, $server, $ds='Jpeg') {
+    function __construct($pid, $server, $mime='text/plain', $ds='Jpeg') {
         $this->pid = $pid;
         $this->server = $server;
+        $this->mime_type = $mime;
         $this->datastream = $ds;
     }
 

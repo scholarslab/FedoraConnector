@@ -45,36 +45,47 @@ require_once __DIR__ . '/../../Disseminators/000-Jp2.php';
 class FedoraConnector_Jp2_Disseminator_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
-    var $ds;
+    var $mocks;
 
     function setUp() {
         $this->diss = new Jp2_Disseminator();
-        $this->ds = new Datastream_Mock('mock:1234', 'http://localhost:8000/');
+        $server = 'http://localhost:8000/';
+        $this->mocks = array(
+            'text/plain' => new Datastream_Mock('m:0', $server, 'text/plain'),
+            'image/jp2' => new Datastream_Mock('m:0', $server, 'image/jp2'),
+            'image/jpeg' => new Datastream_Mock('m:0', $server, 'image/jpeg'),
+            'image/gif' => new Datastream_Mock('m:0', $server, 'image/gif'),
+            'picture/gif' => new Datastream_Mock('m:0', $server, 'picture/gif'),
+            'text/xml' => new Datastream_Mock('m:0', $server, 'text/xml'),
+            'text/unknown' => new Datastream_Mock('m:0', $server, 'text/unknown'),
+            'text/something' => new Datastream_Mock('m:0', $server, 'text/something'),
+            'something/else' => new Datastream_Mock('m:0', $server, 'something/else')
+        );
     }
 
-    function testCanHandle() {
-        $this->assertTrue($this->diss->canHandle('image/jp2', $this->ds));
-        $this->assertFalse($this->diss->canHandle('image/jpeg', $this->ds));
+    function testCanDisplay() {
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jp2']));
+        $this->assertFalse($this->diss->canDisplay($this->mocks['image/jpeg']));
     }
 
     function testCanPreview() {
-        $this->assertTrue($this->diss->canPreview('image/jp2', $this->ds));
-        $this->assertFalse($this->diss->canPreview('image/jpeg', $this->ds));
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/jp2']));
+        $this->assertFalse($this->diss->canPreview($this->mocks['image/jpeg']));
     }
 
-    function testHandle() {
+    function testDisplay() {
         $this->assertEquals(
-            "<img alt='image' src='http://localhost:8000/get/mock:1234/"
+            "<img alt='image' src='http://localhost:8000/get/m:0/"
             . "djatoka:jp2SDef/getRegion?scale=400,400' />",
-            $this->diss->handle('image/jp2', $this->ds)
+            $this->diss->display($this->mocks['image/jp2'])
         );
     }
 
     function testPreview() {
         $this->assertEquals(
-            "<img alt='image' src='http://localhost:8000/get/mock:1234/"
+            "<img alt='image' src='http://localhost:8000/get/m:0/"
             . "djatoka:jp2SDef/getRegion?scale=120,120' />",
-            $this->diss->preview('image/jp2', $this->ds)
+            $this->diss->preview($this->mocks['image/jp2'])
         );
     }
 

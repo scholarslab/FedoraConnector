@@ -2,19 +2,19 @@
 
 class ImageGif_Disseminator extends FedoraConnector_AbstractDisseminator
 {
-    function canHandle($mime, $datastream) {
-        return ($mime == 'image/gif');
+    function canDisplay($datastream) {
+        return ($datastream->mime_type == 'image/gif');
     }
 
-    function handle($mime, $datastream) {
+    function display($datastream) {
         return 'ImageGif_Disseminator';
     }
 
-    function canPreview($mime, $datastream) {
-        return ImageGif_Disseminator::canHandle($mime, $datastream);
+    function canPreview($datastream) {
+        return $this->canDisplay($datastream);
     }
 
-    function preview($mime, $datastream) {
+    function preview($datastream) {
         return 'ImageGif_Disseminator Preview';
     }
 }

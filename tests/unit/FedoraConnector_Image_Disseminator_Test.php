@@ -45,31 +45,42 @@ require_once __DIR__ . '/../../Disseminators/100-Image.php';
 class FedoraConnector_Image_Disseminator_Test extends PHPUnit_Framework_TestCase
 {
     var $diss;
-    var $ds;
+    var $mocks;
 
     function setUp() {
         $this->diss = new Image_Disseminator();
-        $this->ds = new Datastream_Mock('mock:1234', 'http://localhost:8000/');
+        $server = 'http://localhost:8000/';
+        $this->mocks = array(
+            'text/plain' => new Datastream_Mock('m:0', $server, 'text/plain'),
+            'image/jp2' => new Datastream_Mock('m:0', $server, 'image/jp2'),
+            'image/jpeg' => new Datastream_Mock('m:0', $server, 'image/jpeg'),
+            'image/gif' => new Datastream_Mock('m:0', $server, 'image/gif'),
+            'picture/gif' => new Datastream_Mock('m:0', $server, 'picture/gif'),
+            'text/xml' => new Datastream_Mock('m:0', $server, 'text/xml'),
+            'text/unknown' => new Datastream_Mock('m:0', $server, 'text/unknown'),
+            'text/something' => new Datastream_Mock('m:0', $server, 'text/something'),
+            'something/else' => new Datastream_Mock('m:0', $server, 'something/else')
+        );
     }
 
-    function testCanHandle() {
-        $this->assertTrue($this->diss->canHandle('image/jp2', $this->ds));
-        $this->assertTrue($this->diss->canHandle('image/jpeg', $this->ds));
-        $this->assertTrue($this->diss->canHandle('image/gif', $this->ds));
-        $this->assertFalse($this->diss->canHandle('picture/gif', $this->ds));
+    function testCanDisplay() {
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jp2']));
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jpeg']));
+        $this->assertTrue($this->diss->canDisplay($this->mocks['image/gif']));
+        $this->assertFalse($this->diss->canDisplay($this->mocks['picture/gif']));
     }
 
     function testCanPreview() {
-        $this->assertTrue($this->diss->canPreview('image/jp2', $this->ds));
-        $this->assertTrue($this->diss->canPreview('image/jpeg', $this->ds));
-        $this->assertTrue($this->diss->canPreview('image/gif', $this->ds));
-        $this->assertFalse($this->diss->canPreview('picture/gif', $this->ds));
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/jp2']));
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/jpeg']));
+        $this->assertTrue($this->diss->canPreview($this->mocks['image/gif']));
+        $this->assertFalse($this->diss->canPreview($this->mocks['picture/gif']));
     }
 
-    function testHandle() {
+    function testDisplay() {
         $this->assertEquals(
             "<img alt='image' src='http://localhost:8000/get/' />",
-            $this->diss->handle('image/jp2', $this->ds)
+            $this->diss->display($this->mocks['image/jp2'])
         );
     }
 
@@ -77,7 +88,7 @@ class FedoraConnector_Image_Disseminator_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             "<img alt='image' src='http://localhost:8000/get/' "
             . "class='fedora-preview' />",
-            $this->diss->preview('image/jp2', $this->ds)
+            $this->diss->preview($this->mocks['image/jp2'])
         );
     }
 
