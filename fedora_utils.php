@@ -39,8 +39,7 @@
 
 // XXX fix namespace
 
-require_once FEDORA_CONNECTOR_PLUGIN_DIR
-    . '/libraries/FedoraConnector/Disseminators.php';
+require_once dirname(__FILE__) . '/libraries/FedoraConnector/Disseminators.php';
 
 /**
  * This returns 'active' when called.
