@@ -37,7 +37,6 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-// XXX -> libraries/FedoraConnector/Importers.php (introspection and loading)
 // XXX -> libraries/FedoraConnector/BaseImporter.php (ABC)
 // XXX -> Importers/{DublinCore,MODS}.php
 // XXX -> fedora_connector_list_importers

@@ -40,6 +40,7 @@
 // XXX fix namespace
 
 require_once dirname(__FILE__) . '/libraries/FedoraConnector/Renderers.php';
+require_once dirname(__FILE__) . '/libraries/FedoraConnector/Importers.php';
 
 /**
  * This returns 'active' when called.
@@ -265,18 +266,8 @@ function render_fedora_datastream($id, $options=array())
 function fedora_connector_list_importers()
 {
     // XXX -> libraries/FedoraConnector/Importers.php
-    $pathToFile =
-        FEDORA_CONNECTOR_PLUGIN_DIR . DIRECTORY_SEPARATOR . "Importers.php";
-    $string = file_get_contents($pathToFile);
-
-    $matches = array();
-    preg_match_all('/fedora_importer_([A-Z]+)/', $string, $matches);
-
-    $importers = array();
-    foreach ($matches[1] as $match){
-        array_push($importers, $match);
-    }
-    return $importers;
+    $imps = new FedoraConnector_Importers();
+    return $imps->getImporters();
 }
 
 /**
@@ -292,8 +283,8 @@ function fedora_connector_list_importers()
 function fedora_connector_import_metadata($datastream)
 {
     // XXX -> libraries/FedoraConnector/Importers.php
-    $importerFunction = "fedora_importer_{$datastream->metadata_stream}";
-    return $importerFunction($datastream);
+    $imps = new FedoraConnector_Importers();
+    $imps->import($datastream);
 }
 
 /**

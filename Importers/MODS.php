@@ -38,32 +38,11 @@
  */
 
 
-class Datastream_Mock {
-
-    var $pid;
-    var $server;
-    var $mime_type;
-    var $datastream;
-    var $metadata_stream;
-
-    function __construct(
-        $pid, $server, $mime='text/plain', $ds='Jpeg', $mds='DC'
-    ) {
-        $this->pid = $pid;
-        $this->server = $server;
-        $this->mime_type = $mime;
-        $this->datastream = $ds;
-        $this->metadata_stream = $mds;
+class MODS_Importer
+{
+    function canImport($datastream) {
+        return ($datastream->metadata_stream == 'MODS');
     }
-
-    function getServer() {
-        return $this->server;
-    }
-
-    function getContentUrl() {
-        return "{$this->server}get/";
-    }
-
 }
 
 
