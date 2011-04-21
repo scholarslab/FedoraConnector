@@ -191,7 +191,7 @@ function fedora_connector_content_url($datastream)
  */
 function fedora_connector_metadata_url($datastream)
 {
-    // XXX -> models/FedoraConnector/Datastream.php
+    // XXX -> models/FedoraConnector/Datastream.php (->getMetadataUrl())
     $baseUrl = fedora_connector_datastream_base_url($datastream);
     return "{$baseUrl}{$datastream->metadata_stream}/content";
 }

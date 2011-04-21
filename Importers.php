@@ -37,9 +37,10 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-// XXX -> libraries/FedoraConnector/BaseImporter.php (ABC)
 // XXX -> Importers/{DublinCore,MODS}.php
 // XXX -> fedora_connector_list_importers
+// XXX -> test importing from DC, especially with the db and fedora IO
+// XXX -> test importing from MODS, especially with the db and fedora IO
 
 /**
  * This imports Dublin Core metadata into the metadata for an object.
