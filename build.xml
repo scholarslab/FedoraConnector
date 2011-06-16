@@ -49,7 +49,7 @@
 
     <description>A simple build file for Omeka plugins</description>
 
-    <property name="project" value="Timeline" />
+    <property name="project" value="FedoraConnector" />
     <property name="build" location="build" />
     <property name="dist" location="dist" />
     <tstamp />
