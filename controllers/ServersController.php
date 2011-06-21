@@ -50,41 +50,33 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 {
 
     /**
-     * This controls creating the main page for the server item.
+     * Redirect by default to servers action.
      *
      * @return void
      */
-    public function serversAction()
+    public function indexAction()
+    {
+
+        $this->_forward('browse', 'servers', 'fedora-connector');
+
+    }
+
+    /**
+     * Show servers.
+     *
+     * @return void
+     */
+    public function browseAction()
     {
 
         $page = $this->_request->page;
         $sort_field = $this->_request->getParam('sort_field');
         $sort_dir = $this->_request->getParam('sort_dir');
         $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
-        $servers = $this->getTable('FedoraConnector')->getServers($page, $order);
+        $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
 
-        // $count = $db
-        //     ->getTable('FedoraConnector_Server')
-        //     ->count();
-        // $this->view->servers = Fedora_Db_getDataForPage(
-        //     'FedoraConnector_Server',
-        //     $currentPage
-        // );
-        // $this->view->count = $count;
+        $this->view->servers = $servers;
 
-        // Now process the pagination
-        // $baseUrl = $this->getRequest()->getBaseUrl();
-        // $paginationUrl = "$baseUrl/servers/index/";
-
-        //Serve up the pagination
-        // $pagination = array(
-        //     'page'          => $currentPage,
-        //     'per_page'      => 10,
-        //     'total_results' => $count,
-        //     'link'          => $paginationUrl
-        // );
-
-        // Zend_Registry::set('pagination', $pagination);
     }
 
     /**

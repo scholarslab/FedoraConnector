@@ -42,14 +42,16 @@
 
 <?php
 
-//include the importers which are stored in separate files
-// require_once "Importers.php";
-// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
-// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
-
 // {{{ constants
 define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
 define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
+// }}}
+
+// {{{ requires
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
+// require_once "Importers.php";
+// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
+// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
 // }}}
 
 // {{{ plugin_hooks

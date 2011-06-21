@@ -47,6 +47,29 @@
 class FedoraConnectorServerTable extends Omeka_Db_Table
 {
 
+    /**
+     * Returns servers for the main listing.
+     *
+     * @param string $order The constructed SQL order clause.
+     *
+     * @return object The collections.
+     */
+    public function getServers($page = null, $order = null)
+    {
+
+        $select = $this->getSelect();
+        if (isset($page)) {
+            $select->limitPage($page, get_option('per_page_admin'));
+        }
+        if (isset($order)) {
+            $select->order($order);
+        }
+
+        return $this->fetchObjects($select);
+
+    }
+
+
 }
 
 
