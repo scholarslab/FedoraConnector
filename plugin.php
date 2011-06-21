@@ -116,10 +116,7 @@ function fedora_connector_install()
 }
 
 /**
- * This uninstalls the Fedora Connector plugin.
- *
- * This drops the server and datastream tables and, if the TeiDisplay plugin is
- * installed, it removes all Fedora TEI datastreams from it.
+ * Drop tables, scrubs out Fedora TEI datastreams.
  *
  * @return void
  */
@@ -149,9 +146,9 @@ function fedora_connector_uninstall() {
 }
 
 /**
- * This removes all datastreams associated with an item.
+ * On item delete, get rid of datastreams associated with that item.
  *
- * @param Omeka_Record $item The item model instance being deleted.
+ * @param Omeka_Record $item The item being deleted.
  *
  * @return void
  */
@@ -170,8 +167,7 @@ function fedora_connector_before_delete_item($item)
 }
 
 /**
- * This loads fedora_connector_main.css when the Fedora Connector module is
- * active.
+ * Add plugin specific CSS.
  *
  * @param Zend_Controller_Request_Http $request The request for an admin page.
  *
@@ -187,8 +183,7 @@ function fedora_connector_admin_header($request)
 }
 
 /**
- * This controls access to the Fedora Connector resources (server and 
- * datastreams).
+ * Establish ACL privilges.
  *
  * @param Omeka_Acl $acl The ACL instance controlling the access list.
  *
@@ -216,8 +211,7 @@ function fedora_connector_define_acl($acl)
 }
 
 /**
- * This adds Fedora Connector links to the top-level navigation in the admin 
- * theme.
+ * Add link to main admin menu bar.
  *
  * @param array $tabs This is an array of label => URI pairs.
  *
@@ -235,7 +229,7 @@ function fedora_connector_admin_navigation($tabs)
 }
 
 /**
- * This outputs the field for the configuration form.
+ * Do config form.
  *
  * @return void
  */
@@ -247,7 +241,7 @@ function fedora_connector_config_form()
 }
 
 /**
- * This processes the config form, saving the input into the options.
+ * Save config form (omitted datastreams csv).
  *
  * @return void
  */
@@ -260,7 +254,7 @@ function fedora_connector_config()
 }
 
 /**
- * This adds Fedora Datastreams tab to Edit Items form page.
+ * Add Fedora Datastreams tab to the Items interface.
  *
  * @param array $tabs An array mapping tab name to HTML for that tab.
  *
