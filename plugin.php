@@ -231,12 +231,9 @@ function fedora_connector_admin_navigation($tabs)
  */
 function fedora_connector_config_form()
 {
-    $input = __v()->formText(
-        'fedora_connector_omitted_datastreams',
-        get_option('fedora_connector_omitted_datastreams'),
-        null
-    );
-    include './config_form.php';
+
+    include 'config_form.php';
+
 }
 
 /**

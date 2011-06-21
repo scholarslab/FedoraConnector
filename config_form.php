@@ -30,6 +30,7 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
@@ -40,10 +41,12 @@
 
 <div class="field">
     <label for="fedora_connector_server">Omitted Datastreams:</label>
-    <?php echo $input; ?>
+    <?php echo __v()->formText('fedora_connector_omitted_datastreams',
+        get_option('fedora_connector_omitted_datastreams'), null); ?>
+
     <p class="explanation">List datastream IDs, comma-separated, that should be 
-omitted from the datastream selection checkbox list and object metadata 
-dropdown menu.  Default: RELS-EXT,RELS-INT,AUDIT.  </p>
+        omitted from the datastream selection checkbox list and object metadata 
+        dropdown menu.  Default: RELS-EXT,RELS-INT,AUDIT.</p>
 </div>
 
 <?php
