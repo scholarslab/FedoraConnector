@@ -195,7 +195,7 @@ function fedora_connector_admin_header($request)
 function fedora_connector_define_routes($router)
 {
 
-    $router->addConfig(new Zend_Config_Ini(BAGIT_PLUGIN_DIRECTORY .
+    $router->addConfig(new Zend_Config_Ini(FEDORA_CONNECTOR_PLUGIN_DIR .
         DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
 
 

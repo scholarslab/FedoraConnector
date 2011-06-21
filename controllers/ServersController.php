@@ -74,9 +74,12 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
         $page = $this->_request->page;
         $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
-
         $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
+
         $this->view->servers = $servers;
+        $this->view->current_page = $page;
+        $this->view->total_results = $this->getTable('FedoraConnectorServer')->count();
+        $this->view->results_per_page = get_option('per_page_admin');
 
     }
 
@@ -90,9 +93,28 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
         $this->view->form = $this->_doServerForm();
 
-        // $server = array();
-        // $form = $this->_createServerForm($server);
-		// $this->view->form = $form;
+    }
+
+    /**
+     * This handles the action for creating a server.
+     *
+     * @return void
+     */
+    public function editAction()
+    {
+
+        $id = $this->_request->id;
+        $server = $this->getTable('FedoraConnectorServer')->find($id);
+        $form = $this->_doServerForm('edit');
+        $form->populate(array(
+            'name' => $server->name,
+            'url' => $server->url,
+            'is_default' => $server->is_default
+        ));
+
+        $this->view->form = $form;
+        $this->view->server = $server;
+        echo $id;
 
     }
 
@@ -119,13 +141,13 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             ->setLabel('URL:')
             ->setAttrib('size', 35);
 
-        $is_def = new Zend_Form_Element_Checkbox('default');
+        $is_def = new Zend_Form_Element_Checkbox('is_default');
         $is_def->setLabel('Is this the default server?');
 
         if ($mode == 'create') {
             $submit = new Zend_Form_Element_Submit('create_submit');
             $submit->setLabel('Create');
-        } else {
+        } else if ($mode == 'edit') {
             $submit = new Zend_Form_Element_Submit('edit_submit');
             $submit->setLabel('Save');
         }
@@ -144,21 +166,21 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      *
      * @return void
      */
-    public function editAction()
-    {
-		$db = get_db();
+    // public function editAction()
+    // {
+	//     $db = get_db();
 
-        $count = $db
-            ->getTable('FedoraConnector_Server')
-            ->count();
+    //     $count = $db
+    //         ->getTable('FedoraConnector_Server')
+    //         ->count();
 
-        $server = $this->_getFormServer($db);
-		$form = $this->_createServerForm($server);
+    //     $server = $this->_getFormServer($db);
+	//     $form = $this->_createServerForm($server);
 
-		$this->view->count = $count;
-		$this->view->id = $server->id;
-		$this->view->form = $form;
-    }
+	//     $this->view->count = $count;
+	//     $this->view->id = $server->id;
+	//     $this->view->form = $form;
+    // }
 
     /**
      * This handles deleting a server.
