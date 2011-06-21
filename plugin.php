@@ -99,7 +99,7 @@ function fedora_connector_install()
         ");
 
     $db->insert(
-        'fedora_connector_servers',
+        $db->FedoraConnectorServer,
         array('url' => 'http://localhost:8080/fedora/',
               'name' => 'Default Fedora Server',
               'is_default' => 1)

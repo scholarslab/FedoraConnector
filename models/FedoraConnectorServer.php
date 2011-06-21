@@ -42,9 +42,9 @@
 <?php
 
 /**
- * Table class for servers.
+ * Record class for servers.
  */
-class FedoraConnectorServerTable extends Omeka_Db_Table
+class FedoraConnectorServer extends Omeka_record
 {
 
 }

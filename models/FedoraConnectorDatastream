@@ -42,9 +42,9 @@
 <?php
 
 /**
- * Table class for servers.
+ * Record class for datastreams.
  */
-class FedoraConnectorServerTable extends Omeka_Db_Table
+class FedoraConnectorDatastream extends Omeka_record
 {
 
 }

@@ -43,9 +43,6 @@
 
 /**
  * Table class for datastreams.
- *
- * Right now, the class is empty, but I plan to fill it up with crunchy model 
- * goodness.
  */
 class FedoraConnectorDatastreamTable extends Omeka_Db_Table
 {
