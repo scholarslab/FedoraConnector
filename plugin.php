@@ -176,11 +176,11 @@ function fedora_connector_before_delete_item($item)
  */
 function fedora_connector_admin_header($request)
 {
+
     if ($request->getModuleName() == 'fedora-connector') {
-        echo '<link rel="stylesheet" href="'
-            . html_escape(css('fedora_connector_main'))
-            . '" />';
+        queue_css('fedora_connector_main');
     }
+
 }
 
 /**
