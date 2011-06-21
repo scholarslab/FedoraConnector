@@ -258,16 +258,19 @@ function fedora_connector_config()
 function fedora_connector_item_form_tabs($tabs)
 {
    // Insert the tab before the Tags tab.
-   $item = get_current_item();
-   $ttabs = array();
-   foreach($tabs as $key => $html) {
-       if ($key == 'Tags') {
-           $ttabs['Fedora Datastreams'] = fedora_connector_pid_form($item);
-       }
-       $ttabs[$key] = $html;
-   }
-   $tabs = $ttabs;
-   return $tabs;
+   // $item = get_current_item();
+   // $ttabs = array();
+   // foreach($tabs as $key => $html) {
+   //     if ($key == 'Tags') {
+   //         $ttabs['Fedora Datastreams'] = fedora_connector_pid_form($item);
+   //     }
+   //     $ttabs[$key] = $html;
+   // }
+   // $tabs = $ttabs;
+   // return $tabs;
+
+    $tabs['Fedora Datastreams'] = ' ';
+    return $tabs;
 }
 
 /*
