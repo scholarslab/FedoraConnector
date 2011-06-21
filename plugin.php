@@ -107,9 +107,8 @@ function fedora_connector_install()
         )
         ");
 
-    set_option(
-        'fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT'
-    );
+    set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
+
 }
 
 /**
