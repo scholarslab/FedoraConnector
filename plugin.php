@@ -121,12 +121,12 @@ function fedora_connector_install()
  * @return void
  */
 function fedora_connector_uninstall() {
+
+
     $db = get_db();
-    $datastreams
-        = "DROP TABLE IF EXISTS `{$db->prefix}fedora_connector_datastreams`";
-    $servers = "DROP TABLE IF EXISTS `{$db->prefix}fedora_connector_servers`";
-    $db->query($datastreams);
-    $db->query($servers);
+    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
+    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
+
 
     // If TeiDisplay is installed, remove Fedora TEI datastreams from its 
     // table.
@@ -154,6 +154,7 @@ function fedora_connector_uninstall() {
  */
 function fedora_connector_before_delete_item($item)
 {
+
     $db = get_db();
     $datastreams = $db
         ->getTable('FedoraConnector_Datastream')
@@ -162,6 +163,7 @@ function fedora_connector_before_delete_item($item)
     foreach ($datastreams as $datastream){
         $datastream->delete();
     }
+
 }
 
 /**
