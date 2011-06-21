@@ -206,7 +206,7 @@ function fedora_connector_define_acl($acl)
     }
 
     $acl->add($serversResource);
-    $acl->add($datastreamResource);
+    $acl->add($datastreamsResource);
 
     $acl->allow('super', 'FedoraConnector_Servers');
     $acl->allow('admin', 'FedoraConnector_Servers');
@@ -228,7 +228,7 @@ function fedora_connector_admin_navigation($tabs)
 {
 
     if (has_permission('FedoraConnector_Servers', 'index')) {
-        $tabs['Fedora Servers'] = uri('fedora-connector/servers/');
+        $tabs['Fedora Connector'] = uri('fedora-connector/servers');
     }
 
     return $tabs;
