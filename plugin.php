@@ -38,6 +38,10 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
+?>
+
+<?php
+
 //include the importers which are stored in separate files
 // require_once "Importers.php";
 // require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
@@ -156,7 +160,7 @@ function fedora_connector_before_delete_item($item)
 
     $db = get_db();
     $datastreams = $db
-        ->getTable('FedoraConnector_Datastream')
+        ->getTable('FedoraConnectorDatastream')
         ->findBySql('item_id = ?', array($item['id']));
 
     foreach ($datastreams as $datastream){
@@ -192,12 +196,23 @@ function fedora_connector_admin_header($request)
  */
 function fedora_connector_define_acl($acl)
 {
-    $acl->loadResourceList(
-        array('FedoraConnector_Server' => array('index', 'status'))
-    );
-    $acl->loadResourceList(
-        array('FedoraConnector_Datastream' => array('index', 'status'))
-    );
+
+    if (version_compare(OMEKA_VERSION, '2.0-dev', '<')) {
+        $serversResource = new Omeka_Acl_Resource('FedoraConnector_Servers');
+        $datastreamsResource = new Omeka_Acl_Resource('FedoraConnector_Datastreams');
+    } else {
+        $serversResource = new Zend_Acl_Resource('FedoraConnector_Servers');
+        $datastreamsResource = new Zend_Acl_Resource('FedoraConnector_Datastreams');
+    }
+
+    $acl->add($serversResource);
+    $acl->add($datastreamResource);
+
+    $acl->allow('super', 'FedoraConnector_Servers');
+    $acl->allow('admin', 'FedoraConnector_Servers');
+    $acl->allow('super', 'FedoraConnector_Datastreams');
+    $acl->allow('admin', 'FedoraConnector_Datastreams');
+
 }
 
 /**
@@ -211,13 +226,9 @@ function fedora_connector_define_acl($acl)
  */
 function fedora_connector_admin_navigation($tabs)
 {
-    $acl = get_acl();
 
-    if ($acl->checkUserPermission('FedoraConnector_Server', 'index')) {
+    if (has_permission('FedoraConnector_Servers', 'index')) {
         $tabs['Fedora Servers'] = uri('fedora-connector/servers/');
-    }
-    if ($acl->checkUserPermission('FedoraConnector_Datastream', 'browse')) {
-        $tabs['Fedora Objects'] = uri('fedora-connector/datastreams/browse/');
     }
 
     return $tabs;

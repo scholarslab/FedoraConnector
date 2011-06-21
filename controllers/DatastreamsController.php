@@ -30,6 +30,7 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
@@ -37,13 +38,14 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require "Zend/Form/Element.php";
-include_once '../form_utils.php';
-include_once '../db_utils.php';
+?>
 
-/**
- * This class defines actions for datastream items.
- */
+<?php
+
+// require "Zend/Form/Element.php";
+// include_once '../form_utils.php';
+// include_once '../db_utils.php';
+
 class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 {
 
