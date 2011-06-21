@@ -30,20 +30,25 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
  * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
+?>
+
+<?php
 
 /**
- * This is the model class for servers.
+ * Table class for datastreams.
  *
  * Right now, the class is empty, but I plan to fill it up with crunchy model 
  * goodness.
  */
-class FedoraConnector_Server extends Omeka_Record { 
+class FedoraConnectorDatastreamTable extends Omeka_Db_Table
+{
 
 }
 

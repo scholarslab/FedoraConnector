@@ -30,6 +30,7 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
@@ -103,6 +104,7 @@ function fedora_connector_install()
               'name' => 'Default Fedora Server',
               'is_default' => 1)
     );
+
     set_option(
         'fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT'
     );
