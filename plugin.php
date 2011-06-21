@@ -242,10 +242,10 @@ function fedora_connector_config_form()
  */
 function fedora_connector_config()
 {
-    set_option(
-        'fedora_connector_omitted_datastreams',
-        $_POST['fedora_connector_omitted_datastreams']
-    );
+
+    set_option('fedora_connector_omitted_datastreams',
+        $_POST['fedora_connector_omitted_datastreams']);
+
 }
 
 /**
