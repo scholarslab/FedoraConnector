@@ -57,6 +57,7 @@ add_plugin_hook('install', 'fedora_connector_install');
 add_plugin_hook('uninstall', 'fedora_connector_uninstall');
 add_plugin_hook('before_delete_item', 'fedora_connector_before_delete_item');
 add_plugin_hook('admin_theme_header', 'fedora_connector_admin_header');
+add_plugin_hook('define_routes', 'fedora_connector_define_routes');
 add_plugin_hook('define_acl', 'fedora_connector_define_acl');
 add_plugin_hook('config_form', 'fedora_connector_config_form');
 add_plugin_hook('config', 'fedora_connector_config');
@@ -179,6 +180,22 @@ function fedora_connector_admin_header($request)
     if ($request->getModuleName() == 'fedora-connector') {
         queue_css('fedora_connector_main');
     }
+
+}
+
+/**
+ * Wire up the routes in routes.ini.
+ *
+ * @param object $router Router passed in by the front controller.
+ *
+ * @return void
+ */
+function fedora_connector_define_routes($router)
+{
+
+    $router->addConfig(new Zend_Config_Ini(BAGIT_PLUGIN_DIRECTORY .
+        DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
+
 
 }
 

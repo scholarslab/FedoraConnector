@@ -54,35 +54,37 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      *
      * @return void
      */
-    public function indexAction()
+    public function serversAction()
     {
-		$db = get_db();
 
-    	$currentPage = $this->_getParam('page', 1);
+        $page = $this->_request->page;
+        $sort_field = $this->_request->getParam('sort_field');
+        $sort_dir = $this->_request->getParam('sort_dir');
+        $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
+        $servers = $this->getTable('FedoraConnector')->getServers($page, $order);
 
-
-        $count = $db
-            ->getTable('FedoraConnector_Server')
-            ->count();
-        $this->view->servers = Fedora_Db_getDataForPage(
-            'FedoraConnector_Server',
-            $currentPage
-        );
-    	$this->view->count = $count;
+        // $count = $db
+        //     ->getTable('FedoraConnector_Server')
+        //     ->count();
+        // $this->view->servers = Fedora_Db_getDataForPage(
+        //     'FedoraConnector_Server',
+        //     $currentPage
+        // );
+        // $this->view->count = $count;
 
         // Now process the pagination
-        $baseUrl = $this->getRequest()->getBaseUrl();
-        $paginationUrl = "$baseUrl/servers/index/";
+        // $baseUrl = $this->getRequest()->getBaseUrl();
+        // $paginationUrl = "$baseUrl/servers/index/";
 
         //Serve up the pagination
-        $pagination = array(
-            'page'          => $currentPage,
-            'per_page'      => 10,
-            'total_results' => $count,
-            'link'          => $paginationUrl
-        );
+        // $pagination = array(
+        //     'page'          => $currentPage,
+        //     'per_page'      => 10,
+        //     'total_results' => $count,
+        //     'link'          => $paginationUrl
+        // );
 
-        Zend_Registry::set('pagination', $pagination);
+        // Zend_Registry::set('pagination', $pagination);
     }
 
     /**

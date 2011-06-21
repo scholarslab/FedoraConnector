@@ -38,8 +38,8 @@
  */
 
 head(array(
-    'title'         => 'Manage Fedora Servers'
-    'bodyclass'     => 'primary'
+    'title'         => 'Manage Fedora Servers',
+    'bodyclass'     => 'primary',
     'content_class' => 'horizontal-nav'
 ));
 ?>
