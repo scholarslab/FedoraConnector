@@ -39,18 +39,13 @@
 
 //include the importers which are stored in separate files
 require_once "Importers.php";
-
-// {{{ constants
-define(
-    'FEDORA_CONNECTOR_PLUGIN_VERSION',
-    get_plugin_ini('FedoraConnector', 'version')
-);
-define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
-// }}}
-
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
 
+// {{{ constants
+define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
+define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
+// }}}
 
 // {{{ plugin_hooks
 add_plugin_hook('install', 'fedora_connector_install');
@@ -68,38 +63,39 @@ add_filter('admin_navigation_main', 'fedora_connector_admin_navigation');
 // }}}
 
 /**
- * This installs the Fedora Connector.
- *
- * This creates a table for datastreams and a table for servers. It inserts a place-holder server. And it sets which datastreams
- * should be omitted by default.
+ * Create tables for datastreams and servers, insert place-holder server,
+ * set which datastreams should be omitted by default.
  *
  * @return void
  */
 function fedora_connector_install()
 {
+
     $db = get_db();
-    $db->query(
-        <<<EOQ
-        CREATE TABLE IF NOT EXISTS `{$db->prefix}fedora_connector_datastreams` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `item_id` int(10) unsigned,
-                `server_id` int(10) unsigned,
-                `pid` tinytext collate utf8_unicode_ci,
-                `datastream` tinytext collate utf8_unicode_ci,
-                `mime_type` tinytext collate utf8_unicode_ci,
-                `metadata_stream` tinytext collate utf8_unicode_ci,
-               PRIMARY KEY  (`id`)
-               ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-        CREATE TABLE IF NOT EXISTS `{$db->prefix}fedora_connector_servers` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `url` tinytext collate utf8_unicode_ci,
-                `name` tinytext collate utf8_unicode_ci,
-                `version` tinytext collate utf8_unicode_ci,
-                `is_default` tinyint(1) unsigned NOT NULL,
-               PRIMARY KEY  (`id`)
-               ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-EOQ
-);
+
+    $db->query("
+        CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
+            `id` int(10) unsigned NOT NULL auto_increment,
+            `item_id` int(10) unsigned,
+            `server_id` int(10) unsigned,
+            `pid` tinytext collate utf8_unicode_ci,
+            `datastream` tinytext collate utf8_unicode_ci,
+            `mime_type` tinytext collate utf8_unicode_ci,
+            `metadata_stream` tinytext collate utf8_unicode_ci,
+            PRIMARY KEY  (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8_unicode_ci
+        ");
+
+    $db->query("
+        CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
+            `id` int(10) unsigned NOT NULL auto_increment,
+            `url` tinytext collate utf8_unicode_ci,
+            `name` tinytext collate utf8_unicode_ci,
+            `version` tinytext collate utf8_unicode_ci,
+            `is_default` tinyint(1) unsigned NOT NULL,
+            PRIMARY KEY  (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8_unicode_ci
+        ");
 
     $db->insert(
         'fedora_connector_servers',
