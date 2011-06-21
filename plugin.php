@@ -39,9 +39,9 @@
  */
 
 //include the importers which are stored in separate files
-require_once "Importers.php";
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
+// require_once "Importers.php";
+// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
+// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
 
 // {{{ constants
 define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
@@ -84,7 +84,7 @@ function fedora_connector_install()
             `mime_type` tinytext collate utf8_unicode_ci,
             `metadata_stream` tinytext collate utf8_unicode_ci,
             PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8_unicode_ci
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
         ");
 
     $db->query("
@@ -95,15 +95,17 @@ function fedora_connector_install()
             `version` tinytext collate utf8_unicode_ci,
             `is_default` tinyint(1) unsigned NOT NULL,
             PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8_unicode_ci
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
         ");
 
-    $db->insert(
-        $db->FedoraConnectorServer,
-        array('url' => 'http://localhost:8080/fedora/',
-              'name' => 'Default Fedora Server',
-              'is_default' => 1)
-    );
+    $db->query("
+        INSERT INTO `$db->FedoraConnectorServer` (url, name, is_default)
+        VALUES (
+            'http://localhost:8080/fedora/',
+            'Default Fedora Server',
+            1
+        )
+        ");
 
     set_option(
         'fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT'
