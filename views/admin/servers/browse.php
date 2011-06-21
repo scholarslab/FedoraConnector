@@ -36,7 +36,7 @@
     <?php endif; ?>
 
     <form method="post" action="<?php echo uri(array('action' => 'create', 'controller' => 'servers')) ?>" accept-charset="utf-8">
-        <?php echo submit(array('name' => 'create_server', 'class' => 'submit submit-medium'), 'Create Server'); ?>
+        <?php echo submit(array('name' => 'create_server'), 'Add Server'); ?>
     </form>
 
 </div>

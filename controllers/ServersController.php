@@ -69,12 +69,13 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     public function browseAction()
     {
 
-        $page = $this->_request->page;
         $sort_field = $this->_request->getParam('sort_field');
         $sort_dir = $this->_request->getParam('sort_dir');
-        $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
-        $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
 
+        $page = $this->_request->page;
+        $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
+
+        $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
         $this->view->servers = $servers;
 
     }
@@ -86,9 +87,56 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function createAction()
     {
-    	$server = array();
-    	$form = $this->_createServerForm($server);
-		$this->view->form = $form;
+
+        $this->view->form = $this->_doServerForm();
+
+        // $server = array();
+        // $form = $this->_createServerForm($server);
+		// $this->view->form = $form;
+
+    }
+
+    /**
+     * This handles the action for creating a server.
+     *
+     * @param $mode 'create' or 'edit.'
+     *
+     * @return void
+     */
+    protected function _doServerForm($mode = 'create')
+    {
+
+        $form = new Zend_Form();
+        $form->setAction('create')->setMethod('post');
+
+        $name = new Zend_Form_Element_Text('name');
+        $name->setRequired(true)
+            ->setLabel('Name:')
+            ->setAttrib('size', 35);
+
+        $url = new Zend_Form_Element_Text('url');
+        $url->setRequired(true)
+            ->setLabel('URL:')
+            ->setAttrib('size', 35);
+
+        $is_def = new Zend_Form_Element_Checkbox('default');
+        $is_def->setLabel('Is this the default server?');
+
+        if ($mode == 'create') {
+            $submit = new Zend_Form_Element_Submit('create_submit');
+            $submit->setLabel('Create');
+        } else {
+            $submit = new Zend_Form_Element_Submit('edit_submit');
+            $submit->setLabel('Save');
+        }
+
+        $form->addElement($name);
+        $form->addElement($url);
+        $form->addElement($is_def);
+        $form->addElement($submit);
+
+        return $form;
+
     }
 
     /**
