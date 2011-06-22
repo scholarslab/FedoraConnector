@@ -57,6 +57,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     public function indexAction()
     {
 
+        // Ping to browse by default.
         $this->_forward('browse', 'servers', 'fedora-connector');
 
     }
@@ -106,9 +107,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $id = $this->_request->id;
         $server = $this->getTable('FedoraConnectorServer')->find($id);
 
+        // Get the form.
         $form = $this->_doServerForm('edit', $id);
 
-
+        // Fill it with the data.
         $form->populate(array(
             'name' => $server->name,
             'url' => $server->url,
@@ -117,7 +119,6 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
         $this->view->form = $form;
         $this->view->server = $server;
-        echo $id;
 
     }
 
@@ -129,9 +130,11 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     public function updateAction()
     {
 
+        // Get the data, instantiate validator.
         $data = $this->_request->getPost();
         $form = $this->_doServerForm();
 
+        // If delete was hit, do the delete.
         if (isset($data['delete_submit'])) {
             if ($this->getTable('FedoraConnectorServer')->deleteServer($data['id'])) {
                 $this->flashSuccess('Server ' . $data['name'] . ' deleted');
@@ -142,8 +145,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             }
         }
 
+        // Are all the fields filled out?
         if ($form->isValid($data)) {
 
+            // If save was hit, do save.
             if (isset($data['edit_submit'])) {
                 if ($this->getTable('FedoraConnectorServer')->saveServer($data)) {
                     $this->flashSuccess('Information for server ' . $data['name'] . ' saved');
@@ -197,19 +202,23 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
             $submit = new Zend_Form_Element_Submit('create_submit');
             $submit->setLabel('Create');
+
             $form->addElement($submit);
             $form->setAction('insert')->setMethod('post');
 
         }
 
-        else if ($mode == 'edit') { 
+        else if ($mode == 'edit') {
 
             $id = new Zend_Form_Element_Hidden('id');
             $id->setValue($server_id);
+
             $submit = new Zend_Form_Element_Submit('edit_submit');
             $submit->setLabel('Save');
+
             $delete = new Zend_Form_Element_Submit('delete_submit');
             $delete->setLabel('Delete');
+
             $form->addElement($id);
             $form->addElement($submit);
             $form->addElement($delete);
