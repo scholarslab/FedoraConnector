@@ -30,54 +30,70 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
- * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
  * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
+
+head(array(
+    'title'         => 'Fedora Datastreams',
+    'bodyclass'     => 'primary',
+    'content_class' => 'horizontal-nav'
+));
 ?>
+<h1>Fedora Datastreams</h1>
+
+<div id="primary">
+    <?php echo flash(); ?>
+    <?php
+        if (!empty($err)) {
+            echo '<p class="error">' . html_escape($err) . '</p>';
+        }
+    ?>
+	<?php if ($count == 0): ?>
+	    <div id="no-items">
+	    <p>There are no datastreams yet.</p>
+	    </div>
+    <?php else: ?>
+    	<?php $db = get_db(); ?>
+		<div class="pagination"><?php echo pagination_links(); ?></div>
+	    <table class="simple" cellspacing="0" cellpadding="0">
+            <thead>
+                <th>PID</th>
+                <th>Item</th>
+                <th>Server</th>
+                <th>Datastream ID</th>
+                <th>Object Metadata</th>
+                <th>Preview</th><th>Delete?</th>
+            </thead>
+            <tbody>
+                <?php foreach($datastreams as $datastream): ?>
+                <tr>
+                    <td><?php echo html_escape($datastream['id']); ?></td>
+                    <td><?php echo html_escape($datastream['pid']); ?></td>
+                    <td><?php
+$item = $db->getTable('Item')->find($datastream['item_id']);
+echo link_to_item(strip_formatting(item('Dublin Core', 'Title', $options, $item)), $props, $action='show', $item); ?>
+                    </td>
+                    <td><?php
+echo link_to_fedora_datastream($datastream['id']); ?></td>
+                    <td><?php
+echo html_escape($datastream['metadata_stream']); ?></td>
+                    <td><?php
+if (strstr($datastream['mime_type'], 'image/')){ echo render_fedora_datastream_preview($datastream); }  ?></td>
+                    <td><?php
+echo "<a href='$deleteUrl?id={$datastream['id']}'>Delete</a>"; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
 
 <?php
-
-/**
- * Table class for datastreams.
- */
-class FedoraConnectorDatastreamTable extends Omeka_Db_Table
-{
-
-    /**
-     * Returns datastreams for the main listing.
-     *
-     * @param string $order The constructed SQL order clause.
-     * @param string $page The page.
-     *
-     * @return object The collections.
-     */
-    public function getDatastreams($page = null, $order = null)
-    {
-
-        $db = get_db();
-        $select = $this->select()
-            ->from(array('d' => $db->prefix . 'fedora_connector_datastreams'))
-            ->joinLeft(array('s' => $db->prefix . 'fedora_connector_servers'), 'd.server_id = s.id')
-            ->columns(array('server_name' => 's.name', 'parent_item' =>
-                "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50)"));
-
-        if (isset($page)) {
-            $select->limitPage($page, get_option('per_page_admin'));
-        }
-        if (isset($order)) {
-            $select->order($order);
-        }
-
-        return $this->fetchObjects($select);
-
-    }
-
-}
-
+    foot();
 
 /*
  * Local variables:

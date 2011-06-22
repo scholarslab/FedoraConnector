@@ -50,15 +50,16 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 {
 
     /**
-     * This controls creating the main page for the datastream item.
+     * Redirect by default to browse action.
      *
      * @return void
      */
-    public function indexAction(){
-        $item_id = $this->_getParam('id');
-        $form = $this->_getPidForm($item_id);
-        $this->view->id = $item_id;
-        $this->view->form = $form;
+    public function indexAction()
+    {
+
+        // Ping to browse by default.
+        $this->_forward('browse', 'datastreams', 'fedora-connector');
+
     }
 
     /**
@@ -68,35 +69,20 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function browseAction()
     {
-        $db = get_db();
 
-        $deleteUrl = WEB_ROOT . '/admin/fedora-connector/datastreams/delete/';
-        $currentPage = $this->_getParam('page', 1);
-        $count = $db
-            ->getTable('FedoraConnector_Datastream')
-            ->count();
+        $sort_field = $this->_request->getParam('sort_field');
+        $sort_dir = $this->_request->getParam('sort_dir');
 
-        $this->view->datastreams = Fedora_Db_getDataForPage(
-            'FedoraConnector_Datastream',
-            $currentPage
-        );
-        $this->view->count = $count;
-        $this->view->deleteUrl = $deleteUrl;
+        // Get the datastreams.
+        $page = $this->_request->page;
+        $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
+        $datastreams = $this->getTable('FedoraConnectorDatastream')->getDatastreams($page, $order);
 
-        // Pagination.
-        $baseUrl = $this
-            ->getRequest()
-            ->getBaseUrl();
-        $paginationUrl = $baseUrl . '/datastreams/browse/';
+        $this->view->datastreams = $datastreams;
+        $this->view->current_page = $page;
+        $this->view->total_results = $this->getTable('FedoraConnectorDatastream')->count();
+        $this->view->results_per_page = get_option('per_page_admin');
 
-        $pagination = array(
-            'page'          => $currentPage,
-            'per_page'      => 10,
-            'total_results' => $count,
-            'link'          => $paginationUrl
-        );
-
-        Zend_Registry::set('pagination', $pagination);
     }
 
     /**

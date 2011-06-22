@@ -50,7 +50,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 {
 
     /**
-     * Redirect by default to servers action.
+     * Redirect by default to browse action.
      *
      * @return void
      */

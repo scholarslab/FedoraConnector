@@ -56,7 +56,7 @@ function fedora_connector_pid_form($item)
 
     $db = get_db();
     $datastreams = $db
-        ->getTable('FedoraConnector_Datastream')
+        ->getTable('FedoraConnectorDatastream')
         ->findBySql('item_id = ?', array($item->id));
 
     /* XXX: I don't know what this block does. This function is only called 

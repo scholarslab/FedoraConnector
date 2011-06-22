@@ -51,7 +51,7 @@ define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
 // require_once "Importers.php";
 // require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
-// require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
 // }}}
 
 // {{{ plugin_hooks
@@ -293,7 +293,8 @@ function fedora_connector_item_form_tabs($tabs)
    // $tabs = $ttabs;
    // return $tabs;
 
-    $tabs['Fedora Datastreams'] = ' ';
+    $item = get_current_item();
+    $tabs['Fedora Datastreams'] = fedora_connector_pid_form($item);
     return $tabs;
 }
 

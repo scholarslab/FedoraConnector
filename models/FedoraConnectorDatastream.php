@@ -47,6 +47,13 @@
 class FedoraConnectorDatastream extends Omeka_record
 {
 
+    public $item_id;
+    public $server_id;
+    public $pid;
+    public $datastream;
+    public $mime_type;
+    public $metadata_stream;
+
 }
 
 
