@@ -105,7 +105,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
         $id = $this->_request->id;
         $server = $this->getTable('FedoraConnectorServer')->find($id);
+
         $form = $this->_doServerForm('edit');
+
+
         $form->populate(array(
             'name' => $server->name,
             'url' => $server->url,
@@ -121,6 +124,18 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     /**
      * This handles the action for creating a server.
      *
+     * @return void
+     */
+    public function updateAction()
+    {
+
+
+
+    }
+
+    /**
+     * This handles the action for creating a server.
+     *
      * @param $mode 'create' or 'edit.'
      *
      * @return void
@@ -129,7 +144,6 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     {
 
         $form = new Zend_Form();
-        $form->setAction('create')->setMethod('post');
 
         $name = new Zend_Form_Element_Text('name');
         $name->setRequired(true)
@@ -144,18 +158,26 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $is_def = new Zend_Form_Element_Checkbox('is_default');
         $is_def->setLabel('Is this the default server?');
 
-        if ($mode == 'create') {
-            $submit = new Zend_Form_Element_Submit('create_submit');
-            $submit->setLabel('Create');
-        } else if ($mode == 'edit') {
-            $submit = new Zend_Form_Element_Submit('edit_submit');
-            $submit->setLabel('Save');
-        }
-
         $form->addElement($name);
         $form->addElement($url);
         $form->addElement($is_def);
-        $form->addElement($submit);
+
+        if ($mode == 'create') {
+            $submit = new Zend_Form_Element_Submit('create_submit');
+            $submit->setLabel('Create');
+            $form->addElement($submit);
+            $form->setAction('insert')->setMethod('post');
+        }
+
+        else if ($mode == 'edit') { 
+            $submit = new Zend_Form_Element_Submit('edit_submit');
+            $submit->setLabel('Save');
+            $delete = new Zend_Form_Element_Submit('delete_submit');
+            $delete->setLabel('Delete');
+            $form->addElement($submit);
+            $form->addElement($delete);
+            $form->setAction('update')->setMethod('post');
+        }
 
         return $form;
 
@@ -237,22 +259,22 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      *
      * @return void
      */
-    public function updateAction()
-    {
-        $form = $this->_createServerForm($server);
+    // public function updateAction()
+    // {
+    //     $form = $this->_createServerForm($server);
 
-        if ($_POST) {
-            if ($form->isValid($this->_request->getPost())) {
-                $this->_updateServer($form->getValues());
-            } else {
-                $this->flashError('URL and server name are required.');
-                $this->view->form = $form;
-            }
-        } else {
-            $this->flashError('Failed to gather posted data.');
-            $this->view->form = $form;
-        }
-    }
+    //     if ($_POST) {
+    //         if ($form->isValid($this->_request->getPost())) {
+    //             $this->_updateServer($form->getValues());
+    //         } else {
+    //             $this->flashError('URL and server name are required.');
+    //             $this->view->form = $form;
+    //         }
+    //     } else {
+    //         $this->flashError('Failed to gather posted data.');
+    //         $this->view->form = $form;
+    //     }
+    // }
 
     /**
      * This takes the uploaded form data and either creates or updates a 

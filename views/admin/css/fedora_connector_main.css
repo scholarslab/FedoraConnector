@@ -1,7 +1,26 @@
-.zend_form>dd{
-	margin-bottom:20px;
+.zend_form dd {
+	margin-bottom: 20px;
 }
-.fedora-preview{
-	max-width:120px;
-	max-height:120px;	
+
+.fedora-preview {
+	max-width: 120px;
+	max-height: 120px;	
+}
+
+#edit_submit-element, #delete_submit-element {
+    display: inline;
+}
+
+#edit_submit-element input, #delete_submit-element input {
+    clear: none;
+    margin-left: 10px;
+}
+
+#delete_submit-element input {
+    background-color: #800;
+    border: 1px solid #800;
+}
+
+#delete_submit-label, #edit_submit-label {
+    display: none;
 }
