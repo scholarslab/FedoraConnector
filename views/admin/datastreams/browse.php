@@ -14,11 +14,11 @@
                 <thead>
                     <tr>
                         <?php browse_headings(array(
-                            'PID' => null,
-                            'Item' => 'item',
-                            'Server' => 'server',
+                            'PID' => 'pid',
+                            'Item' => 'parent_item',
+                            'Server' => 'server_name',
                             'Datastream' => 'datastream',
-                            'Object Metadata' => null
+                            'Object Metadata' => 'metadata_stream'
                         )); ?>
                     </tr>
                 </thead>
@@ -26,8 +26,8 @@
                     <?php foreach ($datastreams as $datastream): ?>
                         <tr>
                             <td><?php echo $datastream->pid; ?></td>
-                            <td><?php echo $datastream->parent_item; ?></td>
-                            <td><?php echo $datastream->server_name; ?></td>
+                            <td><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo $datastream->parent_item; ?></a></td>
+                            <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $datastream->server_id); ?>"><?php echo $datastream->server_name; ?></a></td>
                             <td><?php echo $datastream->datastream; ?></td>
                             <td><?php echo $datastream->metadata_stream; ?></td>
                         </tr>
