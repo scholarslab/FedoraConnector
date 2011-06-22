@@ -84,7 +84,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     }
 
     /**
-     * This handles the action for creating a server.
+     * Show form to add new server.
      *
      * @return void
      */
@@ -96,7 +96,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     }
 
     /**
-     * This handles the action for creating a server.
+     * Show form to edit existing server.
      *
      * @return void
      */
@@ -106,7 +106,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $id = $this->_request->id;
         $server = $this->getTable('FedoraConnectorServer')->find($id);
 
-        $form = $this->_doServerForm('edit');
+        $form = $this->_doServerForm('edit', $id);
 
 
         $form->populate(array(
@@ -122,25 +122,56 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     }
 
     /**
-     * This handles the action for creating a server.
+     * Process edit form - delete or save.
      *
      * @return void
      */
     public function updateAction()
     {
 
+        $data = $this->_request->getPost();
+        $form = $this->_doServerForm();
 
+        if (isset($data['delete_submit'])) {
+            if ($this->getTable('FedoraConnectorServer')->deleteServer($data['id'])) {
+                $this->flashSuccess('Server ' . $data['name'] . ' deleted');
+                $this->redirect->goto('browse');
+            } else {
+                $this->flashError('Error: Server ' . $data['name'] . ' was not deleted');
+                $this->redirect->goto('browse');
+            }
+        }
+
+        if ($form->isValid($data)) {
+
+            if (isset($data['edit_submit'])) {
+                if ($this->getTable('FedoraConnectorServer')->saveServer($data)) {
+                    $this->flashSuccess('Information for server ' . $data['name'] . ' saved');
+                    $this->redirect->goto('browse');
+                } else {
+                    $this->flashError('Error: Information for server ' . $data['name'] . ' not saved');
+                    $this->redirect->goto('browse');
+                }
+            }
+
+        }
+
+        else {
+            $this->flashError('The server must have a name and a URL.');
+            $this->_redirect('fedora-connector/servers/edit/' . $data['id']);
+        }
 
     }
 
     /**
-     * This handles the action for creating a server.
+     * Build the form for server add/edit.
      *
      * @param $mode 'create' or 'edit.'
+     * @param $server_id The id of the server for hidden input in edit case.
      *
      * @return void
      */
-    protected function _doServerForm($mode = 'create')
+    protected function _doServerForm($mode = 'create', $server_id = null)
     {
 
         $form = new Zend_Form();
@@ -163,20 +194,27 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $form->addElement($is_def);
 
         if ($mode == 'create') {
+
             $submit = new Zend_Form_Element_Submit('create_submit');
             $submit->setLabel('Create');
             $form->addElement($submit);
             $form->setAction('insert')->setMethod('post');
+
         }
 
         else if ($mode == 'edit') { 
+
+            $id = new Zend_Form_Element_Hidden('id');
+            $id->setValue($server_id);
             $submit = new Zend_Form_Element_Submit('edit_submit');
             $submit->setLabel('Save');
             $delete = new Zend_Form_Element_Submit('delete_submit');
             $delete->setLabel('Delete');
+            $form->addElement($id);
             $form->addElement($submit);
             $form->addElement($delete);
             $form->setAction('update')->setMethod('post');
+
         }
 
         return $form;

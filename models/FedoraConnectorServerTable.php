@@ -69,6 +69,46 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
     }
 
+    /**
+     * Delete server by id.
+     *
+     * @param string $id The id of the server to delete.
+     *
+     * @return boolean True if delete succeeds.
+     */
+    public function deleteServer($id)
+    {
+
+        $server = $this->find($id);
+        return $server->delete() ? true : false;
+
+    }
+
+    /**
+     * Save server information.
+     *
+     * @param array $data The field data posted from the form.
+     *
+     * @return boolean True if save succeeds.
+     */
+    public function saveServer($data)
+    {
+
+        $server = $this->find($data['id']);
+
+        $server->name = $data['name'];
+        $server->url = $data['url'];
+
+        if ($data['is_default'] == 1 && $server->is_default == 0) {
+            $old_default = $this->findBySql('is_default = 1');
+            $old_default->is_default = 0;
+            $old_default->save();
+            $server->is_default = 1;
+        }
+
+        return $server->save() ? true : false;
+
+    }
 
 }
 
