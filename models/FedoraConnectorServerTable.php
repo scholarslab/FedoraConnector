@@ -80,7 +80,8 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
     {
 
         $server = $this->find($id);
-        return $server->delete() ? true : false;
+        $server->delete();
+        return true;
 
     }
 
@@ -98,13 +99,28 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
         $server->name = $data['name'];
         $server->url = $data['url'];
+        $server->is_default = $data['is_default'];
+        // Need to add processing here to make sure
+        // only 1 server is default?
 
-        if ($data['is_default'] == 1 && $server->is_default == 0) {
-            $old_default = $this->findBySql('is_default = 1');
-            $old_default->is_default = 0;
-            $old_default->save();
-            $server->is_default = 1;
-        }
+        return $server->save() ? true : false;
+
+    }
+
+    /**
+     * Create a new server.
+     *
+     * @param array $data The field data posted from the form.
+     *
+     * @return boolean True if insert succeeds.
+     */
+    public function createServer($data)
+    {
+
+        $server = new FedoraConnectorServer;
+        $server->name = $data['name'];
+        $server->url = $data['url'];
+        $server->is_default = $data['is_default'];
 
         return $server->save() ? true : false;
 

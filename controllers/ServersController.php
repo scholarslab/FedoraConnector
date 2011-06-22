@@ -73,6 +73,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $sort_field = $this->_request->getParam('sort_field');
         $sort_dir = $this->_request->getParam('sort_dir');
 
+        // Get the servers.
         $page = $this->_request->page;
         $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
         $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
@@ -136,13 +137,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
         // If delete was hit, do the delete.
         if (isset($data['delete_submit'])) {
-            if ($this->getTable('FedoraConnectorServer')->deleteServer($data['id'])) {
-                $this->flashSuccess('Server ' . $data['name'] . ' deleted');
-                $this->redirect->goto('browse');
-            } else {
-                $this->flashError('Error: Server ' . $data['name'] . ' was not deleted');
-                $this->redirect->goto('browse');
-            }
+            $this->_redirect('fedora-connector/servers/delete/' . $data['id']);
         }
 
         // Are all the fields filled out?
@@ -150,6 +145,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
             // If save was hit, do save.
             if (isset($data['edit_submit'])) {
+
                 if ($this->getTable('FedoraConnectorServer')->saveServer($data)) {
                     $this->flashSuccess('Information for server ' . $data['name'] . ' saved');
                     $this->redirect->goto('browse');
@@ -157,6 +153,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
                     $this->flashError('Error: Information for server ' . $data['name'] . ' not saved');
                     $this->redirect->goto('browse');
                 }
+
             }
 
         }
@@ -165,6 +162,62 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             $this->flashError('The server must have a name and a URL.');
             $this->_redirect('fedora-connector/servers/edit/' . $data['id']);
         }
+
+    }
+
+    /**
+     * Add new server.
+     *
+     * @return void
+     */
+    public function insertAction()
+    {
+
+        // Get the data, instantiate validator.
+        $data = $this->_request->getPost();
+        $form = $this->_doServerForm();
+
+        // Are all the fields filled out?
+        if ($form->isValid($data)) {
+
+            // Create server, process success.
+            if ($this->getTable('FedoraConnectorServer')->createServer($data)) {
+                $this->flashSuccess('Server created.');
+                $this->redirect->goto('browse');
+            } else {
+                $this->flashError('Error: The server was not created');
+                $this->redirect->goto('browse');
+            }
+
+        }
+
+    }
+
+    /**
+     * Confirm delete, do delete.
+     *
+     * @return void
+     */
+    public function deleteAction()
+    {
+
+        $id = $this->_request->id;
+        $server = $this->getTable('FedoraConnectorServer')->find($id);
+        $post = $this->_request->getPost();
+
+        if (isset($post['deleteconfirm_submit'])) {
+
+            if ($this->getTable('FedoraConnectorServer')->deleteServer($id)) {
+                $this->flashSuccess('Server ' . $server->name . ' deleted');
+                $this->redirect->goto('browse');
+            } else {
+                $this->flashError('Error: Server ' . $server->name . ' was not deleted');
+                $this->redirect->goto('browse');
+            }
+
+        }
+
+        $this->view->name = $server->name;
 
     }
 
@@ -256,22 +309,22 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      *
      * @return void
      */
-    public function deleteAction()
-    {
-        if ($user = $this->getCurrentUser()) {
-			$db = get_db();
+    // public function deleteAction()
+    // {
+    //     if ($user = $this->getCurrentUser()) {
+	//         $db = get_db();
 
-            $server = $this->_getFormServer($db);
+    //         $server = $this->_getFormServer($db);
 
-			$server->delete();
+	//         $server->delete();
 
-			$this->flashSuccess('The server was successfully deleted!');
-			$this->redirect->goto('index');
+	//         $this->flashSuccess('The server was successfully deleted!');
+	//         $this->redirect->goto('index');
 
-        } else {
-            $this->_forward('forbidden');
-        }
-    }
+    //     } else {
+    //         $this->_forward('forbidden');
+    //     }
+    // }
 
     /**
      * This retrieves a server, taking it's ID from a form parameter.

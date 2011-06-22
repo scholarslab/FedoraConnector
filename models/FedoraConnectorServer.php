@@ -47,6 +47,10 @@
 class FedoraConnectorServer extends Omeka_record
 {
 
+    public $name;
+    public $url;
+    public $is_default;
+
 }
 
 
