@@ -96,14 +96,33 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
     {
 
         $server = $this->find($data['id']);
-
         $server->name = $data['name'];
         $server->url = $data['url'];
+
+        // If server is set to default and it wasn't before, find
+        // the old default and unset it.
+        if ($data['is_default'] == 1 && $server->is_default == 0) {
+            $this->unsetDefault();
+        }
+
         $server->is_default = $data['is_default'];
-        // Need to add processing here to make sure
-        // only 1 server is default?
 
         return $server->save() ? true : false;
+
+    }
+
+    /**
+     * Unset default server.
+     *
+     * @return void.
+     */
+    public function unsetDefault()
+    {
+
+        $select = $this->getSelect()->where('is_default = 1');
+        $old_default_server = $this->fetchObject($select);
+        $old_default_server->is_default = 0;
+        $old_default_server->save();
 
     }
 

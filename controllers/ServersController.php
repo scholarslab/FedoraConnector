@@ -138,6 +138,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         // If delete was hit, do the delete.
         if (isset($data['delete_submit'])) {
             $this->_redirect('fedora-connector/servers/delete/' . $data['id']);
+            exit();
         }
 
         // Are all the fields filled out?

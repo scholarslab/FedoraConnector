@@ -19,7 +19,7 @@
                             'Name' => 'name',
                             'URL' => 'url',
                             'Version' => 'version',
-                            'Default?' => null
+                            'Default?' => 'is_default'
                         )); ?>
                     </tr>
                 </thead>
