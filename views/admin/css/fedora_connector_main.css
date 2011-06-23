@@ -28,3 +28,20 @@
 .add-button {
     margin-top: 1em;
 }
+
+.fedora-inline-button {
+    font-size: 0.9em;
+    margin: 0 !important;
+    border: none !important;
+}
+
+form.fedora-inline-form {
+    margin: 0 0.6em 0 0;
+    padding: 0;
+    float: left;
+}
+
+.fedora-delete {
+    background-color: #800 !important;
+    border-color: #800 !important;
+}
