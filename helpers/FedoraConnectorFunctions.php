@@ -60,3 +60,48 @@ function fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir)
     return (isset($sort_field)) ? trim(implode(' ', array($sort_field, $sort_dir))) : '';
 
 }
+
+/**
+ * Return nodes by file and xpath query.
+ *
+ * @param string $uri The uri of the document.
+ * @param string $xpath The XPath query.
+ *
+ * @return object The matching nodes.
+ */
+function fedorahelpers_getQueryNodes($uri, $xpath)
+{
+
+    $xml = new DomDocument();
+    $xml->load($uri);
+    $query = new DOMXPath($xml);
+    return $query->query($xpath);
+
+}
+
+/**
+ * Same as getQueryNodes, but pulls out single result.
+ *
+ * @param string $uri The uri of the document.
+ * @param string $xpath The XPath query.
+ *
+ * @return object The matching node.
+ */
+function fedorahelpers_getQueryNode($uri, $xpath)
+{
+
+    $xml = new DomDocument();
+    $xml->load($uri);
+    $query = new DOMXPath($xml);
+    $nodes = $query->query($xpath);
+
+    $node = null;
+    foreach ($nodes as $n) {
+        $node = $n->nodeValue;
+    }
+
+    return $node;
+
+
+
+}

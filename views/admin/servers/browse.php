@@ -18,6 +18,7 @@
                         <?php browse_headings(array(
                             'Name' => 'name',
                             'URL' => 'url',
+                            'Status' => null,
                             'Version' => 'version',
                             'Default?' => 'is_default'
                         )); ?>
@@ -28,7 +29,23 @@
                         <tr>
                             <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
                             <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
-                            <td><?php echo ($server->version != null) ? $server->version : '<span style="font-size: 0.8em; color: gray;">[not available]</span>'; ?></td>
+                            <td>
+                            <?php
+                                if ($server->isOnline()) {
+                                    echo '<span style="font-size: 0.8em; color: green;">Online</span>';
+                                } else {
+                                    echo '<span style="font-size: 0.8em; color: red;">Offline</span>';
+                                }
+                            ?>
+                            </td>
+                            <td>
+                            <?php
+                                if ($server->isOnline()) {
+                                    echo $server->getVersion();
+                                } else {
+                                    echo '<span style="font-size: 0.8em; color: gray;">[not available]</span>';
+                                }
+                            ?></td>
                             <td><?php if ($server->is_default) { echo 'Yes'; } ?></td>
                         </tr>
                     <?php endforeach; ?>

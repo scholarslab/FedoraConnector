@@ -51,6 +51,33 @@ class FedoraConnectorServer extends Omeka_record
     public $url;
     public $is_default;
 
+    /**
+     * Retrieve the server version.
+     *
+     * @return string The version.
+     */
+    public function getVersion()
+    {
+
+        return fedorahelpers_getQueryNode(
+            "{$this->url}describe?xml=true",
+            "//*[local-name() = 'repositoryVersion']"
+        );
+
+    }
+
+    /**
+     * Test to see if server is online.
+     *
+     * @return boolean True if online.
+     */
+    public function isOnline()
+    {
+
+        return ($this->getVersion() != '') ? true : false;
+
+    }
+
 }
 
 
