@@ -24,3 +24,7 @@
 #delete_submit-label, #edit_submit-label {
     display: none;
 }
+
+.add-button {
+    margin-top: 1em;
+}

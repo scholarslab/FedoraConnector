@@ -2,6 +2,8 @@
 
 <div id="primary">
 
+    <p id="add-item" class="add-button"><a class="add" href="<?php echo html_escape(uri('fedora-connector/servers/create')); ?>">Add a Server</a></p>
+
     <?php echo flash(); ?>
 
     <?php if (count($servers) == 0): ?>
@@ -35,20 +37,16 @@
 
     <?php endif; ?>
 
-          <div class="pagination">
+    <div class="pagination">
 
-              <?php echo pagination_links(array('scrolling_style' => 'All', 
-              'page_range' => '5',
-              'partial_file' => 'common/pagination_control.php',
-              'page' => $current_page,
-              'per_page' => $results_per_page,
-              'total_results' => $total_results)); ?>
+      <?php echo pagination_links(array('scrolling_style' => 'All', 
+      'page_range' => '5',
+      'partial_file' => 'common/pagination_control.php',
+      'page' => $current_page,
+      'per_page' => $results_per_page,
+      'total_results' => $total_results)); ?>
 
-          </div>
-
-    <form method="post" action="<?php echo uri('fedora-connector/servers/create') ?>" accept-charset="utf-8">
-        <?php echo submit(array('name' => 'create_server'), 'Add Server'); ?>
-    </form>
+    </div>
 
 </div>
 
