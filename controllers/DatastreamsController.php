@@ -116,6 +116,155 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
+     * This retrieves and renders a set of datastream records.
+     *
+     * @return void
+     */
+    public function itemselectAction()
+    {
+
+        $sort_field = $this->_request->getParam('sort_field');
+        $sort_dir = $this->_request->getParam('sort_dir');
+        $search = $this->_request->getParam('search');
+
+        // // Get the datastreams.
+        $page = $this->_request->page;
+        $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
+        $items = fedorahelpers_getItems($page, $order, $search);
+
+        $this->view->items = $items;
+        $this->view->current_page = $page;
+        $this->view->total_results = $this->getTable('Item')->count();
+        $this->view->results_per_page = get_option('per_page_admin');
+        $this->view->search = $search;
+
+    }
+
+    /**
+     * This retrieves and renders a set of datastream records.
+     *
+     * @return void
+     */
+    public function getpidAction()
+    {
+
+        $item_id = $this->_request->id;
+        $this->view->form = $this->_doPidForm($item_id);
+
+    }
+
+    /**
+     * This retrieves and renders a set of datastream records.
+     *
+     * @return void
+     */
+    public function getdatastreamsAction()
+    {
+
+        $post = $this->_request->getPost();
+        $this->view->form = $this->_doDatastreamsForm($item_id);
+
+    }
+
+    /**
+     * Build the upload form.
+     *
+     * @param string $tmp The location of the temporary directory
+     * where the tar files should be stored.
+     *
+     * @return object $form The upload form.
+     */
+    protected function _doPidForm($item_id) {
+
+        $form = new Zend_Form();
+        $form->setAction('datastreams')
+            ->setMethod('post');
+
+        $servers = $this->getTable('FedoraConnectorServer')->findAll();
+        $serverSelect = new Zend_Form_Element_Select('server');
+
+        foreach ($servers as $server) {
+            $serverSelect->addMultiOption($server->id, $server->name);
+            if ($server->is_default == 1) {
+                $default = $server->id;
+            }
+        }
+
+        $serverSelect->setValue($default);
+
+        $pid = new Zend_Form_Element_Text('pid');
+        $pid->setLabel('PID:')
+            ->setRequired(true);
+
+        $id = new Zend_Form_Element_Hidden('item_id');
+        $id->setValue($item_id);
+
+        $submit = new Zend_Form_Element_Submit('pid_submit');
+        $submit->setLabel('Continue');
+
+        $form->addElement($serverSelect);
+        $form->addElement($pid);
+        $form->addElement($id);
+        $form->addElement($submit);
+
+        return $form;
+
+      }
+
+    /**
+     * Build the upload form.
+     *
+     * @param string $tmp The location of the temporary directory
+     * where the tar files should be stored.
+     *
+     * @return object $form The upload form.
+     */
+    protected function _doDatastreamsForm($item_id) {
+
+        $form = new Zend_Form();
+        $form->setAction('datastreams')
+            ->setMethod('post');
+
+        $servers = $this->getTable('FedoraConnectorServer')->findAll();
+        $serverSelect = new Zend_Form_Element_Select('server');
+
+        foreach ($servers as $server) {
+            $serverSelect->addMultiOption($server->id, $server->name);
+            if ($server->is_default == 1) {
+                $default = $server->id;
+            }
+        }
+
+        $serverSelect->setValue($default);
+
+        $pid = new Zend_Form_Element_Text('pid');
+        $pid->setLabel('PID:')
+            ->setRequired(true);
+
+        $id = new Zend_Form_Element_Hidden('item_id');
+        $id->setValue($item_id);
+
+        $submit = new Zend_Form_Element_Submit('pid_submit');
+        $submit->setLabel('Continue');
+
+        $form->addElement($serverSelect);
+        $form->addElement($pid);
+        $form->addElement($id);
+        $form->addElement($submit);
+
+        return $form;
+
+      }
+
+
+
+
+
+
+
+
+
+    /**
      * This retrieves and renders a set of datastream
      *
      * @return void

@@ -21,8 +21,12 @@
     border: 1px solid #800;
 }
 
-#delete_submit-label, #edit_submit-label {
+#delete_submit-label, #edit_submit-label, #item_id-label, #pid_submit-label {
     display: none;
+}
+
+#pid-label label {
+    width: 50px;
 }
 
 .add-button {
@@ -44,4 +48,13 @@ form.fedora-inline-form {
 .fedora-delete {
     background-color: #800 !important;
     border-color: #800 !important;
+}
+
+.fedora-reset-link {
+    float: right;
+}
+
+h2.fedora-select-item {
+    margin-left: 8px; 
+    float: left;
 }
