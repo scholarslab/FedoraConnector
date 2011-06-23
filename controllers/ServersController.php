@@ -147,11 +147,15 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             if (isset($data['edit_submit'])) {
 
                 if ($this->getTable('FedoraConnectorServer')->saveServer($data)) {
+
                     $this->flashSuccess('Information for server ' . $data['name'] . ' saved');
                     $this->redirect->goto('browse');
+
                 } else {
+
                     $this->flashError('Error: Information for server ' . $data['name'] . ' not saved');
                     $this->redirect->goto('browse');
+
                 }
 
             }
@@ -159,8 +163,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         }
 
         else {
+
             $this->flashError('The server must have a name and a URL.');
             $this->_redirect('fedora-connector/servers/edit/' . $data['id']);
+
         }
 
     }
@@ -284,99 +290,6 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     }
 
     /**
-     * This handles editing a server.
-     *
-     * @return void
-     */
-    // public function editAction()
-    // {
-	//     $db = get_db();
-
-    //     $count = $db
-    //         ->getTable('FedoraConnector_Server')
-    //         ->count();
-
-    //     $server = $this->_getFormServer($db);
-	//     $form = $this->_createServerForm($server);
-
-	//     $this->view->count = $count;
-	//     $this->view->id = $server->id;
-	//     $this->view->form = $form;
-    // }
-
-    /**
-     * This handles deleting a server.
-     *
-     * @return void
-     */
-    // public function deleteAction()
-    // {
-    //     if ($user = $this->getCurrentUser()) {
-	//         $db = get_db();
-
-    //         $server = $this->_getFormServer($db);
-
-	//         $server->delete();
-
-	//         $this->flashSuccess('The server was successfully deleted!');
-	//         $this->redirect->goto('index');
-
-    //     } else {
-    //         $this->_forward('forbidden');
-    //     }
-    // }
-
-    /**
-     * This retrieves a server, taking it's ID from a form parameter.
-     *
-     * @param Omeka_Db $db  The database to get the server from. This defaults 
-     * to null.
-     * @param string   $key The form parameter to get the server ID from. This 
-     * defaults to 'id'.
-     *
-     * @return Omeka_Record The record for the server or null.
-     */
-    private function _getFormServer($db=null, $key='id') {
-        // XXX -> libraries/FedoraConnector/Viewer/Server.php
-        if ($db === null) {
-            $db = get_db();
-        }
-
-        $id = $this->_getParam($key);
-        if ($id === null) {
-            return null;
-        }
-
-        $server = $db
-            ->getTable('FedoraConnector_Server')
-            ->find($id);
-
-        return $server;
-    }
-
-    /**
-     * This handles updating the form.
-     *
-     * @return void
-     */
-    // public function updateAction()
-    // {
-    //     $form = $this->_createServerForm($server);
-
-    //     if ($_POST) {
-    //         if ($form->isValid($this->_request->getPost())) {
-    //             $this->_updateServer($form->getValues());
-    //         } else {
-    //             $this->flashError('URL and server name are required.');
-    //             $this->view->form = $form;
-    //         }
-    //     } else {
-    //         $this->flashError('Failed to gather posted data.');
-    //         $this->view->form = $form;
-    //     }
-    // }
-
-    /**
      * This takes the uploaded form data and either creates or updates a 
      * server.
      *
@@ -466,54 +379,6 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             );
     }
 
-    /**
-     * This creates a server form.
-     *
-     * @param Omeka_Record $server The server to create the form for.
-     *
-     * @return Zend_Form The form for the server.
-     */
-    private function _createServerForm($server) {
-        // XXX -> libraries/FedoraConnector/Viewer/Server.php
-        $hasServer = ($server !== null);
-
-        $form = Fedora_initForm('update', 'post', 'multipart/form-data');
-
-        Fedora_Form_addText(
-            $form,
-            'url',
-            'URL:',
-            ($hasServer) ? $server->url : null,
-            true
-        );
-        Fedora_Form_addText(
-            $form,
-            'name',
-            'Name:',
-            ($hasServer) ? $server->name : null,
-            true
-        );
-        Fedora_Form_addCheckbox(
-            $form,
-            'is_default',
-            'Is Default Server:',
-            ($hasServer) ? $server->is_default : null
-        );
-        Fedora_Form_addHidden(
-            $form,
-            'id',
-            ($hasServer) ? $server->id : null
-        );
-        Fedora_Form_addHidden(
-            $form,
-            'method',
-            ($hasServer) ? 'update' : 'create'
-        );
-
-        Fedora_Form_addSubmit($form);
-
-	    return $form;
-    }
 }
 
 /*
