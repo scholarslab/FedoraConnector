@@ -86,6 +86,36 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
+     * This retrieves and renders a set of datastream records.
+     *
+     * @return void
+     */
+    public function deleteAction()
+    {
+
+        $id = $this->_request->id;
+        $datastream = $this->getTable('FedoraConnectorDatastream')->find($id);
+
+        // If delete confirmed, do delete.
+        if ($this->_request->getParam('confirm') == 'true') {
+
+            $datastream->delete();
+
+            $this->flashError('Datastream deleted.');
+            $this->_redirect('fedora-connector/datastreams');
+            exit();
+
+        }
+
+        else {
+
+            $this->view->datastream = $datastream;
+
+        }
+
+    }
+
+    /**
      * This retrieves and renders a set of datastream
      *
      * @return void
@@ -291,24 +321,24 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return void
      */
-    public function deleteAction()
-    {
-        if ($user = $this->getCurrentUser()) {
-            $datastreamId = $this->_getParam('id');
-            $datastream = get_db()
-                ->getTable('FedoraConnector_Datastream')
-                ->find($datastreamId);
-            $item_id = $datastream->item_id;
+    // public function deleteAction()
+    // {
+    //     if ($user = $this->getCurrentUser()) {
+    //         $datastreamId = $this->_getParam('id');
+    //         $datastream = get_db()
+    //             ->getTable('FedoraConnector_Datastream')
+    //             ->find($datastreamId);
+    //         $item_id = $datastream->item_id;
 
-            $datastream->delete();
+    //         $datastream->delete();
 
-            $this->flashSuccess('Fedora datastream successfully deleted.');
-            $this->_helper->redirector->goto($item_id, 'edit', 'items');
+    //         $this->flashSuccess('Fedora datastream successfully deleted.');
+    //         $this->_helper->redirector->goto($item_id, 'edit', 'items');
 
-        } else{
-            $this->_forward('forbidden');
-        }
-    }
+    //     } else{
+    //         $this->_forward('forbidden');
+    //     }
+    // }
 
     /**
      * This imports an item's metadata.
