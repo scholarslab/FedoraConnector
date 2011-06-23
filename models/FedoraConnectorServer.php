@@ -78,6 +78,23 @@ class FedoraConnectorServer extends Omeka_record
 
     }
 
+    /**
+     * Retrieve datastream nodes.
+     *
+     * @param $pid The pid to hit.
+     *
+     * @return array The nodes.
+     */
+    public function getDatastreamNodes($pid)
+    {
+
+        return fedorahelpers_getQueryNodes(
+            "{$this->url}objects/$pid/datastreams?format=xml",
+            "//*[local-name() = 'datastream']"
+        );
+
+    }
+
 }
 
 

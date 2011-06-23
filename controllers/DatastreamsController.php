@@ -150,6 +150,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         $item_id = $this->_request->id;
         $this->view->form = $this->_doPidForm($item_id);
+        $this->view->item = $this->getTable('Item')->find($item_id);
 
     }
 
@@ -162,7 +163,8 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     {
 
         $post = $this->_request->getPost();
-        $this->view->form = $this->_doDatastreamsForm($item_id);
+        $this->view->form = $this->_doDatastreamsForm(
+            $post['item_id'], $post['pid'], $post['server_id']);
 
     }
 
@@ -181,7 +183,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
             ->setMethod('post');
 
         $servers = $this->getTable('FedoraConnectorServer')->findAll();
-        $serverSelect = new Zend_Form_Element_Select('server');
+        $serverSelect = new Zend_Form_Element_Select('server_id');
 
         foreach ($servers as $server) {
             $serverSelect->addMultiOption($server->id, $server->name);
@@ -191,6 +193,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         }
 
         $serverSelect->setValue($default);
+        $serverSelect->setLabel('Server:');
 
         $pid = new Zend_Form_Element_Text('pid');
         $pid->setLabel('PID:')
@@ -219,38 +222,54 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      *
      * @return object $form The upload form.
      */
-    protected function _doDatastreamsForm($item_id) {
+    protected function _doDatastreamsForm($item_id, $pid, $server_id) {
 
         $form = new Zend_Form();
         $form->setAction('datastreams')
             ->setMethod('post');
 
-        $servers = $this->getTable('FedoraConnectorServer')->findAll();
-        $serverSelect = new Zend_Form_Element_Select('server');
+        $server = $this->getTable('FedoraConnectorServer')->find($server_id);
+        $datastreams = $server->getDatastreamNodes($pid);
 
-        foreach ($servers as $server) {
-            $serverSelect->addMultiOption($server->id, $server->name);
-            if ($server->is_default == 1) {
-                $default = $server->id;
+        $datastreamSelect = new Zend_Form_Element_MultiCheckbox('datastreams');
+        $datastreamSelect->setLabel('Datastreams:');
+        $metadataformatSelect = new Zend_Form_Element_Select('metadataformat');
+        $metadataformatSelect->setLabel('Metadata Format:');
+
+        foreach ($datastreams as $datastream) {
+
+            $dsid = $datastream->getAttribute('dsid');
+            $is_text_xml = strpos($datastream->getAttribute('mimeType'), 'text/xml');
+            $is_omitted = fedorahelpers_isOmittedDatastream($datastream);
+
+            if (!$is_omitted) {
+                $datastreamSelect->addMultiOption($dsid, $dsid);
             }
+
+            if ($is_text_xml !== false && !$is_omitted) {
+                $metadataformatSelect->addMultiOption($dsid, $dsid);
+            }
+
         }
 
-        $serverSelect->setValue($default);
-
-        $pid = new Zend_Form_Element_Text('pid');
-        $pid->setLabel('PID:')
-            ->setRequired(true);
-
-        $id = new Zend_Form_Element_Hidden('item_id');
-        $id->setValue($item_id);
-
-        $submit = new Zend_Form_Element_Submit('pid_submit');
+        $submit = new Zend_Form_Element_Submit('datastreams_submit');
         $submit->setLabel('Continue');
 
-        $form->addElement($serverSelect);
-        $form->addElement($pid);
-        $form->addElement($id);
+        $item_id_hidden = new Zend_Form_Element_Hidden('item_id');
+        $item_id_hidden->setValue($item_id);
+
+        $pid_hidden = new Zend_Form_Element_Hidden('pid');
+        $pid_hidden->setValue($pid);
+
+        $server_id_hidden = new Zend_Form_Element_Hidden('server_id');
+        $server_id_hidden->setValue($server_id);
+
+        $form->addElement($datastreamSelect);
+        $form->addElement($metadataformatSelect);
         $form->addElement($submit);
+        $form->addElement($item_id_hidden);
+        $form->addElement($pid_hidden);
+        $form->addElement($server_id_hidden);
 
         return $form;
 

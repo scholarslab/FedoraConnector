@@ -119,7 +119,7 @@ function fedorahelpers_getItems($page, $order, $search)
     $db = get_db();
     $itemTable = $db->getTable('Item');
 
-    // Nasty query. Fallback from weird issue with left join where item id was
+    // Wretched query. Fallback from weird issue with left join where item id was
     // getting overwritten. Fix.
     $select = $db->select()
         ->from(array('item' => $db->prefix . 'items'))
@@ -159,5 +159,20 @@ function fedorahelpers_formatDate($date)
     $date = new DateTime($date);
     return '<strong>' . $date->format('F j, Y') . '</strong> at ' .
        $date->format('g:i a');
+
+}
+
+/**
+ * Check to see if a datastream is omitted.
+ *
+ * @param array $datastream The datastream.
+ *
+ * @return boolean True if the datastream is omitted.
+ */
+function fedorahelpers_isOmittedDatastream($datastream)
+{
+
+    $omittedStreams = explode(',', get_option('fedora_connector_omitted_datastreams'));
+    return in_array($datastream->getAttribute('dsid'), $omittedStreams) ? true : false;
 
 }

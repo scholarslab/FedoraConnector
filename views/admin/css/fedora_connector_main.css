@@ -25,9 +25,9 @@
     display: none;
 }
 
-#pid-label label {
-    width: 50px;
-}
+/* #pid-label label {*/
+/*     width: 50px;*/
+/* }*/
 
 .add-button {
     margin-top: 1em;
