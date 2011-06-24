@@ -144,7 +144,38 @@ function fedorahelpers_getItems($page, $order, $search)
 
     return $itemTable->fetchObjects($select);
 
-}
+
+
+/**
+ * Retrieves a single item with added columns with name, etc.
+ *
+ * @param $id The id of the item.
+ *
+ * @return object $item The item.
+ */
+function fedorahelpers_getSingleItem($id)
+{
+
+    $db = get_db();
+    $itemTable = $db->getTable('Item');
+
+    // Wretched query. Fallback from weird issue with left join where item id was
+    // getting overwritten. Fix.
+    $select = $db->select()
+        ->from(array('item' => $db->prefix . 'items'))
+        ->columns(array('item_id' => 'item.id', 
+            'Type' =>
+            "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
+            'item_name' =>
+            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1)",
+            'creator' =>
+            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 39)"
+            ))
+        ->where('item.id = ' . $id);
+
+    $items = $itemTable->fetchObject($select);
+
+}}
 
 /**
  * Format item add date for datastream create workflow.
@@ -221,33 +252,3 @@ function fedorahelpers_doItemFedoraForm($item)
     return $form;
 
 }
-
-
-
-
-
-    // $db = get_db();
-    // $datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item->id));
-
-    // ob_start();
-    // $ht .= ob_get_contents();
-    // ob_end_clean();
-    
-    // $ht .= '<div id="omeka-map-form">';
-    // //if there are datastreams, display the table
-    // if ($datastreams[0]->pid != NULL){
-    //     $ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Preview</th><th>Delete?</th></thead>';
-    //     foreach ($datastreams as $datastream){
-    //         $deleteUrl = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';        
-    //         $addUrl = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
-    //         $ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' ' . fedora_connector_importer_link($datastream) . '</td><td>' . (strstr($datastream['mime_type'], 'image/') ? render_fedora_datastream_preview($datastream) : '') . '</td><td><a href="' . $deleteUrl . '?id=' . $datastream->id . '">Delete</a></td></tr>';
-    //     }
-    //     $ht .= '</table>';
-    //     $ht .= '<p><a href="' . $addUrl . '?id=' . $item->id . '">Add another</a>?</p>';
-    // } else {
-    //     //otherwise link to add a new datastream
-    //     $addUrl = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
-    //     $ht .= '<p>There are no Fedora datastreams associated with this item.  Why don\'t you <a href="' . $addUrl . '?id=' . $item->id . '">add one</a>?</p>';
-    // }    
-    // $ht .= '</div>';
-    // return $ht;

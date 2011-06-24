@@ -150,7 +150,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         $item_id = $this->_request->id;
         $this->view->form = $this->_doPidForm($item_id);
-        $this->view->item = $this->getTable('Item')->find($item_id);
 
     }
 
