@@ -20,7 +20,8 @@
                             'URL' => 'url',
                             'Status' => null,
                             'Version' => 'version',
-                            'Default?' => 'is_default'
+                            'Default?' => 'is_default',
+                            'Actions' => null
                         )); ?>
                     </tr>
                 </thead>
@@ -47,6 +48,7 @@
                                 }
                             ?></td>
                             <td><?php if ($server->is_default) { echo 'Yes'; } ?></td>
+                            <td><?php echo $this->partial('datastreams/servers-actions.php', array('id' => $server->id)); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
