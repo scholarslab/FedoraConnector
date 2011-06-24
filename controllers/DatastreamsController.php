@@ -193,6 +193,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     {
 
         $post = $this->_request->getPost();
+
         $item_id = $post['item_id'];
         $pid = $post['pid'];
         $metadataformat = $post['metadataformat'];
@@ -202,7 +203,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         foreach ($post['datastreams'] as $key => $stream) {
 
-            // get mime_type here.
             $mime_type = $server->getMimeType($pid, $stream);
 
             $success[] = $this->getTable('FedoraConnectorDatastream')
@@ -217,7 +217,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                     )
                 );
 
-            // do tei insert here.
+            // DO TEI INSERT HERE.
 
         }
 
@@ -226,74 +226,15 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
             $insertsCount = count($success);
             if ($insertsCount > 1) {
                 $this->flashSuccess($insertsCount . ' datastreams added to item.');
-            } else {
+            } else if ($insertsCount == 1) {
                 $this->flashSuccess('Datastream added to item.');
+            } else {
+                $this->flashError('No datastreams were added.');
             }
 
             $this->_forward('browse', 'datastreams', 'fedora-connector');
 
         }
-
-
-
-
-        // XXX some -> models/FedoraConnector/Datastream.php (updateFromArray)
-        // $form = $this->_getDatastreamsForms();
-
-        // if ($_POST) {
-        //     $uploadedData = $this->_request->getPost();
-
-        //     if ($form->isValid($uploadedData)) {
-        //         // Get posted values.
-        //         if ($uploadedData['fedora_connector_item_id'] > 0) {
-        //             $item_id = $uploadedData['fedora_connector_item_id'];
-        //         } else {
-        //             $item = new Item;
-        //             $item->save();
-        //             $item_id = $item->id;
-        //         }
-
-        //         $pid = $uploadedData['fedora_connector_pid'];
-        //         $metadataStream = $uploadedData['fedora_connector_metadata'];
-        //         $server_id = $uploadedData['fedora_connector_server_id'];
-
-        //         $posted = 0;
-        //         foreach ($uploadedData as $k => $v) {
-        //             if (strpos($k, 'fedora_connector_datastream') !== false
-        //                 && $v != '0'
-        //             ) {
-        //                 $datastream = substr($k, 28); // Shave off the prefix.
-        //                 $data = array(
-        //                     'item_id'         => $item_id,
-        //                     'pid'             => $pid,
-        //                     'datastream'      => $datastream,
-        //                     'mime_type'       => $v,
-        //                     'metadata_stream' => $metadataStream,
-        //                     'server_id'       => $server_id
-        //                 );
-
-        //                 if ($this->_updateDb($db, $datastream, $v, $data)) {
-        //                     $posted += 1;
-        //                 }
-
-        //             }
-        //         }
-
-        //         if ($posted > 0) {
-        //             $this->flashSuccess('Fedora datastreams connected to Item');
-        //             $this->_helper->redirector->goto($item_id, 'edit', 'items');
-        //         } else {
-        //             $this->flashError('No datastreams selected.');
-        //             $this->_helper->redirector->goto($item_id, 'edit', 'items');
-        //         }
-
-        //     } else {
-        //         // Ummm. No.
-        //         // var_dump($this->_request->getPost());
-        //         $this->flashError('Failed to gather posted data.');
-        //     }
-        // }
-
 
     }
 
