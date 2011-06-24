@@ -127,7 +127,7 @@ function fedorahelpers_getItems($page, $order, $search)
             'Type' =>
             "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
             'item_name' =>
-            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50)",
+            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1)",
             'creator' =>
             "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 39)"
             ));

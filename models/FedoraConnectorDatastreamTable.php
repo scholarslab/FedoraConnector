@@ -63,7 +63,7 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
             ->from(array('d' => $db->prefix . 'fedora_connector_datastreams'))
             ->joinLeft(array('s' => $db->prefix . 'fedora_connector_servers'), 'd.server_id = s.id')
             ->columns(array('server_name' => 's.name', 'datastream_id' => 'd.id', 'parent_item' =>
-                "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50)"));
+                "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50 LIMIT 1)"));
 
         if (isset($page)) {
             $select->limitPage($page, get_option('per_page_admin'));
