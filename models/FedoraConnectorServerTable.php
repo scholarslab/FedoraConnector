@@ -121,8 +121,10 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
         $select = $this->getSelect()->where('is_default = 1');
         $old_default_server = $this->fetchObject($select);
-        $old_default_server->is_default = 0;
-        $old_default_server->save();
+        if (count($old_default_server) != 0) {
+            $old_default_server->is_default = 0;
+            $old_default_server->save();
+        }
 
     }
 

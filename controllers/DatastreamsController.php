@@ -239,6 +239,24 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     }
 
     /**
+     * Import datastream.
+     *
+     * @return void
+     */
+    public function importAction()
+    {
+
+        $id = $this->_request->id;
+        $datastream = $this->getTable('FedoraConnectorDatastream')->find($id);
+
+        // fedora_connector_import_metadata($datastream);
+
+        // $this->flashSuccess('Metadata imported.');
+        // $this->_helper->redirector->goto($datastream->item_id, 'edit', 'items');
+
+    }
+
+    /**
      * Build the upload form.
      *
      * @param string $tmp The location of the temporary directory
