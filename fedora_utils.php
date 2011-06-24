@@ -146,7 +146,7 @@ function fedora_connector_get_server($datastream)
 function fedora_connector_datastream_base_url($datastream) {
     // XXX -> models/FedoraConnector/Datastream.php
     $server = get_db()
-        ->getTable('FedoraConnector_Server')
+        ->getTable('FedoraConnectorServer')
         ->find($datastream->server_id);
 
     if (preg_match('/^2\./', $server->version)) {
