@@ -76,6 +76,33 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
 
     }
 
+    /**
+     * Inserts new datastream record.
+     *
+     * @param array $data Parameter array with:
+     * $item_id
+     * $server_id
+     * $pid
+     * $datastream
+     * $mime_type
+     * $metadataformat
+     *
+     * @return boolean True if insert succeeds.
+     */
+    public function createDatastream($data)
+    {
+
+        $datastream = new FedoraConnectorDatastream;
+        $datastream->item_id = $data['item_id'];
+        $datastream->server_id = $data['server_id'];
+        $datastream->pid = $data['pid'];
+        $datastream->datastream = $data['datastream'];
+        $datastream->mime_type = $data['mime_type'];
+        $datastream->metadata_stream = $data['metadataformat'];
+        return $datastream->save() ? true : false;
+
+    }
+
 }
 
 
