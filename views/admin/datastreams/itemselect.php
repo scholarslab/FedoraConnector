@@ -47,8 +47,6 @@
                 </tbody>
             </table>
 
-<?php foreach ($items as $item) { echo $item->id; } ?>
-
     <?php endif; ?>
 
           <div class="pagination">

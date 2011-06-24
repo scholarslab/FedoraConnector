@@ -1,10 +1,10 @@
-<?php echo $this->partial('datastreams/admin-header.php', array('subtitle' => 'Create Datastream | Step 1')); ?>
+<?php echo $this->partial('datastreams/admin-header.php', array('subtitle' => 'Create Datastream | Step 2')); ?>
 
 <div id="primary">
 
     <?php echo flash(); ?>
 
-    <h2>Select the datastreams and metadata format:</h2>
+    <h2>Select the metadata format and datastreams:</h2>
 
     <?php echo $this->form; ?>
 

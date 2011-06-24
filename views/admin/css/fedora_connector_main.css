@@ -58,3 +58,12 @@ h2.fedora-select-item {
     margin-left: 8px; 
     float: left;
 }
+
+dd#datastreams-element label {
+    clear: both;
+}
+
+dd#metadataformat-element select {
+    display: block;
+    clear: both;
+}
