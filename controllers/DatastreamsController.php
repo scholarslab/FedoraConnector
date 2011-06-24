@@ -237,7 +237,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                     $p4 = $tei2Node->getAttribute('id');
                 }
 
-
                 if (isset($p5))
                     $teiId = $p5;
                 else if (isset($p4))
