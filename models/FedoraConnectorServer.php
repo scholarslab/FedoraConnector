@@ -95,6 +95,23 @@ class FedoraConnectorServer extends Omeka_record
 
     }
 
+    /**
+     * Retrieve the mimeType for a datastream.
+     *
+     * @param $pid The pid to hit.
+     * @param $datastream The datastream to query on.
+     *
+     * @return string The mimeType.
+     */
+    public function getMimeType($pid, $datastream)
+    {
+
+        return fedorahelpers_getQueryNode(
+            "{$this->url}objects/$pid/datastreams/$datastream?format=xml",
+            "@dsMIME");
+
+    }
+
 }
 
 

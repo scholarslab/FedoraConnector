@@ -193,51 +193,47 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     {
 
         $post = $this->_request->getPost();
-        $form = $this->_doDatastreamsForm();
+        $item_id = $post['item_id'];
+        $pid = $post['pid'];
+        $metadataformat = $post['metadataformat'];
+        $server_id = $post['server_id'];
 
-        // if ($form->isValid($post)) {
+        $server = $this->getTable('FedoraConnectorServer')->find($server_id);
 
-        //     $item_id = $post['item_id'];
-        //     $pid = $post['pid'];
-        //     $metadataformat = $post['metadataformat'];
-        //     $server_id = $post['server_id'];
+        foreach ($post['datastreams'] as $key => $stream) {
 
-        //     foreach ($post['datastreams'] as $key => $stream) {
+            // get mime_type here.
+            $mime_type = $server->getMimeType($pid, $stream);
 
-        //         // get mime_type here.
-        //         $mime_type = 'test';
+            $success[] = $this->getTable('FedoraConnectorDatastream')
+                ->createDatastream(
+                    array(
+                        'item_id' => $item_id,
+                        'server_id' => $server_id,
+                        'pid' => $pid,
+                        'datastream' => $stream,
+                        'mime_type' => $mime_type,
+                        'metadataformat' => $metadataformat
+                    )
+                );
 
-        //         $success[] = $this->getTable('FedoraConnectorDatastream')
-        //             ->createDatastream(
-        //                 array(
-        //                     'item_id' => $item_id,
-        //                     'server_id' => $server_id,
-        //                     'pid' => $pid,
-        //                     'stream' => $stream,
-        //                     'mime_type' => $mime_type,
-        //                     'metadataformat' => $metadataformat
-        //                 )
-        //             );
+            // do tei insert here.
 
-        //     }
+        }
 
-        //     if (!in_array(false, $successes)) {
+        if (!in_array(false, $success)) {
 
-        //         $insertsCount = count($successes);
-        //         if ($insertsCount > 1) {
-        //             $this->flashSuccess($insertsCount . ' datastreams added to item.');
-        //         } else {
-        //             $this->flashSuccess('Datastream added to item.');
-        //         }
+            $insertsCount = count($success);
+            if ($insertsCount > 1) {
+                $this->flashSuccess($insertsCount . ' datastreams added to item.');
+            } else {
+                $this->flashSuccess('Datastream added to item.');
+            }
 
-        //         $this->_forward('browse', 'datastreams', 'fedora-connector');
+            $this->_forward('browse', 'datastreams', 'fedora-connector');
 
-        //     }
+        }
 
-        // }
-
-
-                $this->_forward('browse', 'datastreams', 'fedora-connector');
 
 
 
