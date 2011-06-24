@@ -49,7 +49,7 @@ define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 
 // {{{ requires
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
-// require_once "Importers.php";
+require_once "Importers.php";
 // require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/fedora_utils.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/pid_form.php';
 // }}}
