@@ -176,3 +176,78 @@ function fedorahelpers_isOmittedDatastream($datastream)
     return in_array($datastream->getAttribute('dsid'), $omittedStreams) ? true : false;
 
 }
+
+/**
+ * Build the form for the Edit Item menu.
+ *
+ * @param object $item The item being edited.
+ *
+ * @return string The form.
+ */
+function fedorahelpers_doItemFedoraForm($item)
+{
+
+    $db = get_db();
+    $select = $db->getTable('FedoraConnectorDatastream')->select()
+        ->from(array('d' => $db->prefix . 'fedora_connector_datastreams'))
+        ->joinLeft(array('s' => $db->prefix . 'fedora_connector_servers'), 'd.server_id = s.id')
+        ->columns(array('server_name' => 's.name', 'datastream_id' => 'd.id', 'parent_item' =>
+            "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50 LIMIT 1)"))
+        ->where('d.item_id = ' . $item->id);
+
+    $datastreams = $db->getTable('FedoraConnectorDatastream')->fetchObjects($select);
+
+    $form = '';
+
+    if (count($datastreams) == 0) {
+        $form .= '<p>There are no datastreams yet. <a href="' . uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid') . '">Add one</a>.</p>';
+    }
+
+    else {
+        $form .= '<table><thead><th>Datastream</td><th>PID</td><th>Server</td><th>Metadata Format</td><th>Actions</td>';
+        foreach ($datastreams as $datastream) {
+            $form .= '<tr>
+                <td>' . $datastream->datastream . '</td>
+                <td>' . $datastream->pid . '</td>
+                <td><a href="' . uri('/fedora-connector/servers/edit/' . $datastream->server_id) . '">' . $datastream->server_name . '</a></td>
+                <td>' . $datastream->metadata_stream . '</td>
+                <td><a href="' . uri('/fedora-connector/datastreams/' . $datastream->datastream_id . '/import') . '"><strong>Import</strong></a></td>
+                </tr>';
+        }
+        $form .= '</table>';
+        $form .= '<p><strong><a href="' . uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid') . '">Add another datastream -></a></strong></p>';
+    }
+
+    return $form;
+
+}
+
+
+
+
+
+    // $db = get_db();
+    // $datastreams = $db->getTable('FedoraConnector_Datastream')->findBySql('item_id = ?', array($item->id));
+
+    // ob_start();
+    // $ht .= ob_get_contents();
+    // ob_end_clean();
+    
+    // $ht .= '<div id="omeka-map-form">';
+    // //if there are datastreams, display the table
+    // if ($datastreams[0]->pid != NULL){
+    //     $ht .= '<table><thead><th>ID</th><th>PID</th><th>Datastream ID</th><th>mime-type</th><th>Object Metadata</th><th>Preview</th><th>Delete?</th></thead>';
+    //     foreach ($datastreams as $datastream){
+    //         $deleteUrl = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/delete/';        
+    //         $addUrl = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
+    //         $ht.= '<tr><td>' . $datastream->id . '</td><td>' . $datastream->pid . '</td><td>' . link_to_fedora_datastream($datastream->id) . '</td><td>' . $datastream->mime_type . '</td><td>' . $datastream->metadata_stream . ' ' . fedora_connector_importer_link($datastream) . '</td><td>' . (strstr($datastream['mime_type'], 'image/') ? render_fedora_datastream_preview($datastream) : '') . '</td><td><a href="' . $deleteUrl . '?id=' . $datastream->id . '">Delete</a></td></tr>';
+    //     }
+    //     $ht .= '</table>';
+    //     $ht .= '<p><a href="' . $addUrl . '?id=' . $item->id . '">Add another</a>?</p>';
+    // } else {
+    //     //otherwise link to add a new datastream
+    //     $addUrl = html_escape(WEB_ROOT) . '/admin/fedora-connector/datastreams/';
+    //     $ht .= '<p>There are no Fedora datastreams associated with this item.  Why don\'t you <a href="' . $addUrl . '?id=' . $item->id . '">add one</a>?</p>';
+    // }    
+    // $ht .= '</div>';
+    // return $ht;

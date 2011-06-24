@@ -294,7 +294,7 @@ function fedora_connector_item_form_tabs($tabs)
    // return $tabs;
 
     $item = get_current_item();
-    // $tabs['Fedora Datastreams'] = fedora_connector_pid_form($item);
+    $tabs['Fedora Datastreams'] = fedorahelpers_doItemFedoraForm($item);
     return $tabs;
 }
 
