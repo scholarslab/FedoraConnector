@@ -216,7 +216,44 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                     )
                 );
 
-            // DO TEI INSERT HERE.
+            if (function_exists('tei_display_installed') && $stream == 'TEI' && strstr($mime_type, 'text/xml')) {
+
+                $newDatastreamId = $this->getTable('FedoraConnectorDatastream')->lastInsertId();
+                $newDatastream = $this->getTable('FedoraConnectorDatastream')->find($newDatastreamId);
+                $server = $this->getTable('FedoraConnectorServer')->find($server_id);
+
+                $service = (preg_match('/^2\./')) ? 'get' : 'objects';
+                $teiUri = $server->url . $service . '/' . $newDatastream->pid . '/datastreams' . $newDatastream->datastream . '/content';
+                $xml = new DomDocument;
+                $xml->load($teiUri);
+
+                $teiNode = $xml->getElementsByTagName('TEI');
+                $tei2Node = $xml->getElementsByTagName('TEI.2');
+
+                foreach ($teiNode as $teiNode){
+                    $p5 = $teiNode->getAttribute('xml:id');
+                }
+                foreach ($tei2Node as $tei2Node){
+                    $p4 = $tei2Node->getAttribute('id');
+                }
+
+                if (isset($p5))
+                    $teiId = $p5;
+                else if (isset($p4))
+                    $teiId = $p4;
+                else
+                    $teiId = $p5;
+
+                if ($teiId != null) {
+                    $newTeiConfig = new TeiDisplayConfig;
+                    $newTeiConfig->item_id = $item_id;
+                    $newTeiConfig->is_fedora_datastream = 1;
+                    $newTeiConfig->fedoraconnector_id = $newDatastreamId;
+                    $newTeiConfig->tei_id = $teiId;
+                    $newTeiConfig->save();
+                }
+
+            }
 
         }
 
