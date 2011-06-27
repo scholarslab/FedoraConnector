@@ -15,13 +15,15 @@
                 <h2 class="fedora-select-item">Select an item to add a datastream to:</h2>
 
                 <div id="simple-search-form">
-                    <form id="simple-search" action="<?php uri('fedora-connector/datastreams/create'); ?>" method="get">
+                    <form id="simple-search" action="<?php echo uri('fedora-connector/datastreams/create'); ?>" method="get">
                         <fieldset>
                             <input type="text" name="search" id="search" value="<?php echo $search; ?>" class="textinput">
                             <input type="submit" name="submit_search" id="submit_search" value="Search">
                         </fieldset>
                     </form>
                 </div>
+
+                <p><a href="<?php echo uri('fedora-connector/datastreams/create'); ?>">Reset</a></p>
 
                 <thead>
                     <tr>

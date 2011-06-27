@@ -139,12 +139,12 @@ function fedorahelpers_getItems($page, $order, $search)
         $select->order($order);
     }
     if (isset($search)) {
-        $select->where("(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50) like '%" . $search . "%'");
+        $select->where("(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1) like '%" . $search . "%'");
     }
 
     return $itemTable->fetchObjects($select);
 
-
+}
 
 /**
  * Retrieves a single item with added columns with name, etc.
@@ -175,7 +175,7 @@ function fedorahelpers_getSingleItem($id)
 
     $items = $itemTable->fetchObject($select);
 
-}}
+}
 
 /**
  * Format item add date for datastream create workflow.
