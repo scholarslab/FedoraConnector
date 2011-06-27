@@ -149,7 +149,6 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
 }
 
-
 /*
  * Local variables:
  * tab-width: 4

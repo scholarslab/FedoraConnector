@@ -19,7 +19,7 @@
                             'Name' => 'name',
                             'URL' => 'url',
                             'Status' => null,
-                            'Version' => 'version',
+                            'Version' => null,
                             'Default?' => 'is_default',
                             'Actions' => null
                         )); ?>
