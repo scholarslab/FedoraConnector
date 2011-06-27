@@ -23,7 +23,7 @@
                     </form>
                 </div>
 
-                <p><a href="<?php echo uri('fedora-connector/datastreams/create'); ?>">Reset</a></p>
+                <p class="fedora-connector-search-reset"><a href="<?php echo uri('fedora-connector/datastreams/create'); ?>">Reset</a></p>
 
                 <thead>
                     <tr>
