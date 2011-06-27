@@ -93,7 +93,8 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     public function createAction()
     {
 
-        $this->view->form = $this->_doServerForm();
+        $form = $this->_doServerForm();
+        $this->view->form = $form;
 
     }
 
@@ -147,6 +148,12 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             // If save was hit, do save.
             if (isset($data['edit_submit'])) {
 
+                if (!$this->getTable('FedoraConnectorServer')->checkServerUrlFormat($data['url'])) {
+                    $this->flashError('Server URL must be of format "http://[host]/fedora/"');
+                    $this->_redirect('fedora-connector/servers/edit/' . $data['id']);
+                    exit();
+                }
+
                 if ($this->getTable('FedoraConnectorServer')->saveServer($data)) {
 
                     $this->flashSuccess('Information for server ' . $data['name'] . ' saved');
@@ -186,6 +193,12 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
         // Are all the fields filled out?
         if ($form->isValid($data)) {
+
+            if (!$this->getTable('FedoraConnectorServer')->checkServerUrlFormat($data['url'])) {
+                $this->flashError('Server URL must be of format "http://[host]/fedora/"');
+                $this->_redirect('fedora-connector/servers/create');
+                exit();
+            }
 
             // Create server, process success.
             if ($this->getTable('FedoraConnectorServer')->createServer($data)) {

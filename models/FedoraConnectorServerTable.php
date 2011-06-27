@@ -147,6 +147,22 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
     }
 
+    /**
+     * Runs a regex on the server URL to make sure it's a valid
+     * Fedora server path.
+     *
+     * @param string $url The url of the server.
+     *
+     * @return boolean True if format is correct.
+     */
+    public function checkServerUrlFormat($url)
+    {
+
+        $pattern = '/(http\:\/\/).+(\/fedora\/)/';
+        return preg_match($pattern, $url) ? true : false;
+
+    }
+
 }
 
 /*
