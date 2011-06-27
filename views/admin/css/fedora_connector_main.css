@@ -75,3 +75,7 @@ p.fedora-connector-search-reset {
     font-size: 1em;
     position: relative;
 }
+
+.fedora-connector-datastreams-form label {
+    width: 400px;
+}

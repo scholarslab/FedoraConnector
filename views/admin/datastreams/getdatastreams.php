@@ -1,4 +1,4 @@
-<?php echo $this->partial('datastreams/admin-header.php', array('subtitle' => 'Create Datastream | Step 2')); ?>
+<?php echo $this->partial('datastreams/admin-header.php', array('subtitle' => 'Create Datastream for "' . $item->item_name . '" | Step 2')); ?>
 
 <div id="primary">
 

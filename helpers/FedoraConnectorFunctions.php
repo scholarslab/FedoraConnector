@@ -173,7 +173,7 @@ function fedorahelpers_getSingleItem($id)
             ))
         ->where('item.id = ' . $id);
 
-    $items = $itemTable->fetchObject($select);
+    return $itemTable->fetchObject($select);
 
 }
 

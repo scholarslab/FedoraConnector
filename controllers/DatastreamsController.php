@@ -149,6 +149,9 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     {
 
         $item_id = $this->_request->id;
+        $item = fedorahelpers_getSingleItem($item_id);
+
+        $this->view->item = $item;
         $this->view->form = $this->_doPidForm($item_id);
 
     }
@@ -162,6 +165,8 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     {
 
         $post = $this->_request->getPost();
+        $item_id = $this->_request->id;
+        $item = fedorahelpers_getSingleItem($item_id);
 
         if (trim($post['pid']) == '') {
             $this->flashError('Enter a PID.');
@@ -178,6 +183,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
             }
         }
 
+        $this->view->item = $item;
         $this->view->form = $this->_doDatastreamsForm(
             $post['item_id'], $post['pid'], $post['server_id']);
 
@@ -360,7 +366,8 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         $form = new Zend_Form();
         $form->setAction('insertdatastream')
-            ->setMethod('post');
+            ->setMethod('post')
+            ->setAttrib('class', 'fedora-connector-datastreams-form');
 
         $server = $this->getTable('FedoraConnectorServer')->find($server_id);
         $datastreams = $server->getDatastreamNodes($pid);
@@ -374,11 +381,12 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         foreach ($datastreams as $datastream) {
 
             $dsid = $datastream->getAttribute('dsid');
+            $label = $datastream->getAttribute('label');
             $is_text_xml = strpos($datastream->getAttribute('mimeType'), 'text/xml');
             $is_omitted = fedorahelpers_isOmittedDatastream($datastream);
 
             if (!$is_omitted) {
-                $datastreamSelect->addMultiOption($dsid, $dsid);
+                $datastreamSelect->addMultiOption($dsid, $label);
             }
 
             if ($is_text_xml !== false && !$is_omitted) {
