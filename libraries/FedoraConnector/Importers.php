@@ -68,6 +68,7 @@ class FedoraConnector_Importers
      * importers. It defaults to FedoraConnector/Importers.
      */
     function __construct($importerDir=null) {
+
         if ($importerDir === null) {
             $importerDir = dirname(__FILE__) . '/../../Importers/';
         }
@@ -79,6 +80,7 @@ class FedoraConnector_Importers
             'canImport',
             'import'
         );
+
     }
 
     /**
@@ -87,7 +89,9 @@ class FedoraConnector_Importers
      * @return array The list of importer plugin objects.
      */
     function getImporters() {
+
         return $this->plugins->getPlugins();
+
     }
 
     /**
@@ -99,7 +103,9 @@ class FedoraConnector_Importers
      * it's returned; otherwise, null.
      */
     function getImporter($datastream) {
+
         return $this->plugins->getPlugin($datastream);
+
     }
 
     /**
@@ -111,7 +117,9 @@ class FedoraConnector_Importers
      * datastream.
      */
     function canImport($datastream) {
+
         return ($this->getImporter($datastream) !== null);
+
     }
 
     /**
@@ -122,6 +130,7 @@ class FedoraConnector_Importers
      * @return bool True if an importer can handle this. Otherwise, false.
      */
     function import($datastream) {
+
         // Don't use PluginDir->callFirst because it may not return anything, 
         // even if it does import correctly.
         $imp = $this->getImporter($datastream);
@@ -132,6 +141,7 @@ class FedoraConnector_Importers
             $imp->import($datastream);
             return true;
         }
+
     }
 
 }

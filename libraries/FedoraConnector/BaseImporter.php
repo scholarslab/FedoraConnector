@@ -74,10 +74,13 @@ abstract class FedoraConnector_BaseImporter
      * @return Omeka_Record The omeka item to populate with metadata.
      */
     function getItem($datastream) {
+
         $item = get_db()
             ->getTable('Item')
             ->find($datastream->item_id);
+
         return $item;
+
     }
 
     /**
@@ -90,10 +93,12 @@ abstract class FedoraConnector_BaseImporter
      * metadata.
      */
     function getMetadataXml($datastream) {
+
         $url = $datastream->getMetadataUrl();
         $xml = new DomDocument();
         $xml->load($url);
         return $xml;
+
     }
 
     /**
@@ -103,6 +108,7 @@ abstract class FedoraConnector_BaseImporter
      * @return array An array of DC elements to search for.
      */
     function getDublinCoreNames() {
+
         $db = get_db();
         $select = $db
             ->select()
@@ -118,6 +124,7 @@ abstract class FedoraConnector_BaseImporter
         }
 
         return $names;
+
     }
 
     /**
@@ -131,6 +138,7 @@ abstract class FedoraConnector_BaseImporter
      * all queries.
      */
     function queryAll($xpath, $queries) {
+
         $results = array();
 
         foreach ($queries as $query) {
@@ -153,6 +161,7 @@ abstract class FedoraConnector_BaseImporter
      * @return void
      */
     function addMetadata($item, $element, $name, $value) {
+
         // XXX Where do the hard-coded values below come from?
         $data = array(
             'record_id'      => $item->id,
@@ -164,6 +173,7 @@ abstract class FedoraConnector_BaseImporter
 
         // XXX This should remove any existing values first.
         $db->insert('element_texts', $data);
+
     }
 
     /**
@@ -174,6 +184,7 @@ abstract class FedoraConnector_BaseImporter
      * @return void
      */
     function import($datastream) {
+
         $item = $this->getItem($datastream);
         $xpath = new DOMXPath($this->getMetadataXml($datastream));
         $dcNames = $this->getDublinCoreNames();
