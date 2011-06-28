@@ -2,7 +2,7 @@
 
 <div id="primary">
 
-    <p id="add-item" class="add-button"><a class="add" href="<?php echo html_escape(uri('fedora-connector/datastreams/create')); ?>">Add a Datastream</a></p>
+    <p id="add-item" class="add-button"><a class="add" href="<?php echo html_escape(uri('fedora-connector/datastreams/create')); ?>">Add Datastreams</a></p>
 
     <?php echo flash(); ?>
 
