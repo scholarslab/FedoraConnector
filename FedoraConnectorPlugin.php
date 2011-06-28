@@ -1,8 +1,19 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * Initialization class.
+ * FedoraConnector Omeka plugin allows users to reuse content managed in
+ * institutional repositories in their Omeka repositories.
+ *
+ * The FedoraConnector plugin provides methods to generate calls against Fedora-
+ * based content disemminators. Unlike traditional ingestion techniques, this
+ * plugin provides a facade to Fedora-Commons repositories and records pointers
+ * to the "real" objects rather than creating new physical copies. This will
+ * help ensure longer-term durability of the content streams, as well as allow
+ * you to pull from multiple institutions with open Fedora-Commons
+ * respositories.
+ *
+ * PHP version 5
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -12,15 +23,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  *
- * @package omeka
- * @subpackage BagIt
- * @author Scholars' Lab
- * @author David McClure (david.mcclure@virginia.edu)
- * @copyright 2011
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache 2.0
- *
- * PHP version 5
- *
+ * @package     omeka
+ * @subpackage  fedoraconnector
+ * @author      Scholars' Lab <>
+ * @author      Ethan Gruber <ewg4x@virginia.edu>
+ * @author      Adam Soroka <ajs6f@virginia.edu>
+ * @author      Wayne Graham <wayne.graham@virginia.edu>
+ * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
+ * @copyright   2010 The Board and Visitors of the University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @version     $Id$
+ * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
+ * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 ?>
 
@@ -81,7 +96,8 @@ class FedoraConnectorPlugin
     }
 
     /**
-     * Create tables for file collections and file associations.
+     * Create tables for datastreams and servers, insert place-holder server,
+     * set which datastreams should be omitted by default.
      *
      * @return void
      */
@@ -91,26 +107,43 @@ class FedoraConnectorPlugin
         $db = get_db();
 
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->BagitFileCollection` (
-                `id` int(10) unsigned NOT NULL AUTO_INCREMENT primary key,
-                `name` tinytext COLLATE utf8_unicode_ci NOT NULL,
-                `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                INDEX(name(60))
-            ) ENGINE = innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        ");
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `item_id` int(10) unsigned,
+                `server_id` int(10) unsigned,
+                `pid` tinytext collate utf8_unicode_ci,
+                `datastream` tinytext collate utf8_unicode_ci,
+                `mime_type` tinytext collate utf8_unicode_ci,
+                `metadata_stream` tinytext collate utf8_unicode_ci,
+                PRIMARY KEY  (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+            ");
 
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->BagitFileCollectionAssociation` (
-                `id` int(10) unsigned NOT NULL AUTO_INCREMENT primary key,
-                `file_id` int(10) unsigned NOT NULL,
-                `collection_id` int(10) unsigned NOT NULL
-            ) ENGINE = innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        ");
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `url` tinytext collate utf8_unicode_ci,
+                `name` tinytext collate utf8_unicode_ci,
+                `is_default` tinyint(1) unsigned NOT NULL,
+                PRIMARY KEY  (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+            ");
+
+        $db->query("
+            INSERT INTO `$db->FedoraConnectorServer` (url, name, is_default)
+            VALUES (
+                'http://localhost:8080/fedora/',
+                'Default Fedora Server',
+                1
+            )
+            ");
+
+        set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
 
     }
 
     /**
-     * Drop tables.
+     * Drop tables, scrubs out Fedora TEI datastreams.
      *
      * @return void
      */
@@ -118,31 +151,61 @@ class FedoraConnectorPlugin
     {
 
         $db = get_db();
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
 
-        $db->query("DROP TABLE IF EXISTS `$db->BagitFileCollection`");
-        $db->query("DROP TABLE IF EXISTS `$db->BagitFileCollectionAssociation`");
+        // If TeiDisplay is installed, remove Fedora TEI datastreams from its 
+        // table.
+        //
+        // XXX: Test that this function doesn't exist whenever the TeiDisplay 
+        // plugin directory is in omeka/plugins. Make sure that it only exists 
+        // whenever the plugin has been installed.
+        if (function_exists('tei_display_installed')) {
+            $teiFiles = $db
+                ->getTable('TeiDisplay_Config')
+                ->findBySql('is_fedora_datastream = ?', array(1));
+
+            foreach ($teiFiles as $teiFile) {
+                $teiFile->delete();
+            }
+        }
 
     }
 
     /**
-     * Define access privileges.
+     * On item delete, get rid of datastreams associated with that item.
      *
-     * @param $acl The access management object passed in by the front controller.
+     * @param Omeka_Record $item The item being deleted.
      *
      * @return void
      */
-    public function defineAcl($acl)
+    public function beforeDeleteItem($item)
     {
 
-        if (version_compare(OMEKA_VERSION, '2.0-dev', '<')) {
-            $indexResource = new Omeka_Acl_Resource('Bagit_Collections');
-        } else {
-            $indexResource = new Zend_Acl_Resource('Bagit_Collections');
+        $db = get_db();
+        $datastreams = $db
+            ->getTable('FedoraConnectorDatastream')
+            ->findBySql('item_id = ?', array($item['id']));
+
+        foreach ($datastreams as $datastream){
+            $datastream->delete();
         }
 
-        $acl->add($indexResource);
-        $acl->allow('super', 'Bagit_Collections');
-        $acl->allow('admin', 'Bagit_Collections');
+    }
+
+    /**
+     * Add plugin specific CSS.
+     *
+     * @param Zend_Controller_Request_Http $request The request for an admin page.
+     *
+     * @return void
+     */
+    public function adminThemeHeader($request)
+    {
+
+        if ($request->getModuleName() == 'fedora-connector') {
+            queue_css('fedora_connector_main');
+        }
 
     }
 
@@ -156,45 +219,99 @@ class FedoraConnectorPlugin
     public function defineRoutes($router)
     {
 
-        $router->addConfig(new Zend_Config_Ini(BAGIT_PLUGIN_DIRECTORY .
+        $router->addConfig(new Zend_Config_Ini(FEDORA_CONNECTOR_PLUGIN_DIR .
             DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
 
     }
 
     /**
-     * Add custom css.
+     * Establish ACL privilges.
      *
-     * @param object $request Page request passed in by the 'admin_theme_header'
-     * hook callback.
+     * @param Omeka_Acl $acl The ACL instance controlling the access list.
      *
      * @return void
      */
-    public function adminThemeHeader($request)
+    public function defineAcl($acl)
     {
 
-        if ($request->getModuleName() == 'bag-it') {
-            queue_css('bagit-interface');
+        if (version_compare(OMEKA_VERSION, '2.0-dev', '<')) {
+            $serversResource = new Omeka_Acl_Resource('FedoraConnector_Servers');
+            $datastreamsResource = new Omeka_Acl_Resource('FedoraConnector_Datastreams');
+        } else {
+            $serversResource = new Zend_Acl_Resource('FedoraConnector_Servers');
+            $datastreamsResource = new Zend_Acl_Resource('FedoraConnector_Datastreams');
         }
+
+        $acl->add($serversResource);
+        $acl->add($datastreamsResource);
+
+        $acl->allow('super', 'FedoraConnector_Servers');
+        $acl->allow('admin', 'FedoraConnector_Servers');
+        $acl->allow('super', 'FedoraConnector_Datastreams');
+        $acl->allow('admin', 'FedoraConnector_Datastreams');
 
     }
 
     /**
-     * Add a link to the administrative interface for the plugin.
+     * Do config form.
      *
-     * @param array $nav An array of main administrative links passed in
-     * by the 'admin_navigation_main' filter callback.
-     *
-     * @return array $nav The array of links, modified to include the
-     * link to the BagIt administrative interface.
+     * @return void
      */
-    public function adminNavigationMain($nav)
+    public function configForm()
     {
 
-        if (has_permission('Bagit_Collections', 'browse')) {
-            $nav['BagIt'] = uri('bag-it/collections');
+        include 'config_form.php';
+
+    }
+
+    /**
+     * Save config form (omitted datastreams csv).
+     *
+     * @return void
+     */
+    public function config()
+    {
+
+        set_option('fedora_connector_omitted_datastreams',
+            $_POST['fedora_connector_omitted_datastreams']);
+
+    }
+
+    /**
+     * Add Fedora Datastreams tab to the Items interface.
+     *
+     * @param array $tabs An array mapping tab name to HTML for that tab.
+     *
+     * @return array The $tabs array updated with the Fedora Datastreams tab.
+     */
+    public function adminItemsFormTab($tabs)
+    {
+
+        $item = get_current_item();
+        if (isset($item->added)) {
+            $tabs['Fedora Datastreams'] = fedorahelpers_doItemFedoraForm($item);
         }
 
-        return $nav;
+        return $tabs;
+
+    }
+
+    /**
+     * Add link to main admin menu bar.
+     *
+     * @param array $tabs This is an array of label => URI pairs.
+     *
+     * @return array The tabs array passed in with Fedora Connector links possibly 
+     * added.
+     */
+    public function adminNavigationMain($tabs)
+    {
+
+        if (has_permission('FedoraConnector_Servers', 'index')) {
+            $tabs['Fedora Connector'] = uri('fedora-connector/servers');
+        }
+
+        return $tabs;
 
     }
 
