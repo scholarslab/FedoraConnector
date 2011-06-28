@@ -54,6 +54,52 @@ class FedoraConnectorDatastream extends Omeka_record
     public $mime_type;
     public $metadata_stream;
 
+    /**
+     * Process import call, delegate according to metadata format.
+     *
+     * @return void
+     */
+    public function import()
+    {
+
+        if ($this->metadata_stream == 'DC') {
+            $this->importDC();
+        }
+
+        else if ($this->metadata_stream == 'MODS') {
+            $this->importMODS();
+        }
+
+        else {
+            // Do what? Can this every be the case?
+        }
+
+    }
+
+    /**
+     * Import Dublin Core data.
+     *
+     * @return void
+     */
+    public function importDC()
+    {
+
+
+
+    }
+
+    /**
+     * Import MODS data.
+     *
+     * @return void
+     */
+    public function importMODS()
+    {
+
+
+
+    }
+
 }
 
 

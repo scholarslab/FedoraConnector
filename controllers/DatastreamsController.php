@@ -197,19 +197,23 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
     public function insertdatastreamAction()
     {
 
+        // Get post data.
         $post = $this->_request->getPost();
-
         $item_id = $post['item_id'];
         $pid = $post['pid'];
         $metadataformat = $post['metadataformat'];
         $server_id = $post['server_id'];
 
+        // Get the server object.
         $server = $this->getTable('FedoraConnectorServer')->find($server_id);
 
+        // Now, add each checked datastream.
         foreach ($post['datastreams'] as $key => $stream) {
 
+            // Query for the mime type.
             $mime_type = $server->getMimeType($pid, $stream);
 
+            // Create the database record.
             $success[] = $this->getTable('FedoraConnectorDatastream')
                 ->createDatastream(
                     array(
@@ -222,6 +226,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                     )
                 );
 
+            // If the TeiDisplay plugin is installed, add a configuration record for the datastream.
             if (function_exists('tei_display_installed') && $stream == 'TEI' && strstr($mime_type, 'text/xml')) {
 
                 $newDatastreamId = $this->getTable('FedoraConnectorDatastream')->lastInsertId();
@@ -263,6 +268,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         }
 
+        // Flash feedback.
         if (!in_array(false, $success)) {
 
             $insertsCount = count($success);
