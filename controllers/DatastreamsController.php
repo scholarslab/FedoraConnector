@@ -297,17 +297,19 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         $id = $this->_request->id;
         $datastream = $this->getTable('FedoraConnectorDatastream')->find($id);
 
-        switch ($datastream->metadata_stream) {
+        // switch ($datastream->metadata_stream) {
 
-            case 'DC':
-                fedora_importer_DC($datastream);
-            break;
+        //     case 'DC':
+        //         fedora_importer_DC($datastream);
+        //     break;
 
-            case 'MODS':
-                fedora_importer_MODS($datastream);
-            break;
+        //     case 'MODS':
+        //         fedora_importer_MODS($datastream);
+        //     break;
 
-        }
+        // }
+
+        FedoraConnector_Importers::import($datastream);
 
         $this->flashSuccess('Metadata imported.');
         $this->_helper->redirector->goto($datastream->item_id, 'edit', 'items');

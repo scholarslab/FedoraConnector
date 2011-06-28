@@ -80,31 +80,6 @@ function fedorahelpers_getQueryNodes($uri, $xpath)
 }
 
 /**
- * Same as getQueryNodes, but pulls out single result.
- *
- * @param string $uri The uri of the document.
- * @param string $xpath The XPath query.
- *
- * @return object The matching node.
- */
-function fedorahelpers_getQueryNode($uri, $xpath)
-{
-
-    $xml = new DomDocument();
-    $xml->load($uri);
-    $query = new DOMXPath($xml);
-    $nodes = $query->query($xpath);
-
-    $node = null;
-    foreach ($nodes as $n) {
-        $node = $n->nodeValue;
-    }
-
-    return $node;
-
-}
-
-/**
  * Retrieves items to populate the listings in the itemselect view.
  *
  * @param string $page The page to fetch.
