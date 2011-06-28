@@ -282,7 +282,10 @@ function fedora_connector_item_form_tabs($tabs)
 {
 
     $item = get_current_item();
-    $tabs['Fedora Datastreams'] = fedorahelpers_doItemFedoraForm($item);
+    if (isset($item->added)) {
+        $tabs['Fedora Datastreams'] = fedorahelpers_doItemFedoraForm($item);
+    }
+
     return $tabs;
 
 }
