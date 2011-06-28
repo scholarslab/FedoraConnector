@@ -243,6 +243,7 @@ function fedora_connector_admin_navigation($tabs)
     }
 
     return $tabs;
+
 }
 
 /**
