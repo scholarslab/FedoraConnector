@@ -99,7 +99,76 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
         $datastream->datastream = $data['datastream'];
         $datastream->mime_type = $data['mime_type'];
         $datastream->metadata_stream = $data['metadataformat'];
-        return $datastream->save() ? true : false;
+
+        $success = $datastream->save() ? true : false;
+
+        if (function_exists('tei_display_installed')
+            && $data['datastream'] == 'TEI'
+            && strstr($data['mime_type'], 'text/xml')) {
+
+            $this->_addTeiConfig($datastream);
+
+        }
+
+        return $success;
+
+    }
+
+    /**
+     * Inserts new datastream record.
+     *
+     * @param object $datastream The datastream to add a TEI
+     * record for.
+     *
+     * @return void.
+     */
+    protected function _addTeiConfig($datastream)
+    {
+
+        $datastreamTable = $this->getTable('FedoraConnectorDatastream');
+        $serverTable = $this->getTable('FedoraConnectorServer');
+
+        $newDatastreamId = $datastreamTable->lastInsertId();
+        $newDatastream = $datastreamTable->find($newDatastreamId);
+        $server = $serverTable->find($datastream->server_id);
+
+        $service = (preg_match('/^2\./')) ? 'get' : 'objects';
+        $teiUri = $server->url . $service . '/' .
+            $newDatastream->pid . '/datastreams' .
+            $newDatastream->datastream . '/content';
+        $xml = new DomDocument;
+        $xml->load($teiUri);
+
+        $teiNode = $xml->getElementsByTagName('TEI');
+        $tei2Node = $xml->getElementsByTagName('TEI.2');
+
+        foreach ($teiNode as $teiNode){
+            $p5 = $teiNode->getAttribute('xml:id');
+        }
+        foreach ($tei2Node as $tei2Node){
+            $p4 = $tei2Node->getAttribute('id');
+        }
+
+        if (isset($p5)) {
+            $teiId = $p5;
+        }
+
+        else if (isset($p4)) {
+            $teiId = $p4;
+        }
+
+        else {
+            $teiId = $p5;
+        }
+
+        if ($teiId != null) {
+            $newTeiConfig = new TeiDisplayConfig;
+            $newTeiConfig->item_id = $datastream->item_id;
+            $newTeiConfig->is_fedora_datastream = 1;
+            $newTeiConfig->fedoraconnector_id = $newDatastreamId;
+            $newTeiConfig->tei_id = $teiId;
+            $newTeiConfig->save();
+        }
 
     }
 
@@ -107,10 +176,10 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
 
 
 /*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
+* Local variables:
+* tab-width: 4
+* c-basic-offset: 4
+* c-hanging-comment-ender-p: nil
  * End:
  */
 
