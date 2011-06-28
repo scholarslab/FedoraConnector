@@ -106,18 +106,12 @@ class FedoraConnectorServer extends Omeka_record
     public function getMimeType($pid, $datastream)
     {
 
-        $nodes = fedorahelpers_getQueryNodes(
+        $stream = fedorahelpers_getQueryNodes(
             "{$this->url}objects/$pid/datastreams?format=xml",
-            "//*[local-name() = 'datastream']"
+            "//datastream[@dsid='DC']"
         );
 
-        // Extremely inefficient way of doing this, because I can't
-        // figure out how to just query for this specifically. Fix.
-        foreach ($nodes as $node) {
-            if ($node->getAttribute('dsid') == $datastream) {
-                return $node->getAttribute('mimeType');
-            }
-        }
+        return $stream->getAttribute('mimeType');
 
     }
 
