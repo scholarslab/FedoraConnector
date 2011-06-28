@@ -67,19 +67,19 @@ class FedoraConnector_Importers
      * @param string $importerDir This is the directory containing the 
      * importers. It defaults to FedoraConnector/Importers.
      */
-    function __construct($importerDir=null) {
+    public function __construct($importerDir = null) {
 
-        if ($importerDir === null) {
-            $importerDir = dirname(__FILE__) . '/../../Importers/';
-        }
+        // if ($importerDir === null) {
+        //     $importerDir = dirname(__FILE__) . '/../../Importers/';
+        // }
 
-        $this->importerDir = $importerDir;
-        $this->plugins = new FedoraConnector_PluginDir(
-            $importerDir,
-            'Importer',
-            'canImport',
-            'import'
-        );
+        // $this->importerDir = $importerDir;
+        // $this->plugins = new FedoraConnector_PluginDir(
+        //     $importerDir,
+        //     'Importer',
+        //     'canImport',
+        //     'import'
+        // );
 
     }
 
@@ -88,7 +88,7 @@ class FedoraConnector_Importers
      *
      * @return array The list of importer plugin objects.
      */
-    function getImporters() {
+    public function getImporters() {
 
         return $this->plugins->getPlugins();
 
@@ -102,7 +102,7 @@ class FedoraConnector_Importers
      * @return FedoraConnector_BaseImporter|null If an importer can be found, 
      * it's returned; otherwise, null.
      */
-    function getImporter($datastream) {
+    public function getImporter($datastream) {
 
         return $this->plugins->getPlugin($datastream);
 
@@ -116,7 +116,7 @@ class FedoraConnector_Importers
      * @return bool True if a plugin can import the metadata for this 
      * datastream.
      */
-    function canImport($datastream) {
+    public function canImport($datastream) {
 
         return ($this->getImporter($datastream) !== null);
 
@@ -129,18 +129,21 @@ class FedoraConnector_Importers
      *
      * @return bool True if an importer can handle this. Otherwise, false.
      */
-    function import($datastream) {
+    public function import($datastream) {
 
         // Don't use PluginDir->callFirst because it may not return anything, 
         // even if it does import correctly.
-        $imp = $this->getImporter($datastream);
+        // $imp = $this->getImporter($datastream);
 
-        if ($imp === null) {
-            return false;
-        } else {
-            $imp->import($datastream);
-            return true;
-        }
+        // if ($imp === null) {
+        //     return false;
+        // } else {
+        //     $imp->import($datastream);
+        //     return true;
+        // }
+
+        echo 'test';
+        return true;
 
     }
 

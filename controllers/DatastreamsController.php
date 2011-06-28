@@ -42,10 +42,6 @@
 
 <?php
 
-// require "Zend/Form/Element.php";
-// include_once '../form_utils.php';
-// include_once '../db_utils.php';
-
 class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 {
 
@@ -108,9 +104,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         }
 
         else {
-
             $this->view->datastream = $datastream;
-
         }
 
     }
@@ -259,10 +253,12 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
         // Not working...
         $importer = new FedoraConnecter_Importers;
-        $importer->import($datastream);
+        // $importer->import($datastream);
 
-        $this->flashSuccess('Metadata imported.');
-        $this->_helper->redirector->goto($datastream->item_id, 'edit', 'items');
+        // $this->flashSuccess('Metadata imported.');
+        // $this->_helper->redirector->goto($datastream->item_id, 'edit', 'items');
+
+        $this->_forward('browse', 'datastreams', 'fedora-connector');
 
     }
 
