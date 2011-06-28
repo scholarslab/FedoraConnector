@@ -108,7 +108,7 @@ class FedoraConnectorServer extends Omeka_record
 
         $stream = fedorahelpers_getQueryNodes(
             "{$this->url}objects/$pid/datastreams?format=xml",
-            "//datastream[@dsid='" . $datastream . "']"
+            "//*[local-name() = 'datastream'][@dsid='" . $datastream . "']"
         );
 
         return $stream->item(0)->getAttribute('mimeType');
