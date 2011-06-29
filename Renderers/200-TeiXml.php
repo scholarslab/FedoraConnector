@@ -54,9 +54,11 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
      * @return boolean True if this can display the datastream.
      */
     function canDisplay($datastream) {
+
         return (strpos($datastream->mime_type, 'text/xml') !== false
             && $datastream->datastream == 'TEI'
             && function_exists('tei_display_installed'));
+
     }
 
     /**
@@ -67,7 +69,9 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
      * @return boolean True if this can display the datastream.
      */
     function canPreview($datastream) {
+
         return false;
+
     }
 
     /**
@@ -78,6 +82,7 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
      * @return string The display HTML for the datastream.
      */
     function display($datastream) {
+
         $teiFiles = get_db()
             ->getTable('TeiDisplay_Config')
             ->findbySql('item_id = ?', array($datastream->item_id));
@@ -90,6 +95,7 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
         ob_end_clean();
 
         return $html;
+
     }
 
     /**
@@ -100,7 +106,9 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
      * @return string The preview HTML for the datastream.
      */
     function preview($datastream) {
+
         return '';
+
     }
 
 }

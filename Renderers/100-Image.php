@@ -53,7 +53,9 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      * @return boolean True if this can display the datastream.
      */
     function canDisplay($datastream) {
+
         return (bool)(preg_match('/^image\//', $datastream->mime_type));
+
     }
 
     /**
@@ -64,7 +66,9 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      * @return boolean True if this can display the datastream.
      */
     function canPreview($datastream) {
+
         return $this->canDisplay($datastream);
+
     }
 
     /**
@@ -75,9 +79,11 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      * @return string The display HTML for the datastream.
      */
     function display($datastream) {
+
         $url = $datastream->getContentUrl();
         $html = "<img alt='image' src='{$url}' />";
         return $html;
+
     }
 
     /**
@@ -88,9 +94,11 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      * @return string The preview HTML for the datastream.
      */
     function preview($datastream) {
+
         $url = $datastream->getContentUrl();
         $html = "<img alt='image' src='{$url}' class='fedora-preview' />";
         return $html;
+
     }
 
 }
