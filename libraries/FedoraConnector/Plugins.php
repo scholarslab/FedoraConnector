@@ -112,7 +112,17 @@ class FedoraConnector_Plugins
      */
     function getPlugin($arg) {
 
+        $predicate = $this->filter;
 
+        foreach ($this->plugins as $plugin) {
+
+            if ($plugin->$predicate($arg)) {
+                return $plugin;
+            }
+
+        }
+
+        return null;
 
     }
 
