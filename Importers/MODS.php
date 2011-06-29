@@ -38,6 +38,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractImporter.php';
+
 class MODS_Importer extends FedoraConnector_AbstractImporter
 {
 

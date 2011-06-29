@@ -50,8 +50,7 @@ define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 // {{{ requires
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/FedoraConnectorPlugin.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Importers.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Renderers.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Import.php';
 // }}}
 
 new FedoraConnectorPlugin;

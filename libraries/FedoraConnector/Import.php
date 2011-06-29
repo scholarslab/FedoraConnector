@@ -39,7 +39,7 @@
  */
 
 
-// require_once dirname(__FILE__) . '/PluginDir.php';
+require_once dirname(__FILE__) . '/Plugins.php';
 
 class FedoraConnector_Import
 {
@@ -54,13 +54,13 @@ class FedoraConnector_Import
     public function __construct($importerDir = null)
     {
 
-        $this->importerDir = ($importerDir != null) ?
+        $this->importerDir = isset($importerDir) ?
             $importerDir :
-            FEDORA_CONNECTOR_PLUGIN_DIR . '/importers';
+            FEDORA_CONNECTOR_PLUGIN_DIR . '/Importers';
 
         // Add params here.
         $this->plugins = new FedoraConnector_Plugins(
-            $importerDir,
+            $this->importerDir,
             'Importer',
             'canImport',
             'import'

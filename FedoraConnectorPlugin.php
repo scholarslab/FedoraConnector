@@ -284,7 +284,7 @@ class FedoraConnectorPlugin
      *
      * @return array The $tabs array updated with the Fedora Datastreams tab.
      */
-    public function adminItemsFormTab($tabs)
+    public function adminItemsFormTabs($tabs)
     {
 
         $item = get_current_item();
