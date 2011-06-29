@@ -69,7 +69,61 @@ class FedoraConnector_Plugins
 
     }
 
+    /**
+     * Walk $dirname to find plugin classes.
+     *
+     * @return array The list of plugin objects.
+     */
+    private function _discover() {
+
+        $dir = new DirectoryIterator($this->dirname);
+
+        foreach ($dir as $file) {
+
+            if ($file->isFile() && !$file->isDot()) {
+
+                $filename = $file->getFilename();
+                $pathname = $file->getPathname();
+
+                if (preg_match('/^(\d+\W*)?(\w+)\.php$/', $filename, $matches)) {
+                    require_once($pathname);
+                    $class = "{$matches[2]}_{$this->suffix}";
+                    $files[$filename] = new $class();
+                }
+
+            }
+
+        }
+
+        ksort($files);
+        $plugins = array_values($files);
+
+        return $plugins;
+
+    }
+
+    /**
+     * Return the first plugin that passes the predicate.
+     *
+     * @param mixed $arg An argument to pass to the predicate method.
+     *
+     * @return mixed This returns the first plugin object that passes the 
+     * predicate.
+     */
+    function getPlugin($arg) {
+
+
+
+    }
+
 }
+
+
+
+
+
+
+
 
 class FedoraConnector_PluginDir
 {
