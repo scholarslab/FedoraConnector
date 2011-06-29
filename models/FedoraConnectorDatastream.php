@@ -97,6 +97,19 @@ class FedoraConnectorDatastream extends Omeka_record
 
     }
 
+    /**
+     * Renders a preview of the datastream.
+     *
+     * @return string The preview markup.
+     */
+    public function renderPreview()
+    {
+
+        $renderer = new FedoraConnector_Render;
+        return $renderer->preview($this);
+
+    }
+
 }
 
 

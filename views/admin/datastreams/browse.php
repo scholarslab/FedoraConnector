@@ -22,6 +22,7 @@
                             'Item' => 'parent_item',
                             'Server' => 'server_name',
                             'Object Metadata' => 'metadata_stream',
+                            // 'Preview' => null,
                             'Actions' => null
                         )); ?>
                     </tr>
@@ -35,6 +36,7 @@
                             <td><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo $datastream->parent_item; ?></a></td>
                             <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $datastream->server_id); ?>"><?php echo $datastream->server_name; ?></a></td>
                             <td><?php echo $datastream->metadata_stream; ?></td>
+                            <!-- <td><?php echo $datastream->renderPreview(); ?></td> -->
                             <td><?php echo $this->partial('datastreams/datastreams-actions.php', array('id' => $datastream->datastream_id)); ?></td>
                         </tr>
                     <?php endforeach; ?>

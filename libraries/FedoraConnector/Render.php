@@ -74,19 +74,19 @@ class FedoraConnector_Render
     public function __construct($rendererDir = null)
     {
 
-        $this->$rendererDir = isset($rendererDir) ?
+        $this->rendererDir = isset($rendererDir) ?
             $rendererDir :
             FEDORA_CONNECTOR_PLUGIN_DIR . '/renderers';
 
         $this->previewPlugins = new FedoraConnector_Plugins(
-            $this->$rendererDir,
+            $this->rendererDir,
             'Renderer',
             'canPreview',
             'preview'
         );
 
         $this->displayPlugins = new FedoraConnector_Plugins(
-            $this->$rendererDir,
+            $this->rendererDir,
             'Renderer',
             'canDisplay',
             'display'
@@ -104,7 +104,7 @@ class FedoraConnector_Render
      */
     public function display($datastream) {
 
-        return $this->displayPlugs->callFirst($datastream);
+        return $this->displayPlugins->callFirst($datastream);
 
     }
 
@@ -118,7 +118,8 @@ class FedoraConnector_Render
      */
     public function preview($datastream) {
 
-        return $this->previewPlugs->callFirst($datastream);
+        // return 'test';
+        return $this->previewPlugins->callFirst($datastream);
 
     }
 

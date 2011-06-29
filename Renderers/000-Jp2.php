@@ -135,8 +135,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
             $px = $this->sizes['*'];
         }
 
-        $server = $datastream->getServer();
-        $url = "{$server}get/{$datastream->pid}"
+        $url = "{$datastream->url}get/{$datastream->pid}"
             . "/djatoka:jp2SDef/getRegion?scale={$px},{$px}";
 
         $html = "<img alt='image' src='{$url}' />";
