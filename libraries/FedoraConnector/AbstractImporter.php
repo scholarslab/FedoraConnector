@@ -158,46 +158,6 @@ abstract class FedoraConnector_AbstractImporter
     }
 
     /**
-     * Perform all queries in the list on the documents and returns the
-     * nodes for all queries as an array.
-     *
-     * @param DOMXPath $xpath The XPath object to perform the queries.
-     * @param array $queries The queries to perform.
-     *
-     * @return array The resulting array of DOMNodes.
-     */
-    public function queryAll($xpath, $queries) {
-
-        foreach ($queries as $query) {
-            foreach ($xpath->query($query) as $node) {
-                $results[] = $node;
-            }
-        }
-
-        return $i;
-
-    }
-
-    /**
-     * Get rid of existing imported metadata for an item.
-     *
-     * @param Omeka_Record $item The item to scrub.
-     *
-     * @return void
-     */
-    public function clearMetadata($item) {
-
-        $texts = $this->db
-            ->getTable('ElementText')
-            ->findBySql('record_id = ?', array($item->id));
-
-        foreach ($texts as $text) {
-            $text->delete();
-        }
-
-    }
-
-    /**
      * Adds the metadata texts to the database.
      *
      * @param Omeka_Record $item The item containing the metadata.
