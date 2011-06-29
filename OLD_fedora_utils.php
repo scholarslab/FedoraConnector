@@ -180,12 +180,7 @@ function fedora_connector_content_url($datastream)
 /**
  * This returns the URL for the object metadata datastream.
  *
- * This gets the server URL from the datastream's server_id. It also much query
- * the Fedora server to determine its version. Fedora 2 uses 'get' in the URL,
- * Fedora 3 uses 'objects.'
- *
- * @param Omeka_Record $datastream The data stream to return the metadata URL
- * for.
+ * @param Omeka_Record $datastream The datastream.
  *
  * @return string The URL for the datastream.
  */

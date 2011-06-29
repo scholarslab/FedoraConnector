@@ -54,6 +54,49 @@ class FedoraConnectorDatastream extends Omeka_record
     public $mime_type;
     public $metadata_stream;
 
+    /**
+     * This returns the datastream's base URL.
+     *
+     * This gets the server URL from the datastream's server_id. It also must query
+     * the Fedora server to determine its version. Fedora 2 uses 'get' in the URL,
+     * while Fedora 3 uses 'objects.'
+     *
+     * @param Omeka_Record $datastream The data stream to return the base URL for.
+     *
+     * @return string The base URL.
+     */
+    public function getBaseUrl()
+    {
+
+        $server = $this->getTable('FedoraConnectorServer')
+            ->find($this->server_id);
+
+        if (preg_match('/^2\./', $server->getVersion())) {
+            $service = 'get';
+        } else {
+            $service = 'objects';
+        }
+
+        $url = "{$server->url}{$service}/{$this->pid}/datastreams/";
+        return $url; 
+
+    }
+
+    /**
+     * This returns the URL for the object metadata datastream.
+     *
+     * @param Omeka_Record $datastream The datastream.
+     *
+     * @return string The URL for the datastream.
+     */
+    public function getMetadataUrl()
+    {
+
+        $baseUrl = $this->getBaseUrl();
+        return "{$baseUrl}{$this->metadata_stream}/content";
+
+    }
+
 }
 
 

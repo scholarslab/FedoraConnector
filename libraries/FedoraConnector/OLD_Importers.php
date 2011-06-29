@@ -69,17 +69,17 @@ class FedoraConnector_Importers
      */
     public function __construct($importerDir = null) {
 
-        // if ($importerDir === null) {
-        //     $importerDir = dirname(__FILE__) . '/../../Importers/';
-        // }
+        if ($importerDir === null) {
+            $importerDir = dirname(__FILE__) . '/../../Importers/';
+        }
 
-        // $this->importerDir = $importerDir;
-        // $this->plugins = new FedoraConnector_PluginDir(
-        //     $importerDir,
-        //     'Importer',
-        //     'canImport',
-        //     'import'
-        // );
+        $this->importerDir = $importerDir;
+        $this->plugins = new FedoraConnector_PluginDir(
+            $importerDir,
+            'Importer',
+            'canImport',
+            'import'
+        );
 
     }
 
@@ -133,17 +133,14 @@ class FedoraConnector_Importers
 
         // Don't use PluginDir->callFirst because it may not return anything, 
         // even if it does import correctly.
-        // $imp = $this->getImporter($datastream);
+        $imp = $this->getImporter($datastream);
 
-        // if ($imp === null) {
-        //     return false;
-        // } else {
-        //     $imp->import($datastream);
-        //     return true;
-        // }
-
-        echo 'test';
-        return true;
+        if ($imp === null) {
+            return false;
+        } else {
+            $imp->import($datastream);
+            return true;
+        }
 
     }
 
