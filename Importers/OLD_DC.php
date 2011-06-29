@@ -37,13 +37,6 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-class DC_Importer extends FedoraConnector_AbstractImporter
-{
-
-    
-
-}
-
 
 class DC_Importer
 {
