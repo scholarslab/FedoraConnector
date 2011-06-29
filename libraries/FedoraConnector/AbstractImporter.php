@@ -64,11 +64,10 @@ abstract class FedoraConnector_AbstractImporter
      *
      * @return void.
      */
-    public function __construct($datastream)
+    public function __construct()
     {
 
         $this->db = get_db();
-        $this->datastream = $datastream;
 
     }
 
@@ -77,27 +76,29 @@ abstract class FedoraConnector_AbstractImporter
      *
      * @return void
      */
-    public function import()
+    public function import($datastream)
     {
+
+        $this->datastream = $datastream;
 
         $item = $this->getItem();
         $xpath = new DOMXPath($this->getMetadataXml());
         $dcNames = $this->getDublinCoreNames();
 
-        foreach ($dcNames as $name) {
-            $queries = $this->getQueries($name);
-            $element = $item->getElementByNameAndSetName(
-                strtolower($name),
-                'Dublin Core'
-            );
-        }
+        // foreach ($dcNames as $name) {
+        //     $queries = $this->getQueries($name);
+        //     $element = $item->getElementByNameAndSetName(
+        //         strtolower($name),
+        //         'Dublin Core'
+        //     );
+        // }
 
-        // What should be happening here?
-        // $this->clearMetadata($item);
+        // // What should be happening here?
+        // // $this->clearMetadata($item);
 
-        foreach ($this->queryAll($xpath, $queries) as $node) {
-            $this->addMetadata($item, $element, $dc, $node->nodeValue);
-        }
+        // foreach ($this->queryAll($xpath, $queries) as $node) {
+        //     $this->addMetadata($item, $element, $dc, $node->nodeValue);
+        // }
 
     }
 
@@ -118,16 +119,14 @@ abstract class FedoraConnector_AbstractImporter
     /**
      * Get XML from Fedora for the item.
      *
-     * @param Omeka_Record $datastream The datastream to import metadata from.
-     *
      * @return DOMDocument The metadata XML.
      */
     public function getMetadataXml() {
 
         $url = $this->datastream->getMetadataUrl();
         $xml = new DomDocument();
-
-        return $xml->load($url);
+        $xml->load($url);
+        return $xml;
 
     }
 
