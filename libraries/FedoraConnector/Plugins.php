@@ -60,7 +60,12 @@ class FedoraConnector_Plugins
     public function __construct($dirname, $suffix, $filter, $action)
     {
 
+        $this->dirname = $dirname;
+        $this->suffix = $suffix;
+        $this->filter = $filter;
+        $this->action = $action;
 
+        $this->plugins = $this->_discover();
 
     }
 
