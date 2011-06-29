@@ -38,9 +38,6 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-
-require_once dirname(__FILE__) . '/Plugins.php';
-
 class FedoraConnector_Import
 {
     /**
