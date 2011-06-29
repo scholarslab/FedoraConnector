@@ -74,19 +74,19 @@ class FedoraConnector_Render
     public function __construct($rendererDir = null)
     {
 
-        $this->importerDir = isset($rendererDir) ?
+        $this->$rendererDir = isset($rendererDir) ?
             $rendererDir :
             FEDORA_CONNECTOR_PLUGIN_DIR . '/renderers';
 
         $this->previewPlugins = new FedoraConnector_Plugins(
-            $rendererDir,
+            $this->$rendererDir,
             'Renderer',
             'canPreview',
             'preview'
         );
 
         $this->displayPlugins = new FedoraConnector_Plugins(
-            $rendererDir,
+            $this->$rendererDir,
             'Renderer',
             'canDisplay',
             'display'
@@ -94,41 +94,76 @@ class FedoraConnector_Render
 
     }
 
+    /**
+     * Render a datastream.
+     * If no datastream currently installed can handle this, it returns null.
+     *
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return string|null The output of the renderer.
+     */
+    public function display($datastream) {
+
+        return $this->displayPlugs->callFirst($datastream);
+
+    }
+
+    /**
+     * Render a preview for a datastream.
+     * If no datastream can preview this, it returns null.
+     *
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return string|null The output of the renderer.
+     */
+    public function preview($datastream) {
+
+        return $this->previewPlugs->callFirst($datastream);
+
+    }
+
 }
 
-class FedoraConnector_Renderers
-{
-    //{{{properties
+
+
+
+
+
+
+
+// class FedoraConnector_Renderers
+// {
+//     //{{{properties
 
     /**
      * The directory containing the renderers.
      *
      * @var string
      */
-    var $rendererDir;
+//     var $rendererDir;
 
     /**
      * This is the plugin manager for previews.
      *
      * @var FedoraConnector_PluginDir
      */
-    var $previewPlugs;
+//     var $previewPlugs;
 
     /**
      * This is the plugin manager for displays.
      *
      * @var FedoraConnector_PluginDir
      */
-    var $displayPlugs;
+//     var $displayPlugs;
 
     /**
      * The list of renderer classes in the order they should be loaded.
      *
      * @var array
      */
-    var $renderers;
+//     var $renderers;
 
-    //}}}
+//     //}}}
 
     /**
      * This constructs an instance of FedoraConnector_Renderers.
@@ -136,35 +171,35 @@ class FedoraConnector_Renderers
      * @param string $rendererDir This is the directory containing the 
      * renderers. It defaults to FedoraConnector/Renderers.
      */
-    function __construct($rendererDir=null) {
-        if ($rendererDir === null) {
-            $rendererDir = dirname(__FILE__) . '/../../Renderers/';
-        }
+//     function __construct($rendererDir=null) {
+//         if ($rendererDir === null) {
+//             $rendererDir = dirname(__FILE__) . '/../../Renderers/';
+//         }
 
-        $this->rendererDir = $rendererDir;
+//         $this->rendererDir = $rendererDir;
 
-        $this->previewPlugs = new FedoraConnector_PluginDir(
-            $rendererDir,
-            'Renderer',
-            'canPreview',
-            'preview'
-        );
-        $this->displayPlugs = new FedoraConnector_PluginDir(
-            $rendererDir,
-            'Renderer',
-            'canDisplay',
-            'display'
-        );
-    }
+//         $this->previewPlugs = new FedoraConnector_PluginDir(
+//             $rendererDir,
+//             'Renderer',
+//             'canPreview',
+//             'preview'
+//         );
+//         $this->displayPlugs = new FedoraConnector_PluginDir(
+//             $rendererDir,
+//             'Renderer',
+//             'canDisplay',
+//             'display'
+//         );
+//     }
 
     /**
      * This returns the list of renderer classes found.
      *
      * @return array A list of renderer classes in order of use.
      */
-    function getRenderers() {
-        return $this->displayPlugs->getPlugins();
-    }
+//     function getRenderers() {
+//         return $this->displayPlugs->getPlugins();
+//     }
 
     /**
      * This tests whether a renderer is installed that can handle the MIME 
@@ -176,10 +211,10 @@ class FedoraConnector_Renderers
      *
      * @return boolean True if the datastream can be rendered.
      */
-    function hasRendererFor($datastream, $isPreview=false) {
-        $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
-        return $plugs->hasPlugin($datastream);
-    }
+//     function hasRendererFor($datastream, $isPreview=false) {
+//         $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
+//         return $plugs->hasPlugin($datastream);
+//     }
 
     /**
      * This tests whether a renderer can handle displaying a datastream.
@@ -188,9 +223,9 @@ class FedoraConnector_Renderers
      *
      * @return boolean True if the datastream can be rendered.
      */
-    function canDisplay($datastream) {
-        return $this->hasRendererFor($datastream, false);
-    }
+//     function canDisplay($datastream) {
+//         return $this->hasRendererFor($datastream, false);
+//     }
 
     /**
      * This tests whether a renderer can handle previewing a datastream.
@@ -199,9 +234,9 @@ class FedoraConnector_Renderers
      *
      * @return boolean True if the datastream can be rendered.
      */
-    function canPreview($datastream) {
-        return $this->hasRendererFor($datastream, true);
-    }
+//     function canPreview($datastream) {
+//         return $this->hasRendererFor($datastream, true);
+//     }
 
     /**
      * This returns the first renderer that says it can handle the 
@@ -214,10 +249,10 @@ class FedoraConnector_Renderers
      * @return FedoraConnector_AbstractRenderer|null The renderer that 
      * can handle the input datastream.
      */
-    function getRenderer($datastream, $isPreview=false) {
-        $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
-        return $plugs->getPlugin($datastream);
-    }
+//     function getRenderer($datastream, $isPreview=false) {
+//         $plugs = ($isPreview) ? $this->previewPlugs : $this->displayPlugs;
+//         return $plugs->getPlugin($datastream);
+//     }
 
     /**
      * This renders a datastream.
@@ -228,9 +263,9 @@ class FedoraConnector_Renderers
      *
      * @return string|null The output of the renderer.
      */
-    function display($datastream) {
-        return $this->displayPlugs->callFirst($datastream);
-    }
+//     function display($datastream) {
+//         return $this->displayPlugs->callFirst($datastream);
+//     }
 
     /**
      * This renders a preview for a datastream.
@@ -241,11 +276,11 @@ class FedoraConnector_Renderers
      *
      * @return string|null The output of the renderer.
      */
-    function preview($datastream) {
-        return $this->previewPlugs->callFirst($datastream);
-    }
+//     function preview($datastream) {
+//         return $this->previewPlugs->callFirst($datastream);
+//     }
 
-}
+// }
 
 
 /*

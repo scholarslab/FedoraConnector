@@ -30,7 +30,6 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
- * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
@@ -38,31 +37,9 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractRenderer.php';
 
-/**
- * This class defines a display adapter for an image.
- */
-class Jp2_Renderer extends FedoraConnector_AbstractRenderer
+abstract class FedoraConnector_AbstractRenderer
 {
-    /**
-     * This contains the sizes for image rescaling.
-     *
-     * @var array
-     */
-    var $sizes;
-
-    /**
-     * This constructs an instance.
-     */
-    function __construct() {
-        $this->sizes = array(
-            'thumb'  => 120,
-            'screen' => 600,
-            '*'      => 400
-        );
-    }
-
     /**
      * This tests whether this renderer can display a datastream.
      *
@@ -70,9 +47,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return boolean True if this can display the datastream.
      */
-    function canDisplay($datastream) {
-        return ($datastream->mime_type == 'image/jp2');
-    }
+    abstract function canDisplay($datastream);
 
     /**
      * This tests whether this renderer can preview a datastream.
@@ -81,9 +56,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return boolean True if this can display the datastream.
      */
-    function canPreview($datastream) {
-        return $this->canDisplay($datastream);
-    }
+    abstract function canPreview($datastream);
 
     /**
      * This displays a datastream.
@@ -92,10 +65,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The display HTML for the datastream.
      */
-    function display($datastream) {
-        $html = $this->_display($datastream, '*');
-        return $html;
-    }
+    abstract function display($datastream);
 
     /**
      * This displays a datastream's preview.
@@ -104,35 +74,10 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The preview HTML for the datastream.
      */
-    function preview($datastream) {
-        $html = $this->_display($datastream, 'thumb');
-        return $html;
-    }
-
-    /**
-     * This displays the image.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     * @param string       $size       The size to scale the image to.
-     *
-     * @return string The HTML for the datastream.
-     */
-    private function _display($datastream, $size='*') {
-        if (array_key_exists($size, $this->sizes)) {
-            $px = $this->sizes[$size];
-        } else {
-            $px = $this->sizes['*'];
-        }
-
-        $server = $datastream->getServer();
-        $url = "{$server}get/{$datastream->pid}"
-            . "/djatoka:jp2SDef/getRegion?scale={$px},{$px}";
-
-        $html = "<img alt='image' src='{$url}' />";
-        return $html;
-    }
+    abstract function preview($datastream);
 
 }
+
 
 /*
  * Local variables:

@@ -30,6 +30,7 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
@@ -37,8 +38,7 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once dirname(__FILE__)
-    . '/../libraries/FedoraConnector/AbstractRenderer.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractRenderer.php';
 
 /**
  * This class defines a display adapter for an image.

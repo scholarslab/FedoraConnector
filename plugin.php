@@ -51,6 +51,7 @@ define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/FedoraConnectorPlugin.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Import.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Render.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Plugins.php';
 // }}}
 

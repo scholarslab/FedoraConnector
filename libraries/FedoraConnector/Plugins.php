@@ -127,6 +127,33 @@ class FedoraConnector_Plugins
 
     }
 
+    /**
+     * This calls an action on the first plugin object that passes the
+     * predicate.
+     *
+     * @param mixed $arg An argument to pass to the predicate and action
+     * methods.
+     *
+     * @return mixed This returns the result of calling the action on the first
+     * plugin object that passes the predicate.
+     */
+    public function callFirst($arg)
+    {
+
+        $plugin = $this->getPlugin($arg);
+
+        if ($plugin === null) {
+            return null;
+        }
+
+        else {
+            $action = $this->action;
+            return $plugin->$action($arg);
+        }
+
+
+    }
+
 }
 
 /*
