@@ -96,8 +96,10 @@ abstract class FedoraConnector_AbstractImporter
             // What should be happening here?
             // $this->clearMetadata($item);
 
-            foreach ($xpath->query($queries) as $node) {
-                $this->addMetadata($item, $element, $name, $node->nodeValue);
+            foreach ($queries as $query) {
+                foreach ($xpath->query($query) as $node) {
+                    $this->addMetadata($item, $element, $name, $node->nodeValue);
+                }
             }
 
         }
