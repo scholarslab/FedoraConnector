@@ -63,13 +63,34 @@ require_once dirname(__FILE__) . '/PluginDir.php';
 
 class FedoraConnector_Render
 {
-
-    public function __construct($importerDir = null)
+    /**
+     * Set renderer directory, instantiate plugins classes.
+     *
+     * @param string $rendererDir The directory containing the
+     * renderers. Defaults to FedoraConnector/renderers.
+     *
+     * @return void.
+     */
+    public function __construct($rendererDir = null)
     {
 
-        $this->importerDir = isset($importerDir) ?
-            $importerDir :
+        $this->importerDir = isset($rendererDir) ?
+            $rendererDir :
             FEDORA_CONNECTOR_PLUGIN_DIR . '/renderers';
+
+        $this->previewPlugins = new FedoraConnector_Plugins(
+            $rendererDir,
+            'Renderer',
+            'canPreview',
+            'preview'
+        );
+
+        $this->displayPlugins = new FedoraConnector_Plugins(
+            $rendererDir,
+            'Renderer',
+            'canDisplay',
+            'display'
+        );
 
     }
 

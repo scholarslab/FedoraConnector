@@ -40,6 +40,7 @@
 
 class FedoraConnector_Import
 {
+
     /**
      * Set importer directory, instantiate plugins class.
      *
