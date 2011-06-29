@@ -38,7 +38,7 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-abstract class Importer
+abstract class FedoraConnector_AbstractImporter
 {
 
     /**
