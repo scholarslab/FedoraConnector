@@ -30,6 +30,7 @@
  * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
  * @copyright   2010 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
@@ -40,18 +41,35 @@
 class DC_Importer extends FedoraConnector_AbstractImporter
 {
 
-    
+    /**
+     * Checks to see if the datastream is DC format.
+     *
+     * @param object $datastream The datastream.
+     *
+     * @return boolean True if format is DC.
+     */
+    public function canImport($datastream)
+    {
 
-}
-
-
-class DC_Importer
-{
-    function canImport($datastream) {
         return ($datastream->metadata_stream == 'DC');
-    }
-}
 
+    }
+
+    /**
+     * Get xpath queries for finding nodes in the input data for a given DC name.
+     *
+     * @param string $name The DC name of the element.
+     *
+     * @return array The array of xpath queries.
+     */
+    public function getQueries($name)
+    {
+
+        return '//*[local-name() = "' . $name . '"]';
+
+    }
+
+}
 
 /*
  * Local variables:

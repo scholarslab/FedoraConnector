@@ -59,7 +59,12 @@ class FedoraConnector_Import
             FEDORA_CONNECTOR_PLUGIN_DIR . '/importers';
 
         // Add params here.
-        $this->plugins = new FedoraConnector_Plugins();
+        $this->plugins = new FedoraConnector_Plugins(
+            $importerDir,
+            'Importer',
+            'canImport',
+            'import'
+        );
 
     }
 
