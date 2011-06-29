@@ -85,20 +85,22 @@ abstract class FedoraConnector_AbstractImporter
         $xpath = new DOMXPath($this->getMetadataXml());
         $dcNames = $this->getDublinCoreNames();
 
-        // foreach ($dcNames as $name) {
-        //     $queries = $this->getQueries($name);
-        //     $element = $item->getElementByNameAndSetName(
-        //         strtolower($name),
-        //         'Dublin Core'
-        //     );
-        // }
+        foreach ($dcNames as $name) {
 
-        // // What should be happening here?
-        // // $this->clearMetadata($item);
+            $queries = $this->getQueries(strtolower($name));
+            $element = $item->getElementByNameAndSetName(
+                $name,
+                'Dublin Core'
+            );
 
-        // foreach ($this->queryAll($xpath, $queries) as $node) {
-        //     $this->addMetadata($item, $element, $dc, $node->nodeValue);
-        // }
+            // What should be happening here?
+            // $this->clearMetadata($item);
+
+            foreach ($xpath->query($queries) as $node) {
+                $this->addMetadata($item, $element, $name, $node->nodeValue);
+            }
+
+        }
 
     }
 
@@ -112,7 +114,7 @@ abstract class FedoraConnector_AbstractImporter
 
         return $this->db
             ->getTable('Item')
-            ->find($this->datastream->id);
+            ->find($this->datastream->item_id);
 
     }
 
@@ -139,14 +141,14 @@ abstract class FedoraConnector_AbstractImporter
 
         $select = $this->db
             ->select()
-            ->from(array('e' => 'Element'), array('name'))
-            ->join(array('es' => 'ElementSet'), 'e.element_set_id = es.id', array())
+            ->from(array('e' => $this->db->prefix . 'elements'), array('name'))
+            ->join(array('es' => $this->db->prefix . 'element_sets'), 'e.element_set_id = es.id', array())
             ->where('es.name = ?', 'Dublin Core')
             ->order('name');
-        $elements = $this->db->fetchObjects($select);
+        $elements = $this->db->query($select);
 
-        foreach ($elements as $element) {
-            $names[] = $element->name;
+        foreach ($elements->fetchAll() as $element) {
+            $names[] = $element['name'];
         }
 
         return $names;
@@ -170,7 +172,7 @@ abstract class FedoraConnector_AbstractImporter
             }
         }
 
-        return $results;
+        return $i;
 
     }
 
@@ -205,16 +207,13 @@ abstract class FedoraConnector_AbstractImporter
      */
     public function addMetadata($item, $element, $name, $value) {
 
-        // Where do the hard-coded values below come from?
-        $data = array(
-            'record_id'      => $item->id,
-            'record_type_id' => 2,
-            'element_id'     => $element->id,
-            'html'           => 0,
-            'text'           => $value
-        );
-
-        $db->insert('element_texts', $data);
+        $text = new ElementText;
+        $text->record_id = $item->id;
+        $text->record_type_id = 2;
+        $text->element_id = $element->id;
+        $text->html = 0;
+        $text->text = $value;
+        $text->save();
 
     }
 
