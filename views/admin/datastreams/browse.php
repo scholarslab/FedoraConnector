@@ -38,12 +38,12 @@
                                 <span style="color: gray; font-size: 0.8em">format: <?php echo $datastream->metadata_stream; ?></span>
                             </td>
                             <td width="100" class="fedora-td-small"><?php echo $datastream->pid; ?></td>
-                            <td class="fedora-td-small"><?php echo $datastream->mime_type; ?></td>
+                            <td width="80" class="fedora-td-small"><?php echo $datastream->mime_type; ?></td>
                             <td class="fedora-td-small"><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo $datastream->parent_item; ?></a></td>
                             <td class="fedora-td-small"><a href="<?php echo uri('fedora-connector/servers/edit/' . $datastream->server_id); ?>"><?php echo $datastream->server_name; ?></a></td>
                             <!-- <td><?php echo $datastream->metadata_stream; ?></td> -->
-                            <td><?php echo $datastream->renderPreview(); ?></td>
-                            <td width="140"><?php echo $this->partial('datastreams/datastreams-actions.php', array('id' => $datastream->datastream_id)); ?></td>
+                            <td style="text-align: center;"><?php echo $datastream->renderPreview(); ?></td>
+                            <td width="60"><?php echo $this->partial('datastreams/datastreams-actions.php', array('id' => $datastream->datastream_id)); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -61,11 +61,7 @@
               'total_results' => $total_results)); ?>
 
           </div>
-<!--
-    <form method="post" action="<?php echo uri('fedora-connector/servers/create') ?>" accept-charset="utf-8">
-        <?php echo submit(array('name' => 'create_server'), 'Add Server'); ?>
-    </form>
--->
+
 </div>
 
 <?php foot(); ?>

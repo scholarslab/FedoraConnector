@@ -34,15 +34,15 @@
 }
 
 .fedora-inline-button {
-    font-size: 0.9em;
+    font-size: 0.8em;
     margin: 0 !important;
     border: none !important;
 }
 
 form.fedora-inline-form {
-    margin: 0 0.6em 0 0;
+    margin: 0.4em 0.6em 0 0;
     padding: 0;
-    float: left;
+    /* float: left;*/
 }
 
 .fedora-delete {

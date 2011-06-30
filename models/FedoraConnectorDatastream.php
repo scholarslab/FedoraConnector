@@ -106,7 +106,14 @@ class FedoraConnectorDatastream extends Omeka_record
     {
 
         $renderer = new FedoraConnector_Render;
-        return $renderer->preview($this);
+
+        if ($renderer->canPreview($this)) {
+            return $renderer->preview($this);
+        }
+
+        else {
+            return '<span style="color: gray; font-size: 0.8em;">[Unavailable]</span>';
+        }
 
     }
 

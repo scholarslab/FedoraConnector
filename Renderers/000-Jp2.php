@@ -58,7 +58,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
     function __construct() {
 
         $this->sizes = array(
-            'thumb'  => 120,
+            'thumb'  => 80,
             'screen' => 600,
             '*'      => 400
         );
