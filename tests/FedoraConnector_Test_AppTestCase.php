@@ -47,6 +47,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
     const PLUGIN_NAME = 'FedoraConnector';
 
     public function setUp() {
+
         parent::setUp();
 
         // Authenticate and set the current user.
@@ -59,24 +60,16 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         $pluginHelper = new Omeka_Test_Helper_Plugin();
         $pluginHelper->setUp(self::PLUGIN_NAME);
+
     }
 
     public function _addPluginHooksAndFilters($pluginBroker, $pluginName) {
+
         // Set the current plugin so the add_plugin_hook function works.
         $pluginBroker->setCurrentPluginDirName($pluginName);
 
-        // Add plugin hooks.
-        add_plugin_hook('install', 'fedora_connector_install');
-        add_plugin_hook('uninstall', 'fedora_connector_uninstall');
-        add_plugin_hook('before_delete_item', 'fedora_connector_before_delete_item');
-        add_plugin_hook('admin_theme_header', 'fedora_connector_admin_header');
-        add_plugin_hook('define_acl', 'fedora_connector_define_acl');
-        add_plugin_hook('config_form', 'fedora_connector_config_form');
-        add_plugin_hook('config', 'fedora_connector_config');
+        new FedoraConnectorPlugin;
 
-        // Add filters.
-        add_filter('admin_items_form_tabs', 'fedora_connector_item_form_tabs');
-        add_filter('admin_navigation_main', 'fedora_connector_admin_navigation');
     }
 
 }

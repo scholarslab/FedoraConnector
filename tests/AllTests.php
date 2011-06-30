@@ -47,12 +47,14 @@ require_once 'FedoraConnector_Test_AppTestCase.php';
  */
 class FedoraConnector_AllTests extends PHPUnit_Framework_TestSuite
 {
+
     /**
-     * This constructos the test suite for the FedoraConnector plugin.
+     * This constructs the test suite for the FedoraConnector plugin.
      *
      * @return FedoraConnector_AllTests The test suites.
      */
     public static function suite() {
+
         $suite = new FedoraConnector_AllTests('FedoraConnector Tests');
 
         $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
@@ -61,10 +63,13 @@ class FedoraConnector_AllTests extends PHPUnit_Framework_TestSuite
                 dirname(__FILE__) . '/unit'
             )
         );
+
         $suite->addTestFiles($testCollector->collectTests());
 
         return $suite;
+
     }
+
 }
 
 /*
