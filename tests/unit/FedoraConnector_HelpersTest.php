@@ -93,4 +93,13 @@ class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
 
     }
 
+    public function testFedoraHelpersGetSingleItem()
+    {
+
+        $this->helper->_createItems(1);
+        $items = fedorahelpers_getItems();
+        $this->assertEquals(1, count($items));
+
+    }
+
 }
