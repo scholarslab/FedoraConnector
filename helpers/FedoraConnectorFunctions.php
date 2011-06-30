@@ -88,7 +88,7 @@ function fedorahelpers_getQueryNodes($uri, $xpath)
  *
  * @return array $items The items.
  */
-function fedorahelpers_getItems($page, $order, $search)
+function fedorahelpers_getItems($page = null, $order = null, $search = null)
 {
 
     $db = get_db();
