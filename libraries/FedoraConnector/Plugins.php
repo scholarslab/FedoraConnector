@@ -145,10 +145,11 @@ class FedoraConnector_Plugins
      *
      * @return array A list of the plugin objects that pass the predicate.
      */
-    function filterPlugins() {
+    function filterPlugins($arg) {
 
         $predicate = $this->filter;
 
+        $results = array();
         foreach ($this->plugins as $plugin) {
             if ($plugin->$predicate($arg)) {
                 $results[] = $plugin;
@@ -211,8 +212,9 @@ class FedoraConnector_Plugins
 
         $action = $this->action;
 
+        $results = array();
         foreach ($this->filterPlugins($arg) as $plugin) {
-            $results[] = $plug->$action($arg);
+            $results[] = $plugin->$action($arg);
         }
 
         return $results;

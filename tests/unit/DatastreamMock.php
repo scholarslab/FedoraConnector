@@ -58,7 +58,7 @@ class Datastream_Mock {
 
     function getServer() {
 
-        return $this->server;
+        return new Server_Mock($this->server);
 
     }
 
@@ -66,6 +66,15 @@ class Datastream_Mock {
 
         return "{$this->server}get/";
 
+    }
+
+}
+
+class Server_Mock {
+
+    function __construct($url)
+    {
+        $this->url = $url;
     }
 
 }
