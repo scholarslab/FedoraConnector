@@ -37,6 +37,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
+require_once '../FedoraConnectorPlugin.php';
+
 /**
  * This class sets up the system for testing this plugin.
  *
