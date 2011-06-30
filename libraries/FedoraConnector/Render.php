@@ -76,7 +76,7 @@ class FedoraConnector_Render
 
         $this->rendererDir = isset($rendererDir) ?
             $rendererDir :
-            FEDORA_CONNECTOR_PLUGIN_DIR . '/renderers';
+            FEDORA_CONNECTOR_PLUGIN_DIR . '/Renderers';
 
         $this->previewPlugins = new FedoraConnector_Plugins(
             $this->rendererDir,
