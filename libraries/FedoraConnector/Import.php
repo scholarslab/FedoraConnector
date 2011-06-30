@@ -78,6 +78,7 @@ class FedoraConnector_Import
 
         if ($importer != null) {
             $importer->import($datastream);
+            return true;
         }
 
     }
