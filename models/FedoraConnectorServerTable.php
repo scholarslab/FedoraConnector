@@ -143,6 +143,10 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
         $server->url = $data['url'];
         $server->is_default = $data['is_default'];
 
+        if ($server->is_default) {
+            $this->unsetDefault();
+        }
+
         return $server->save() ? true : false;
 
     }

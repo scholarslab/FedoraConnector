@@ -48,177 +48,124 @@ class FedoraConnector_ServersControllerTest extends Omeka_Test_AppTestCase
 
         parent::setUp();
         $this->helper = new FedoraConnector_Test_AppTestCase;
-        $this->helper->setUpPlugin();
+        $this->helper->setUp();
         $this->db = get_db();
+
+    }
+
+    public function testDefaultRedirect()
+    {
+
+        $this->dispatch('fedora-connector');
+        $this->assertController('servers');
+        $this->assertAction('browse');
 
     }
 
     public function testDefaultServer()
     {
 
-        $this->dispatch('bag-it');
-        $this->assertQueryContentContains('p', 'There are no collections. Create one!');
-        $this->assertEquals(0, $this->db->getTable('BagitFileCollection')->count());
+        $this->dispatch('fedora-connector');
+        $this->assertEquals(1, $this->db->getTable('FedoraConnectorServer')->count());
+        $this->assertQueryContentContains('strong', 'Default Fedora Server');
+        $this->assertQueryContentContains('a', 'http://localhost:8080/fedora/');
 
     }
 
-    public function testAddCollection()
+    public function testAddServer()
+    {
+
+        $this->assertEquals(1, $this->db->getTable('FedoraConnectorServer')->count());
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'name' => 'TestServer',
+                'url' => 'http://TestUrl',
+                'is_default' => 0
+            )
+        );
+
+        $this->dispatch('fedora-connector/servers/insert');
+        $this->assertEquals(1, $this->db->getTable('FedoraConnectorServer')->count());
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'name' => 'TestServer',
+                'url' => 'http://TestUrl.com/fedora/',
+                'is_default' => 0
+            )
+        );
+
+        $this->dispatch('fedora-connector/servers/insert');
+        $this->assertEquals(2, $this->db->getTable('FedoraConnectorServer')->count());
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'name' => 'TestServer2',
+                'url' => 'http://TestUrl.com/fedora/',
+                'is_default' => 1
+            )
+        );
+
+        $this->dispatch('fedora-connector/servers/insert');
+        $this->assertEquals(3, $this->db->getTable('FedoraConnectorServer')->count());
+        $this->assertEquals(1, count($this->db->getTable('FedoraConnectorServer')->findBySql('is_default = ?', array(1))));
+
+    }
+
+    public function testEditServer()
     {
 
         $this->request->setMethod('POST')
             ->setPost(array(
-                'collection_name' => 'Testing Collection'
+                'name' => 'TestServer',
+                'url' => 'http://TestUrl.com/fedora/',
+                'is_default' => 0
             )
         );
 
-        $this->dispatch('bag-it/collections/addcollection');
-        $this->assertQueryContentContains('a', 'Testing Collection');
-        $this->assertEquals(1, $this->db->getTable('BagitFileCollection')->count());
+        $this->dispatch('fedora-connector/servers/insert');
+        $this->assertEquals(2, $this->db->getTable('FedoraConnectorServer')->count());
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'name' => 'TestServer',
+                'url' => 'http://TestUrl.com/fedora/',
+                'is_default' => 1,
+                'id' => 2,
+                'edit_submit' => 'Save'
+            )
+        );
+
+        $this->dispatch('fedora-connector/servers/edit/update');
+        $this->assertEquals(1, count($this->db->getTable('FedoraConnectorServer')->findBySql('is_default = ?', array(1))));
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'name' => 'TestServerUpdate',
+                'url' => 'http://TestUrl.com/fedora/',
+                'is_default' => 1,
+                'id' => 2,
+                'edit_submit' => 'Save'
+            )
+        );
+
+        $this->dispatch('fedora-connector/servers/edit/update');
+        $this->assertEquals('TestServerUpdate', $this->db->getTable('FedoraConnectorServer')->find(2)->name);
 
     }
 
-    public function testRejectBlankCollectionName()
+    public function testDeleteServer()
     {
 
         $this->request->setMethod('POST')
             ->setPost(array(
-                'collection_name' => ''
+                'deleteconfirm_submit' => 'Delete'
             )
         );
 
-        $this->dispatch('bag-it/collections/addcollection');
-        $this->assertQueryContentContains('div.error', 'Enter a name for the collection');
-
-    }
-
-    public function testCollectionNameTrim()
-    {
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'collection_name' => '    '
-            )
-        );
-
-        $this->dispatch('bag-it/collections/addcollection');
-        $this->assertQueryContentContains('div.error', 'Enter a name for the collection');
-
-    }
-
-    public function testDeleteCollection()
-    {
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'collection_name' => 'Testing Collection'
-            )
-        );
-
-        $this->dispatch('bag-it/collections/addcollection');
-        $this->assertQueryContentContains('a', 'Testing Collection');
-        $this->assertEquals(1, $this->db->getTable('BagitFileCollection')->count());
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'confirm' => 'true'
-            )
-        );
-
-        $this->dispatch('bag-it/collections/1/delete');
-        $this->assertEquals(0, $this->db->getTable('BagitFileCollection')->count());
-
-    }
-
-    public function testDetectNoFilesToAdd()
-    {
-
-        $this->helper->_createFileCollection('Test Collection');
-        $this->dispatch('bag-it/collections/1/add');
-        $this->assertQueryContentContains('p', 'There are no files on the site that can be added to a Bag.');
-
-    }
-
-    public function testAddAndRemoveFiles()
-    {
-
-        $this->helper->_createItem('Testing Item');
-        $this->helper->_createFiles();
-        $this->helper->_createFileCollection('Test Collection');
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'file' => array(
-                    '3' => 'add',
-                    '4' => 'add',
-                    '5' => 'add'
-                )
-            )
-        );
-
-        $this->dispatch('bag-it/collections/1/add');
-        $this->assertQueryCount(3, 'input[value="remove"]');
-
-        $this->dispatch('bag-it/collections/1');
-        $this->assertQueryContentContains('h2', '"Test Collection" contains 3 files:');
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'file' => array(
-                    '3' => 'remove',
-                    '4' => 'remove'
-                )
-            )
-        );
-
-        $this->dispatch('bag-it/collections/1');
-        $this->assertQueryContentContains('h2', '"Test Collection" contains 1 files:');
-
-        $this->resetRequest()->resetResponse();
-
-        $this->dispatch('bag-it/collections/1/add');
-        $this->assertQueryCount(1, 'input[value="remove"]');
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'file' => array(
-                    '5' => 'remove'
-                )
-            )
-        );
-
-        $this->dispatch('bag-it/collections/1/add');
-        $this->assertQueryCount(0, 'input[value="remove"]');
-
-    }
-
-    public function testAddAndRemoveAllFiles()
-    {
-
-        $this->helper->_createItem('Testing Item');
-        $this->helper->_createFiles();
-        $this->helper->_createFileCollection('Test Collection');
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'add_all_files' => 'Add All Files'
-                )
-            );
-
-        $this->dispatch('bag-it/collections/1/add');
-        $this->assertEquals(13, count($this->db->getTable('BagitFileCollectionAssociation')
-            ->findBySql('collection_id = ?', array(1))));
-
-        $this->resetRequest()->resetResponse();
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'remove_all_files' => 'Remove All Files'
-                )
-            );
-
-        $this->dispatch('bag-it/collections/1/add');
-        $this->assertEquals(0, count($this->db->getTable('BagitFileCollectionAssociation')
-            ->findBySql('collection_id = ?', array(1))));
+        $this->dispatch('fedora-connector/servers/delete/1');
+        $this->assertEquals(0, $this->db->getTable('FedoraConnectorServer')->count());
 
     }
 

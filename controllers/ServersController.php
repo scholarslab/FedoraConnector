@@ -197,17 +197,27 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             if (!$this->getTable('FedoraConnectorServer')->checkServerUrlFormat($data['url'])) {
                 $this->flashError('Server URL must be of format "http://[host]/fedora/"');
                 $this->_redirect('fedora-connector/servers/create');
-                exit();
             }
 
-            // Create server, process success.
-            if ($this->getTable('FedoraConnectorServer')->createServer($data)) {
-                $this->flashSuccess('Server created.');
-                $this->redirect->goto('browse');
-            } else {
-                $this->flashError('Error: The server was not created');
-                $this->redirect->goto('browse');
+            else {
+
+                // Create server, process success.
+                if ($this->getTable('FedoraConnectorServer')->createServer($data)) {
+                    $this->flashSuccess('Server created.');
+                    $this->redirect->goto('browse');
+                } else {
+                    $this->flashError('Error: The server was not created');
+                    $this->redirect->goto('browse');
+                }
+
             }
+
+        }
+
+        else {
+
+            $this->flashError('Enter a name and URL.');
+            $this->_redirect('fedora-connector/servers/create');
 
         }
 
