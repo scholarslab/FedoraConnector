@@ -83,3 +83,11 @@ p.fedora-connector-search-reset {
 h1.fedora-nowrap {
     white-space: nowrap;
 }
+
+.fedora-td-small {
+    font-size: 0.9em;
+}
+
+table.fedora td {
+    vertical-align: middle;
+}

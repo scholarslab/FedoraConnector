@@ -12,7 +12,7 @@
 
     <?php else: ?>
 
-            <table>
+            <table class="fedora">
                 <thead>
                     <tr>
                         <?php browse_headings(array(
@@ -21,7 +21,7 @@
                             'Mime Type' => 'mime_type',
                             'Item' => 'parent_item',
                             'Server' => 'server_name',
-                            'Object Metadata' => 'metadata_stream',
+                            // 'Object Metadata' => 'metadata_stream',
                             // 'Preview' => null,
                             'Actions' => null
                         )); ?>
@@ -30,14 +30,20 @@
                 <tbody>
                     <?php foreach ($datastreams as $datastream): ?>
                         <tr>
-                            <td><?php echo $datastream->datastream; ?></td>
-                            <td><?php echo $datastream->pid; ?></td>
-                            <td><?php echo $datastream->mime_type; ?></td>
-                            <td><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo $datastream->parent_item; ?></a></td>
-                            <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $datastream->server_id); ?>"><?php echo $datastream->server_name; ?></a></td>
-                            <td><?php echo $datastream->metadata_stream; ?></td>
+                            <td width="240">
+                                <strong><?php echo $datastream->getNode()->getAttribute('label'); ?></strong>
+                                <br />
+                                <span style="color: gray; font-size: 0.8em">id: <?php echo $datastream->datastream; ?></span>
+                                <br />
+                                <span style="color: gray; font-size: 0.8em">format: <?php echo $datastream->metadata_stream; ?></span>
+                            </td>
+                            <td width="100" class="fedora-td-small"><?php echo $datastream->pid; ?></td>
+                            <td class="fedora-td-small"><?php echo $datastream->mime_type; ?></td>
+                            <td class="fedora-td-small"><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo $datastream->parent_item; ?></a></td>
+                            <td class="fedora-td-small"><a href="<?php echo uri('fedora-connector/servers/edit/' . $datastream->server_id); ?>"><?php echo $datastream->server_name; ?></a></td>
+                            <!-- <td><?php echo $datastream->metadata_stream; ?></td> -->
                             <!-- <td><?php echo $datastream->renderPreview(); ?></td> -->
-                            <td><?php echo $this->partial('datastreams/datastreams-actions.php', array('id' => $datastream->datastream_id)); ?></td>
+                            <td width="140"><?php echo $this->partial('datastreams/datastreams-actions.php', array('id' => $datastream->datastream_id)); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
