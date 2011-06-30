@@ -40,33 +40,37 @@
 
 class Datastream_Mock {
 
+    var $item_id;
+    var $server_id;
     var $pid;
-    var $server;
     var $mime_type;
     var $datastream;
     var $metadata_stream;
 
-    function __construct($pid, $server, $mime='text/plain', $ds='Jpeg', $mds='DC') {
+    function __construct($item_id, $server_id, $pid, $mime_type, $datastream, $metadata_stream) {
 
+        $this->item_id = $item_id;
+        $this->server_id = $server_id;
         $this->pid = $pid;
-        $this->server = $server;
-        $this->mime_type = $mime;
-        $this->datastream = $ds;
-        $this->metadata_stream = $mds;
+        $this->mime_type = $mime_type;
+        $this->datastream = $datastream;
+        $this->metadata_stream = $metadata_stream;
+
+        $datastream = new FedoraConnectorDatastream;
 
     }
 
-    function getServer() {
+    // function getServer() {
 
-        return $this->server;
+    //     return $this->server;
 
-    }
+    // }
 
-    function getContentUrl() {
+    // function getContentUrl() {
 
-        return "{$this->server}get/";
+    //     return "{$this->server}get/";
 
-    }
+    // }
 
 }
 

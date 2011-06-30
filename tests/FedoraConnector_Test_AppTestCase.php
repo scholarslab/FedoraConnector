@@ -90,6 +90,8 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $element_text->text = $name;
         $element_text->save();
 
+        return $item;
+
     }
 
     public function _createItems($count)

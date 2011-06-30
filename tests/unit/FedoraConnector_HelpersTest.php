@@ -41,6 +41,8 @@
 
 <?php
 
+require_once 'Datastream_Mock.php';
+
 class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
 {
 
@@ -83,10 +85,13 @@ class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
     {
 
         $this->helper->_createItems(20);
+
         $items = fedorahelpers_getItems();
         $this->assertEquals(20, count($items));
+
         $items = fedorahelpers_getItems(1, null, null);
         $this->assertEquals(get_option('per_page_admin'), count($items));
+
         $items = fedorahelpers_getItems(1, null, '12');
         $this->assertEquals(1, count($items));
         $this->assertEquals($items[0]->item_name, 'TestingItem12');
@@ -99,6 +104,17 @@ class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
         $this->helper->_createItems(1);
         $items = fedorahelpers_getItems();
         $this->assertEquals(1, count($items));
+        $this->assertEquals($items[0]->item_name, 'TestingItem0');
+
+    }
+
+    public function testFedoraHelpersIsOmittedDatastream()
+    {
+
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/_files/testXML.xml';
+        $query = '//*[local-name() = "datastream"][@dsid="content"]';
+        $datastream = fedorahelpers_getQueryNodes($url, $query)->item(0);
+        $this->assertFalse(fedorahelpers_isOmittedDatastream($datastream));
 
     }
 
