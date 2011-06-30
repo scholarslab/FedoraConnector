@@ -110,6 +110,35 @@ class FedoraConnectorDatastream extends Omeka_record
 
     }
 
+    /**
+     * Fetches the database object for the parent server.
+     *
+     * @return object The server.
+     */
+    public function getServer()
+    {
+
+        return $this->getTable('FedoraConnectorServer')->find($this->server_id);
+
+    }
+
+    /**
+     * Fetches the datastream node from Fedora.
+     *
+     * @return object The node.
+     */
+    public function getNode()
+    {
+
+        // $datastream = fedorahelpers_getQueryNodes(
+        //     "{$this->url}objects/$pid/datastreams?format=xml",
+        //     "//*[local-name() = 'datastream'][@dsid='" . $datastream . "']"
+        // );
+
+        // return $stream->item(0)->getAttribute('mimeType');
+
+    }
+
 }
 
 
