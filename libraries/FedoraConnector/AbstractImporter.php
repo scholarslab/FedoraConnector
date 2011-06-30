@@ -79,10 +79,8 @@ abstract class FedoraConnector_AbstractImporter
     public function import($datastream)
     {
 
-        $this->datastream = $datastream;
-
-        $item = $this->getItem();
-        $xpath = new DOMXPath($this->getMetadataXml());
+        $item = $this->getItem($datastream);
+        $xpath = new DOMXPath($this->getMetadataXml($datastream));
         $dcNames = $this->getDublinCoreNames();
 
         foreach ($dcNames as $name) {
@@ -93,17 +91,13 @@ abstract class FedoraConnector_AbstractImporter
                 'Dublin Core'
             );
 
-            foreach ($queries as $query) {
-
-                foreach ($xpath->query($query) as $node) {
-                    $this->addMetadata(
-                        $item,
-                        $element,
-                        $name,
-                        $node->nodeValue
-                    );
-                }
-
+            foreach ($this->queryAll($xpath, $queries) as $node) {
+                $this->addMetadata(
+                    $item,
+                    $element,
+                    $name,
+                    $node->nodeValue
+                );
             }
 
         }
@@ -115,12 +109,32 @@ abstract class FedoraConnector_AbstractImporter
      *
      * @return $item The item.
      */
-    public function getItem()
+    public function queryAll($xpath, $queries)
+    {
+
+        $results = array();
+
+        foreach ($queries as $query) {
+            foreach ($xpath->query($query) as $node) {
+                array_push($results, $node);
+            }
+        }
+
+        return $results;
+
+    }
+
+    /**
+     * Fetch the target item.
+     *
+     * @return $item The item.
+     */
+    public function getItem($datastream)
     {
 
         return $this->db
             ->getTable('Item')
-            ->find($this->datastream->item_id);
+            ->find($datastream->item_id);
 
     }
 
@@ -129,9 +143,9 @@ abstract class FedoraConnector_AbstractImporter
      *
      * @return DOMDocument The metadata XML.
      */
-    public function getMetadataXml() {
+    public function getMetadataXml($datastream) {
 
-        $url = $this->datastream->getMetadataUrl();
+        $url = $datastream->getMetadataUrl();
         $xml = new DomDocument();
         $xml->load($url);
         return $xml;
