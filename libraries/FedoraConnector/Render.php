@@ -118,7 +118,6 @@ class FedoraConnector_Render
      */
     public function preview($datastream) {
 
-        // return 'test';
         return $this->previewPlugins->callFirst($datastream);
 
     }

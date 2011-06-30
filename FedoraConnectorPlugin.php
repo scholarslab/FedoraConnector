@@ -52,7 +52,8 @@ class FedoraConnectorPlugin
         'define_routes',
         'define_acl',
         'config_form',
-        'config'
+        'config',
+        'public_append_to_items_show'
     );
 
     private static $_filters = array(
@@ -301,7 +302,7 @@ class FedoraConnectorPlugin
      *
      * @param array $tabs This is an array of label => URI pairs.
      *
-     * @return array The tabs array passed in with Fedora Connector links possibly 
+     * @return array The tabs array passed in with Fedora Connector links possibly
      * added.
      */
     public function adminNavigationMain($tabs)
@@ -312,6 +313,26 @@ class FedoraConnectorPlugin
         }
 
         return $tabs;
+
+    }
+
+    /**
+     * Render the datastream in the public view of the item.
+     *
+     * @return void.
+     */
+    public function publicAppendToItemsShow()
+    {
+
+        $db = get_db();
+        $item = get_current_item();
+        $datastreams = $db->getTable('FedoraConnectorDatastream')
+            ->findBySql('item_id = ?', array($item->id));
+
+        foreach ($datastreams as $datastream) {
+            $renderer = new FedoraConnector_Render;
+            echo $renderer->display($datastream);
+        }
 
     }
 

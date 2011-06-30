@@ -141,6 +141,7 @@ class FedoraConnector_Plugins
     {
 
         $plugin = $this->getPlugin($arg);
+        // print_r($arg);
 
         if ($plugin === null) {
             return null;

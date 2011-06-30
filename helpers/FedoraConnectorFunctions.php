@@ -210,10 +210,10 @@ function fedorahelpers_doItemFedoraForm($item)
     }
 
     else {
-        $form .= '<table><thead><th>Datastream</td><th>PID</td><th>Server</td><th>Metadata Format</td><th>Actions</td>';
+        $form .= '<table><thead><th>Datastream</th><th>PID</th><th>Server</th><th>Metadata Format</th><th>Actions</th>';
         foreach ($datastreams as $datastream) {
             $form .= '<tr>
-                <td>' . $datastream->getNode()->getAttribute('label') . '</td>
+                <td><strong>' . $datastream->getNode()->getAttribute('label') . '</strong></td>
                 <td>' . $datastream->pid . '</td>
                 <td><a href="' . uri('/fedora-connector/servers/edit/' . $datastream->server_id) . '">' . $datastream->server_name . '</a></td>
                 <td>' . $datastream->metadata_stream . '</td>
