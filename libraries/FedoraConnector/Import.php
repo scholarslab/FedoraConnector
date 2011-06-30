@@ -97,6 +97,31 @@ class FedoraConnector_Import
 
     }
 
+    /**
+     * This returns the importer plugins loaded.
+     *
+     * @return array The list of importer plugin objects.
+     */
+    public function getImporters() {
+
+        return $this->plugins->getPlugins();
+
+    }
+
+    /**
+     * This tests whether a datastream can be imported by any importer plugins.
+     *
+     * @param Omeka_Record $datastream The datastream record.
+     *
+     * @return bool True if a plugin can import the metadata for this 
+     * datastream.
+     */
+    public function canImport($datastream) {
+
+        return ($this->getImporter($datastream) !== null);
+
+    }
+
 }
 
 /*

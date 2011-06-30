@@ -122,6 +122,78 @@ class FedoraConnector_Render
 
     }
 
+    /**
+     * This returns the list of renderer classes found.
+     *
+     * @return array A list of renderer classes in order of use.
+     */
+    function getRenderers() {
+
+        return $this->displayPlugins->getPlugins();
+
+    }
+
+    /**
+     * This tests whether a renderer is installed that can handle the MIME 
+     * type and datastream.
+     *
+     * @param Omeka_Record $datastream The data stream.
+     * @param boolean $isPreview  Is this for a preview? The default is
+     * no.
+     *
+     * @return boolean True if the datastream can be rendered.
+     */
+    function hasRendererFor($datastream, $isPreview=false) {
+
+        $plugins = ($isPreview) ? $this->previewPlugins : $this->displayPlugins;
+        return $plugins->hasPlugin($datastream);
+
+    }
+
+    /**
+     * This tests whether a renderer can handle displaying a datastream.
+     *
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return boolean True if the datastream can be rendered.
+     */
+    function canDisplay($datastream) {
+
+        return $this->hasRendererFor($datastream, false);
+
+    }
+
+    /**
+     * This tests whether a renderer can handle previewing a datastream.
+     *
+     * @param Omeka_Record $datastream The data stream.
+     *
+     * @return boolean True if the datastream can be rendered.
+     */
+    function canPreview($datastream) {
+
+        return $this->hasRendererFor($datastream, true);
+
+    }
+
+    /**
+     * This returns the first renderer that says it can handle the 
+     * datastream.
+     *
+     * @param Omeka_Record $datastream The data stream.
+     * @param boolean $isPreview  Is this for a preview? The default is 
+     * no.
+     *
+     * @return FedoraConnector_AbstractRenderer|null The renderer that 
+     * can handle the input datastream.
+     */
+    function getRenderer($datastream, $isPreview=false) {
+
+        $plugins = ($isPreview) ? $this->previewPlugins : $this->displayPlugins;
+        return $plugins->getPlugin($datastream);
+
+    }
+
 }
 
 /*

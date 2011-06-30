@@ -128,6 +128,51 @@ class FedoraConnector_Plugins
     }
 
     /**
+     * This returns the plugins.
+     *
+     * @return array The list of plugins.
+     */
+    function getPlugins() {
+
+        return $this->plugins;
+
+    }
+
+    /**
+     * This returns all plugins that pass the filter predicate.
+     *
+     * @param mixed $arg An argument to pass to the predicate method.
+     *
+     * @return array A list of the plugin objects that pass the predicate.
+     */
+    function filterPlugins() {
+
+        $predicate = $this->filter;
+
+        foreach ($this->plugins as $plugin) {
+            if ($plugin->$predicate($arg)) {
+                $results[] = $plugin;
+            }
+        }
+
+        return $results;
+
+    }
+
+    /**
+     * This tests for any plugin that passes the predicate.
+     *
+     * @param mixed $arg An argument to pass to the predicate method.
+     *
+     * @return bool True if any plugin object passes the predicate call.
+     */
+    function hasPlugin($arg) {
+
+        return ($this->getPlugin($arg) !== null);
+
+    }
+
+    /**
      * This calls an action on the first plugin object that passes the
      * predicate.
      *
@@ -141,7 +186,6 @@ class FedoraConnector_Plugins
     {
 
         $plugin = $this->getPlugin($arg);
-        // print_r($arg);
 
         if ($plugin === null) {
             return null;
@@ -152,6 +196,26 @@ class FedoraConnector_Plugins
             return $plugin->$action($arg);
         }
 
+    }
+
+    /**
+     * This calls an action on all plugin objects that pass the predicate.
+     *
+     * @param mixed $arg An argument to pass to the predicate and action
+     * methods.
+     *
+     * @return array This returns the result of calling the action on the
+     * plugin objects that pass the predicate.
+     */
+    function callAll($arg) {
+
+        $action = $this->action;
+
+        foreach ($this->filterPlugins($arg) as $plugin) {
+            $results[] = $plug->$action($arg);
+        }
+
+        return $results;
 
     }
 

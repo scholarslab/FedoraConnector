@@ -93,9 +93,6 @@ abstract class FedoraConnector_AbstractImporter
                 'Dublin Core'
             );
 
-            // What should be happening here?
-            // $this->clearMetadata($item);
-
             foreach ($queries as $query) {
 
                 foreach ($xpath->query($query) as $node) {
