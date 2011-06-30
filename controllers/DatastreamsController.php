@@ -350,7 +350,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                 }
             }
 
-            if ($is_text_xml !== false && !$is_omitted) {
+            if ($is_text_xml !== false && !$is_omitted && fedorahelpers_canImport($datastream)) {
                 $metadataformatSelect->addMultiOption($dsid, $dsid);
             }
 
