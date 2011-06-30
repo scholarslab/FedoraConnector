@@ -41,8 +41,6 @@
 
 <?php
 
-require_once 'Datastream_Mock.php';
-
 class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
 {
 

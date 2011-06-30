@@ -45,6 +45,12 @@ form.fedora-inline-form {
     /* float: left;*/
 }
 
+form.fedora-inline-form-servers {
+    margin: 0.4em 0.6em 0 0;
+    padding: 0;
+    float: left;
+}
+
 .fedora-delete {
     background-color: #800 !important;
     border-color: #800 !important;

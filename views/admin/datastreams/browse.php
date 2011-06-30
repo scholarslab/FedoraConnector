@@ -30,7 +30,7 @@
                 <tbody>
                     <?php foreach ($datastreams as $datastream): ?>
                         <tr>
-                            <td width="240">
+                            <td width="220">
                                 <strong><?php echo $datastream->getNode()->getAttribute('label'); ?></strong>
                                 <br />
                                 <span style="color: gray; font-size: 0.8em">id: <?php echo $datastream->datastream; ?></span>
