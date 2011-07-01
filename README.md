@@ -1,3 +1,4 @@
 # Fedora Connector
 
-This plugin connects an Omeka site to a Fedora Commons repository.
+This plugin connects an Omeka site to one or more Fedora Commons
+repositores.
