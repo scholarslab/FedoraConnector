@@ -38,7 +38,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once '../libraries/FedoraConnector/AbstractRenderer.php';
+
+require_once dirname(dirname(__FILE__)) . '/libraries/FedoraConnector/AbstractRenderer.php';
 
 /**
  * This class defines a display adapter for an image.
