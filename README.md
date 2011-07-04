@@ -1,7 +1,7 @@
 # Fedora Connector
 
 FedoraConnector makes it possible to connect an Omeka site with one more
-more [Fedora Commons] repositories. This allows users to link Omeka
+more [Fedora Commons] repositories. The plugin allows users to link Omeka
 items with "datastreams" on the Fedora repository and
 automatically populate the Dublin Core fields for the Omeka item with
 the values defined by the datastream.
