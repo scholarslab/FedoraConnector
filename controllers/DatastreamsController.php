@@ -337,12 +337,16 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         $metadataformatSelect = new Zend_Form_Element_Select('metadataformat');
         $metadataformatSelect->setLabel('Metadata Format:');
 
+        $testImporter = new FedoraConnector_Import();
+
         foreach ($datastreams as $datastream) {
 
             $dsid = $datastream->getAttribute('dsid');
             $label = $datastream->getAttribute('label');
             $is_text_xml = strpos($datastream->getAttribute('mimeType'), 'text/xml');
             $is_omitted = fedorahelpers_isOmittedDatastream($datastream);
+            $testDatastream = new FedoraConnectorDatastream;
+            $testDatastream->metadata_stream = $dsid;
 
             if (!$is_omitted) {
                 if ($label != '') {
@@ -352,7 +356,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                 }
             }
 
-            if ($is_text_xml !== false && !$is_omitted) {
+            if ($is_text_xml !== false && !$is_omitted && $testImporter->canImport($testDatastream)) {
                 $metadataformatSelect->addMultiOption($dsid, $dsid);
             }
 
