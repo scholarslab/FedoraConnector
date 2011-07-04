@@ -144,7 +144,7 @@ locations:
 Connector" tab. Click the "Import" link for the datastream that you want
 to import.
 
-## Extending the plugin to accept new metadata format
+## Extending the plugin to accept new metadata formats
 
 As of July 2011, FedoraConnector can automatically process metadata from
 Fedora datastreams if it is in Dublin Core or MODS formats. However, the
@@ -157,7 +157,7 @@ the new importer.
 
 All impoters inherit from an abstract class called FedoraConnector_AbstractImporter, which is located in the /libraries/FedoraConnector/ folder. All of the utility functions that perform the actual import are defined in the abstract class, and the concrete child classes need to define just two functions: canImport() and getQueries().
 
-canImport() just defines the name of the new format that is being
+canImport() takes a FedoraConnectorDatastream object and just defines the name of the new format that is being
 handled by the importer. This is the function that FedoraConnector uses
 to populate the list of allowed metadata formats when a new datastream
 is added. So, for example, the core DC importer just checks to see if
@@ -205,3 +205,32 @@ tag mappings of the MODS converted look like this:
 
 In this way, any conceivable metadata format can be mapped onto Omeka's
 native Dublin Core item representations.
+
+## Extending the plugin to render new data types
+
+Likewise, FedoraConnector has a modular system for defining "Renderers,"
+which control the display format for data imported from Fedora. Like the
+importers, concrete renderer classes inherit from an asbtract class,
+this time called FedoraConnector_AbstractRenderer.
+
+For renderers, four functions need to be defined: canDisplay(),
+canPreview(), display(), and preview(). canDispla() and canPreview()
+each take a FedoraConnectorDatastream object and return true if the
+renderer can handle the datastream's mime_type. Use this syntax to run
+the mime_type through a regular expression and return a boolean:
+
+        return (bool)(preg_match('/^image\//', $datastream->mime_type));
+
+In most cases, canPreview() can just invoke canDisplay().
+
+The display() and preview() functions, meanwhile, take the datastream
+object and return HTML markup to be displayed. For example, the core
+image renderer just returns an image tag:
+
+        function display($datastream) {
+
+            $url = $datastream->getContentUrl();
+            $html = "<img alt='image' src='{$url}' />";
+            return $html;
+
+        }
