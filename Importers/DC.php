@@ -67,7 +67,7 @@ class DC_Importer extends FedoraConnector_AbstractImporter
     public function getQueries($name)
     {
 
-        return array('//*[local-name() = "' . $name . '"]');
+        return array('//*[local-name() = "' . strtolower($name) . '"]');
 
     }
 

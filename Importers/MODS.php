@@ -227,6 +227,8 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
         }
 
+        return $queries;
+
     }
 
 }

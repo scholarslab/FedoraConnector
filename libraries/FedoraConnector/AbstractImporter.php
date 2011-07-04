@@ -85,11 +85,13 @@ abstract class FedoraConnector_AbstractImporter
 
         foreach ($dcNames as $name) {
 
-            $queries = $this->getQueries(strtolower($name));
+            $queries = $this->getQueries($name);
             $element = $item->getElementByNameAndSetName(
                 $name,
                 'Dublin Core'
             );
+
+            print_r($queries);
 
             foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
