@@ -91,8 +91,6 @@ abstract class FedoraConnector_AbstractImporter
                 'Dublin Core'
             );
 
-            print_r($queries);
-
             foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
                     $item,

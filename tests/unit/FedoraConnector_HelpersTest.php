@@ -85,7 +85,7 @@ class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
         $this->helper->_createItems(20);
 
         $items = fedorahelpers_getItems();
-        $this->assertEquals(20, count($items));
+        $this->assertEquals(21, count($items));
 
         $items = fedorahelpers_getItems(1, null, null);
         $this->assertEquals(get_option('per_page_admin'), count($items));
@@ -101,8 +101,8 @@ class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
 
         $this->helper->_createItems(1);
         $items = fedorahelpers_getItems();
-        $this->assertEquals(1, count($items));
-        $this->assertEquals($items[0]->item_name, 'TestingItem0');
+        $this->assertEquals(2, count($items));
+        $this->assertEquals($items[1]->item_name, 'TestingItem0');
 
     }
 
