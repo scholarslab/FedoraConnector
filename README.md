@@ -221,7 +221,7 @@ the mime_type through a regular expression and return a boolean:
 
         return (bool)(preg_match('/^image\//', $datastream->mime_type));
 
-In most cases, canPreview() can just invoke canDisplay().
+Assuming you plan to populate functions display() and preview(), canPreview() can usually just invoke canDisplay().
 
 The display() and preview() functions, meanwhile, take the datastream
 object and return HTML markup to be displayed. For example, the core
