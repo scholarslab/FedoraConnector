@@ -1,7 +1,6 @@
 # Fedora Connector
 
-FedoraConnector makes it possible to connect an Omeka site with one more
-more [Fedora Commons] repositories. The plugin allows users to link Omeka
+FedoraConnector makes it possible to connect an Omeka site with [Fedora Commons] repositories. The plugin allows you to link Omeka
 items with "datastreams" on the Fedora repository and
 automatically populate the Dublin Core fields for the Omeka item with
 the values defined by the datastream.
@@ -13,15 +12,16 @@ the repository.
 
 The basic workflow for importing Fedora data into Omeka is as follows:
 
-- <strong>Create server records for Fedora Commons repositories</strong>: Create a record with the title and base
+- <strong>Create server records for Fedora Commons repositories</strong>: Set the name and base
   URL for the external Fedora Commons repository;
 
-- <strong>Link Fedora datastreams to an Omeka item</strong>: After selecting the
+- <strong>Link Fedora datastreams to an Omeka item</strong>: After
+  choosing the
   item that you want to associate the new datastreams with, enter the
 PID of the object on the Fedora repository and select one or more of the
 component datastreams;
 
-- <strong>Import datastreams</strong>: This is a one-click process that fetches the data from Fedora and populates the
+- <strong>Import datastreams</strong>: The plugin fetches the data from Fedora and populates the
   Dublin Core fields for the item with the information from the
 datastream.
 
@@ -214,7 +214,7 @@ importers, concrete renderer classes inherit from an asbtract class,
 this time called FedoraConnector_AbstractRenderer.
 
 For renderers, four functions need to be defined: canDisplay(),
-canPreview(), display(), and preview(). canDispla() and canPreview()
+canPreview(), display(), and preview(). canDisplay() and canPreview()
 each take a FedoraConnectorDatastream object and return true if the
 renderer can handle the datastream's mime_type. Use this syntax to run
 the mime_type through a regular expression and return a boolean:
