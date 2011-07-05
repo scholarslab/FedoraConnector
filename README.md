@@ -25,7 +25,7 @@ component datastreams;
   Dublin Core fields for the item with the information from the
 datastream.
 
-[Fedora Commons]: http://www.fedora-commonsorg/
+[Fedora Commons]: http://www.fedora-commons.org/
 
 ## Requirements
 
