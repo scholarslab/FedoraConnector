@@ -40,14 +40,14 @@ and running a digital repository.
 
 ## Installing and Configuring
 
-- Clone the FedoraConnector folder into the "plugins" folder of the root
+1. Clone the FedoraConnector folder into the "plugins" folder of the root
 Omeka installation. (see [Installing a Plugin])
 
-- In the Omeka administrative interface, click on the orange "Settings"
+2. In the Omeka administrative interface, click on the orange "Settings"
   button at the top right of the screen, go to the "Plugins" tab, and
 click the "Install" button next to the listing for Fedora Connector.
 
-- If the installation is successful, you will be automatically taken to
+3. If the installation is successful, you will be automatically taken to
   the plugin's configuration form, which allows you to specifiy
 datastreams that should be omitted from selection menus on a system-wide
 basis. These values are comma delimited. The datastreams omitted by
