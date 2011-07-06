@@ -67,6 +67,24 @@ class FedoraConnectorServer extends Omeka_record
     }
 
     /**
+     * Retrieve the server service (get or objects) for url construction.
+     *
+     * @return string The version.
+     */
+    public function getService()
+    {
+
+        if (preg_match('/^2\./', $this->getVersion())) {
+            $service = 'get';
+        } else {
+            $service = 'objects';
+        }
+
+        return $service;
+
+    }
+
+    /**
      * Test to see if server is online.
      *
      * @return boolean True if online.

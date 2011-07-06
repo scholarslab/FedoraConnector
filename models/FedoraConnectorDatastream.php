@@ -71,14 +71,22 @@ class FedoraConnectorDatastream extends Omeka_record
         $server = $this->getTable('FedoraConnectorServer')
             ->find($this->server_id);
 
-        if (preg_match('/^2\./', $server->getVersion())) {
-            $service = 'get';
-        } else {
-            $service = 'objects';
-        }
+        $url = "{$server->url}{$server->getService()}/{$this->pid}/datastreams/";
+        return $url;
 
-        $url = "{$server->url}{$service}/{$this->pid}/datastreams/";
-        return $url; 
+    }
+
+    /**
+     * This returns the URL for the object metadata datastream.
+     *
+     * @param Omeka_Record $datastream The datastream.
+     *
+     * @return string The URL for the datastream.
+     */
+    public function getServerService()
+    {
+
+        return $this->getServer()->getService();
 
     }
 
@@ -98,7 +106,7 @@ class FedoraConnectorDatastream extends Omeka_record
     }
 
     /**
-     * This returns the URL for the object metadata datastream.
+     * Return the URL for the datastream content.
      *
      * @param Omeka_Record $datastream The datastream.
      *
