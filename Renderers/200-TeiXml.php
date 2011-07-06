@@ -83,18 +83,18 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
      */
     function display($datastream) {
 
-        $teiFiles = get_db()
-            ->getTable('TeiDisplay_Config')
-            ->findbySql('item_id = ?', array($datastream->item_id));
+        // $teiFiles = get_db()
+        //     ->getTable('TeiDisplay_Config')
+        //     ->findbySql('item_id = ?', array($datastream->item_id));
 
-        ob_start();
-        foreach ($teiFiles as $teiFile) {
-            echo render_tei_file($teiFile->id, $_GET['section']);
-        }
-        $html = ob_get_contents();
-        ob_end_clean();
+        // ob_start();
+        // foreach ($teiFiles as $teiFile) {
+        //     echo render_tei_file($teiFile->id, $_GET['section']);
+        // }
+        // $html = ob_get_contents();
+        // ob_end_clean();
 
-        return $html;
+        // return $html;
 
     }
 
