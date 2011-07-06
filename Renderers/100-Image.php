@@ -55,7 +55,7 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      */
     function canDisplay($datastream) {
 
-        return (bool)(preg_match('/^image\//', $datastream->mime_type));
+        return (bool)(preg_match('/^image\/(?!jp2)/', $datastream->mime_type));
 
     }
 
