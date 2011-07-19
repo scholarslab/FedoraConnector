@@ -73,9 +73,20 @@ function fedorahelpers_getQueryNodes($uri, $xpath)
 {
 
     $xml = new DomDocument();
-    $xml->load($uri);
-    $query = new DOMXPath($xml);
-    return $query->query($xpath);
+
+    try {
+
+        $xml->load($uri);
+        $query = new DOMXPath($xml);
+        $result = $query->query($xpath);
+
+    } catch (Exception $e) {
+
+        $result = false;
+
+    }
+
+    return $result;
 
 }
 

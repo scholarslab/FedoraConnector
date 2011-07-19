@@ -56,9 +56,7 @@ class FedoraConnector_DatastreamsControllerTest extends Omeka_Test_AppTestCase
     public function testDefaultRedirect()
     {
 
-        $this->dispatch('fedora-connector');
-        $this->assertController('servers');
-        $this->assertAction('browse');
+
 
     }
 

@@ -71,7 +71,7 @@ class Datastream_Mock {
     function getServerService()
     {
 
-        return $this->getServer()->url;
+        return 'get';
 
     }
 
