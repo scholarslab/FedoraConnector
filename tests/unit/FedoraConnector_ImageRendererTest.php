@@ -64,14 +64,12 @@ class FedoraConnector_ImageRendererTest extends PHPUnit_Framework_TestCase
     }
 
     function testCanDisplay() {
-        $this->assertTrue($this->diss->canDisplay($this->mocks['image/jp2']));
         $this->assertTrue($this->diss->canDisplay($this->mocks['image/jpeg']));
         $this->assertTrue($this->diss->canDisplay($this->mocks['image/gif']));
         $this->assertFalse($this->diss->canDisplay($this->mocks['picture/gif']));
     }
 
     function testCanPreview() {
-        $this->assertTrue($this->diss->canPreview($this->mocks['image/jp2']));
         $this->assertTrue($this->diss->canPreview($this->mocks['image/jpeg']));
         $this->assertTrue($this->diss->canPreview($this->mocks['image/gif']));
         $this->assertFalse($this->diss->canPreview($this->mocks['picture/gif']));
