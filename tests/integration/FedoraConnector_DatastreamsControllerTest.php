@@ -36,63 +36,30 @@
  * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
-
-
-class Datastream_Mock {
-
-    var $pid;
-    var $server;
-    var $mime_type;
-    var $datastream;
-    var $metadata_stream;
-
-    function __construct($pid, $server, $mime='text/plain', $ds='Jpeg', $mds='DC') {
-
-        $this->pid = $pid;
-        $this->server = $server;
-        $this->mime_type = $mime;
-        $this->datastream = $ds;
-        $this->metadata_stream = $mds;
-
-    }
-
-    function getServer() {
-
-        return new Server_Mock($this->server);
-
-    }
-
-    function getContentUrl() {
-
-        return "{$this->server}get/";
-
-    }
-
-    function getServerService()
-    {
-
-        return $this->getServer()->url;
-
-    }
-
-}
-
-class Server_Mock {
-
-    function __construct($url)
-    {
-        $this->url = $url;
-    }
-
-}
-
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
 ?>
+
+<?php
+
+class FedoraConnector_DatastreamsControllerTest extends Omeka_Test_AppTestCase
+{
+
+    public function setUp()
+    {
+
+        parent::setUp();
+        $this->helper = new FedoraConnector_Test_AppTestCase;
+        $this->helper->setUp();
+        $this->db = get_db();
+
+    }
+
+    public function testDefaultRedirect()
+    {
+
+        $this->dispatch('fedora-connector');
+        $this->assertController('servers');
+        $this->assertAction('browse');
+
+    }
+
+}
