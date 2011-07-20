@@ -221,7 +221,7 @@ function fedorahelpers_doItemFedoraForm($item)
     }
 
     else {
-        $form .= '<table><thead><th>Datastream</th><th>PID</th><th>Server</th><th>Metadata Format</th><th>Actions</th>';
+        $form .= '<table><thead><th>Datastream</th><th>PID</th><th>Server</th><th>Format</th><th>Actions</th>';
         foreach ($datastreams as $datastream) {
             $form .= '<tr>
                 <td><strong>' . $datastream->getNode()->getAttribute('label') . '</strong></td>
