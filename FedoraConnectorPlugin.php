@@ -204,7 +204,7 @@ class FedoraConnectorPlugin
     public function adminThemeHeader($request)
     {
 
-        if ($request->getModuleName() == 'fedora-connector') {
+        if (in_array($request->getModuleName(), array('fedora-connector', 'default'))) {
             queue_css('fedora_connector_main');
         }
 

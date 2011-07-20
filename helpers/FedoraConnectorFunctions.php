@@ -224,11 +224,11 @@ function fedorahelpers_doItemFedoraForm($item)
         $form .= '<table><thead><th>Datastream</th><th>PID</th><th>Server</th><th>Format</th><th>Actions</th>';
         foreach ($datastreams as $datastream) {
             $form .= '<tr>
-                <td><strong>' . $datastream->getNode()->getAttribute('label') . '</strong></td>
-                <td>' . $datastream->pid . '</td>
-                <td><a href="' . uri('/fedora-connector/servers/edit/' . $datastream->server_id) . '">' . $datastream->server_name . '</a></td>
-                <td>' . $datastream->metadata_stream . '</td>
-                <td><a href="' . uri('/fedora-connector/datastreams/' . $datastream->datastream_id . '/import') . '"><strong>Import</strong></a></td>
+                <td class="fedora-td-small">' . $datastream->getNode()->getAttribute('label') . '</td>
+                <td class="fedora-td-small">' . $datastream->pid . '</td>
+                <td class="fedora-td-small"><a href="' . uri('/fedora-connector/servers/edit/' . $datastream->server_id) . '">' . $datastream->server_name . '</a></td>
+                <td class="fedora-td-small">' . $datastream->metadata_stream . '</td>
+                <td class="fedora-td-small"><a href="' . uri('/fedora-connector/datastreams/' . $datastream->datastream_id . '/import') . '"><strong>Import</strong></a></td>
                 </tr>';
         }
         $form .= '</table>';
