@@ -46,6 +46,14 @@ require_once dirname(dirname(__FILE__)) . '/libraries/FedoraConnector/AbstractRe
  */
 class Image_Renderer extends FedoraConnector_AbstractRenderer
 {
+
+    // Some image types are handled elsewhere or won't render with a basic <img> tag. These
+    // are excluded in the regular expression in canDisplay().
+    private static $_excludedImageFormats = array(
+        'jp2',
+        'x-mrsid-image'
+    );
+
     /**
      * This tests whether this renderer can display a datastream.
      *
@@ -55,7 +63,8 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      */
     function canDisplay($datastream) {
 
-        return (bool)(preg_match('/^image\/(?!jp2)/', $datastream->mime_type));
+        $excludeString = implode('|', self::$_excludedImageFormats);
+        return (bool)(preg_match('/^image\/(?!' . $excludeString . ')/', $datastream->mime_type));
 
     }
 
