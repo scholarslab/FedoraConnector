@@ -31,7 +31,7 @@
                     <?php foreach ($datastreams as $datastream): ?>
                         <tr>
                             <td width="220">
-                                <strong><?php echo $datastream->getNode()->getAttribute('label'); ?></strong>
+                                <strong><a href="<?php echo $datastream->getUrl(); ?>"><?php echo $datastream->getNode()->getAttribute('label'); ?></a></strong>
                                 <br />
                                 <span style="color: gray; font-size: 0.8em">id: <?php echo $datastream->datastream; ?></span>
                                 <br />

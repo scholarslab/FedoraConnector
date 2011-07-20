@@ -77,6 +77,18 @@ class FedoraConnectorDatastream extends Omeka_record
     }
 
     /**
+     * This returns the datastream's URL.
+     *
+     * @return string The URL.
+     */
+    public function getUrl()
+    {
+
+        return $this->getBaseUrl() . $this->datastream;
+
+    }
+
+    /**
      * This returns the URL for the object metadata datastream.
      *
      * @param Omeka_Record $datastream The datastream.
