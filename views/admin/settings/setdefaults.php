@@ -23,9 +23,51 @@ Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector
     <p class="fedora-explanation">Use the dropdown boxes below to set installation-wide default behaviors for each field.
 These settings can be customized for individual items through the "Fedora Import Settings" tab in the item editing interface.</p>
 
+<hr class="fedora-divider">
+
+<h2>Universal Default Settings:</h2>
+
+    <div class="fedora-defaults-field">
+
+        <span>Import Behavior:</span>
+        <select name="behavior">
+            <option value="overwrite">Overwrite</option>
+            <option value="stack">Stack</option>
+            <option value="block">Block</option>
+        </select>
+
+        <span>Add new data if fields are empty?</span>
+        <select name="addifempty">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+    </div>
+
+<h2 style="margin-top: 2em;">Per-Field Default Settings:</h2>
+
     <?php foreach ($elements as $element): ?>
 
-        <?php echo $element->name; ?>
+        <div class="fedora-defaults-field">
+
+            <h3><strong><?php echo $element->name; ?></strong>:</h3>
+
+            <span>Import Behavior:</span>
+            <select name="behavior[<?php echo $element->name; ?>]">
+                <option value="default">(default)</option>
+                <option value="overwrite">Overwrite</option>
+                <option value="stack">Stack</option>
+                <option value="block">Block</option>
+            </select>
+
+            <span>Add new data if fields are empty?</span>
+            <select name="addifempty[<?php echo $element->name; ?>]">
+                <option value="default">(default)</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+        </div>
 
     <?php endforeach; ?>
 
