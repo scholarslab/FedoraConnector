@@ -23,6 +23,12 @@ Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector
     <p class="fedora-explanation">Use the dropdown boxes below to set installation-wide default behaviors for each field.
 These settings can be customized for individual items through the "Fedora Import Settings" tab in the item editing interface.</p>
 
+    <?php foreach ($elements as $element): ?>
+
+        <?php echo $element->name; ?>
+
+    <?php endforeach; ?>
+
 </div>
 
 <?php foot(); ?>

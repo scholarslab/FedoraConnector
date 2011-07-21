@@ -46,6 +46,19 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 {
 
     /**
+     * Set table aliases.
+     *
+     * @return void
+     */
+    public function init()
+    {
+
+        $this->_elementSetTable = $this->getTable('ElementSet');
+        $this->_elementTable = $this->getTable('Element');
+
+    }
+
+    /**
      * Redirect by default to setdefaults action.
      *
      * @return void
@@ -67,7 +80,13 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
     public function setdefaultsAction()
     {
 
+        $dublinCoreSet = $this->_elementSetTable->fetchObject(
+            $this->_elementSetTable->getSelect()->where('name = "Dublin Core"')
+        );
 
+        $elements = $this->_elementTable->findBySql('element_set_id = ?', array(1));
+
+        $this->view->elements = $elements;
 
     }
 
