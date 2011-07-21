@@ -261,7 +261,7 @@ class FedoraConnectorPlugin
     public function configForm()
     {
 
-        include 'config_form.php';
+        include 'forms/config_form.php';
 
     }
 
