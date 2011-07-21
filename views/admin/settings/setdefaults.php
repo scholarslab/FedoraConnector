@@ -60,7 +60,7 @@ These settings can be customized for individual items through the "Fedora Import
                 <option value="block">Block</option>
             </select>
 
-            <span>Add new data if fields are empty?</span>
+            <span>Add new data if field is empty?</span>
             <select name="addifempty[<?php echo $element->name; ?>]">
                 <option value="default">(default)</option>
                 <option value="yes">Yes</option>

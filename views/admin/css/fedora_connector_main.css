@@ -3,8 +3,7 @@
 }
 
 .fedora-preview {
-	max-width: 120px;
-	max-height: 120px;	
+	max-width: 80px;
 }
 
 #edit_submit-element, #delete_submit-element {
