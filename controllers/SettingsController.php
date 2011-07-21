@@ -46,6 +46,19 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 {
 
     /**
+     * Redirect by default to setdefaults action.
+     *
+     * @return void
+     */
+    public function indexAction()
+    {
+
+        // Ping to browse by default.
+        $this->_forward('setdefaults', 'settings', 'fedora-connector');
+
+    }
+
+    /**
      * Show instructions about how to set defaults and the stack of select
      * drop-downs for each of the DC fields.
      *

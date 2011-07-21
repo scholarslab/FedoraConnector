@@ -97,3 +97,13 @@ h1.fedora-nowrap {
 table.fedora td {
     vertical-align: middle;
 }
+
+.fedora-explanation {
+    font-size: 11px;
+    color: #767676;
+}
+
+ul.fedora-explanation {
+    list-style: disc;
+    margin: 0 0 1em 3em;
+}
