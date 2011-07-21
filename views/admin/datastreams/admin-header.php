@@ -9,6 +9,7 @@
 <ul id="section-nav" class="navigation">
 <?php echo nav(array(
     'Servers' => uri('fedora-connector/servers'),
-    'Datastreams'  => uri('fedora-connector/datastreams')
+    'Datastreams'  => uri('fedora-connector/datastreams'),
+    'Import Settings'  => uri('fedora-connector/settings')
 ))?>
 </ul>
