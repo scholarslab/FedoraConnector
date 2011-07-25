@@ -47,6 +47,9 @@
 class FedoraConnectorAddToBlankDefaultTable extends Omeka_Db_Table
 {
 
+    public $element_id;
+    public $add_to_blank;
+
     /**
      * Returns the behavior record for the given DC field name.
      *
@@ -58,15 +61,14 @@ class FedoraConnectorAddToBlankDefaultTable extends Omeka_Db_Table
     public function getBehavior($field)
     {
 
-        $dcElement = $this->getTable('Element')->fetchObject(
-            $this->getTable('Element')->findBySql('name = ?', array($field))
-        );
+        $dcElement = $this->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', $field);
 
         $record = $this->fetchObject(
             $this->findBySql('element_id = ?', array($dcElement->id))
         );
 
-        return $record ? $record : false;
+        return ($record != null) ? $record : false;
 
     }
 

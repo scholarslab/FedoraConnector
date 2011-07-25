@@ -80,13 +80,11 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
     public function setdefaultsAction()
     {
 
-        $dublinCoreSet = $this->_elementSetTable->fetchObject(
-            $this->_elementSetTable->getSelect()->where('name = "Dublin Core"')
-        );
+        $dublinCoreSet = $this->_elementTable->findBySet('Dublin Core');
 
-        $elements = $this->_elementTable->findBySql('element_set_id = ?', array(1));
-
-        $this->view->elements = $elements;
+        $this->view->elements = $dublinCoreSet;
+        $this->view->defaultImportBehavior = get_option('fedora_connector_default_import_behavior');
+        $this->view->defaultAddToBlank = get_option('fedora_connector_default_add_to_blank_behavior');
 
     }
 
@@ -111,10 +109,10 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
             foreach ($post['behavior'] as $field => $behavior) {
 
-                if ($behavior != 'default') {
+                // Query for the record.
+                $behaviorRecord = $this->getTable('FedoraConnectorImportBehaviorDefault')->getBehavior($field);
 
-                    // Query for the record.
-                    $behaviorRecord = $this->getTable('FedoraConnectorImportBehaviorDefault')->getBehavior($field);
+                if ($behavior != 'default') {
 
                     // If the record exists, update it.
                     if ($behaviorRecord != false) {
@@ -133,9 +131,6 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
                 else {
 
-                    // Query for the record.
-                    $behaviorRecord = $this->getTable('FedoraConnectorImportBehaviorDefault')->getBehavior($field);
-
                     // If the record exists, delete it.
                     if ($behaviorRecord != false) {
                         $behaviorRecord->delete();
@@ -150,17 +145,30 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
                 // Query for the record.
                 $behaviorRecord = $this->getTable('FedoraConnectorAddToBlankDefault')->getBehavior($field);
 
-                // If the record exists, update it.
-                if ($behaviorRecord != false) {
-                    $behaviorRecord->behavior = $behavior;
-                    $behaviorRecord->save();
+                if ($behavior != 'default') {
+
+                    // If the record exists, update it.
+                    if ($behaviorRecord != false) {
+                        $behaviorRecord->behavior = $behavior;
+                        $behaviorRecord->save();
+                    }
+
+                    // Otherwise, create a new record.
+                    else {
+                        $newBehaviorRecord = new FedoraConnectorAddToBlankDefault;
+                        $newBehaviorRecord->behavior = $behavior;
+                        $newBehaviorRecord->save();
+                    }
+
                 }
 
-                // Otherwise, create a new record.
                 else {
-                    $newBehaviorRecord = new FedoraConnectorAddToBlankDefault;
-                    $newBehaviorRecord->behavior = $behavior;
-                    $newBehaviorRecord->save();
+
+                    // If the record exists, delete it.
+                    if ($behaviorRecord != false) {
+                        $behaviorRecord->delete();
+                    }
+
                 }
 
             }
