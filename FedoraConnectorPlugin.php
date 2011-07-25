@@ -132,26 +132,12 @@ class FedoraConnectorPlugin
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
-        // Create table with import behaviors.
-        $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehavior` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `name` tinytext collate utf8_unicode_ci,
-                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-            ");
-
-        // Insert overwrite behaviors.
-        $db->query("INSERT INTO `$db->FedoraConnectorImportBehavior` (name) VALUES ('overwrite')");
-        $db->query("INSERT INTO `$db->FedoraConnectorImportBehavior` (name) VALUES ('stack')");
-        $db->query("INSERT INTO `$db->FedoraConnectorImportBehavior` (name) VALUES ('block')");
-
         // Create table for DC defaults for overwrite behaviors.
         $db->query("
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDcOverwriteDefault` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `element_id` int(10) unsigned NOT NULL,
-                `behavior_id` int(10) unsigned NOT NULL,
+                `behavior` ENUM('overwrite', 'stack', 'block'),
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
@@ -162,7 +148,7 @@ class FedoraConnectorPlugin
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `item_id` int(10) unsigned NOT NULL,
                 `element_id` int(10) unsigned NOT NULL,
-                `behavior_id` int(10) unsigned NOT NULL,
+                `behavior` ENUM('overwrite', 'stack', 'block'),
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
@@ -172,7 +158,7 @@ class FedoraConnectorPlugin
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDcAddToBlankDefault` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `element_id` int(10) unsigned NOT NULL,
-                `add_to_blank` bool,
+                `add_to_blank` bool NOT NULL,
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
@@ -183,7 +169,7 @@ class FedoraConnectorPlugin
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `item_id` int(10) unsigned NOT NULL,
                 `element_id` int(10) unsigned NOT NULL,
-                `add_to_blank` bool,
+                `add_to_blank` bool NOT NULL,
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
@@ -199,6 +185,8 @@ class FedoraConnectorPlugin
             ");
 
         set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
+        set_option('fedora_connector_default_import_behavior', 'overwrite');
+        set_option('fedora_connector_default_add_to_blank_behavior', 'yes');
 
     }
 

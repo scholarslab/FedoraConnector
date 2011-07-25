@@ -1,4 +1,4 @@
-<p class="fedora-explanation">Use the dropdown boxes below to set item-specific default behaviors for each field.</p>
+<p class="fedora-explanation">Use the dropdown boxes below to set item-specific behaviors for each field.</p>
 
 <p class="fedora-explanation">By default, Fedora will always add information from a datastream if the corresponding
 Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector can do one of three things:</p>

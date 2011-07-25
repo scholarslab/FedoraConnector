@@ -90,4 +90,27 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
     }
 
+    /**
+     * Show instructions about how to set defaults and the stack of select
+     * drop-downs for each of the DC fields.
+     *
+     * @return void
+     */
+    public function savesettingsAction()
+    {
+
+        if ($this->_request->isPost()) {
+
+            // save defaults
+            // iterate over behavior settings, check to see if record exists, if so update/do nothing, otherwise create
+            // iterate over add-to-blank, check to see if record exists, if so update/do nothing, otherwise create
+
+        } else {
+
+            $this->_forward('setdefaults', 'settings', 'fedora-connector');
+
+        }
+
+    }
+
 }

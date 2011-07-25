@@ -25,6 +25,8 @@ These settings can be customized for individual items through the "Fedora Import
 
 <hr class="fedora-divider">
 
+<form enctype="multipart/form-data" action="import" method="post">
+
 <h2>Universal Default Settings:</h2>
 
     <div class="fedora-defaults-field">
@@ -71,6 +73,12 @@ These settings can be customized for individual items through the "Fedora Import
 
     <?php endforeach; ?>
 
+    <input type="submit" name="fedora-settings-submit" id="fedora-settings-submit" value="Save Settings" action="<?php echo uri('/fedora-connector/settings/save'); ?>" />
+
+</form>
+
 </div>
+
+
 
 <?php foot(); ?>
