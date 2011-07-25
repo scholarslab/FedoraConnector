@@ -16,23 +16,28 @@ Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector
 
     <?php foreach ($elements as $element): ?>
 
+        <?php
+            $import = $db->getTable('FedoraConnectorImportBehaviorItem')->getBehaviorForSelect($element->name);
+            $addifempty = $db->getTable('FedoraConnectorAddToBlankItem')->getBehaviorForSelect($element->name);
+        ?>
+
         <div class="fedora-defaults-field">
 
-            <h3><strong><?php echo $element->name; ?></strong>:</h3>
+            <h3><strong><?php echo $element->name; if ($import != false || $addifempty != false) { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong>:</h3>
 
             <span>Import Behavior:</span>
             <select name="behavior[<?php echo $element->name; ?>]">
-                <option value="default">(default)</option>
-                <option value="overwrite">Overwrite</option>
-                <option value="stack">Stack</option>
-                <option value="block">Block</option>
+                <option value="default"<?php if ($import == false) { echo ' SELECTED'; } ?>>(default)</option>
+                <option value="overwrite"<?php if ($import == 'overwrite') { echo ' SELECTED'; } ?>>Overwrite</option>
+                <option value="stack"<?php if ($import == 'stack') { echo ' SELECTED'; } ?>>Stack</option>
+                <option value="block"<?php if ($import == 'block') { echo ' SELECTED'; } ?>>Block</option>
             </select>
 
             <span>Add new data if field is empty?</span>
             <select name="addifempty[<?php echo $element->name; ?>]">
-                <option value="default">(default)</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+                <option value="default"<?php if ($addifempty == false) { echo ' SELECTED'; } ?>>(default)</option>
+                <option value="yes"<?php if ($addifempty == 'yes') { echo ' SELECTED'; } ?>>Yes</option>
+                <option value="no"<?php if ($addifempty == 'no') { echo ' SELECTED'; } ?>>No</option>
             </select>
 
         </div>
