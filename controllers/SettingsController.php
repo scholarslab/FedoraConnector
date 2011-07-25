@@ -101,11 +101,7 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
         if ($this->_request->isPost()) {
 
-            // save defaults
-            // iterate over behavior settings, check to see if record exists, if so update/do nothing, otherwise create
-            // iterate over add-to-blank, check to see if record exists, if so update/do nothing, otherwise create
-
-            print_r($_POST);
+            // print_r($_POST);
 
             $post = $this->_request->getPost();
 
