@@ -85,6 +85,8 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
         $this->view->elements = $dublinCoreSet;
         $this->view->defaultImportBehavior = get_option('fedora_connector_default_import_behavior');
         $this->view->defaultAddToBlank = get_option('fedora_connector_default_add_to_blank_behavior');
+        $this->view->importBehavior = $this->getTable('FedoraConnectorImportBehaviorDefault');
+        $this->view->addToBlank = $this->getTable('FedoraConnectorAddToBlankDefault');
 
     }
 
@@ -99,8 +101,6 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
         if ($this->_request->isPost()) {
 
-            // print_r($_POST);
-
             $post = $this->_request->getPost();
 
             // Set defaults.
@@ -109,8 +109,10 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
             foreach ($post['behavior'] as $field => $behavior) {
 
-                // Query for the record.
+                // Query for the behavior record and the DC element.
                 $behaviorRecord = $this->getTable('FedoraConnectorImportBehaviorDefault')->getBehavior($field);
+                $dcElement = $this->getTable('Element')
+                    ->findByElementSetNameAndElementName('Dublin Core', $field);
 
                 if ($behavior != 'default') {
 
@@ -124,6 +126,7 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
                     else {
                         $newBehaviorRecord = new FedoraConnectorImportBehaviorDefault;
                         $newBehaviorRecord->behavior = $behavior;
+                        $newBehaviorRecord->element_id = $dcElement->id;
                         $newBehaviorRecord->save();
                     }
 
@@ -142,21 +145,24 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
             foreach ($post['addifempty'] as $field => $behavior) {
 
-                // Query for the record.
+                // Query for the behavior record and the DC element.
                 $behaviorRecord = $this->getTable('FedoraConnectorAddToBlankDefault')->getBehavior($field);
+                $dcElement = $this->getTable('Element')
+                    ->findByElementSetNameAndElementName('Dublin Core', $field);
 
                 if ($behavior != 'default') {
 
                     // If the record exists, update it.
                     if ($behaviorRecord != false) {
-                        $behaviorRecord->behavior = $behavior;
+                        $behaviorRecord->add_to_blank = ($behavior == 'yes') ? true : false;
                         $behaviorRecord->save();
                     }
 
                     // Otherwise, create a new record.
                     else {
                         $newBehaviorRecord = new FedoraConnectorAddToBlankDefault;
-                        $newBehaviorRecord->behavior = $behavior;
+                        $newBehaviorRecord->add_to_blank = ($behavior == 'yes') ? true : false;
+                        $newBehaviorRecord->element_id = $dcElement->id;
                         $newBehaviorRecord->save();
                     }
 

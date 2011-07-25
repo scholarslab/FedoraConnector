@@ -201,6 +201,10 @@ class FedoraConnectorPlugin
         $db = get_db();
         $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
         $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportBehaviorDefault`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportBehaviorItem`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorAddToBlankDefault`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorAddToBlankItem`");
 
         // If TeiDisplay is installed, remove Fedora TEI datastreams from its 
         // table.

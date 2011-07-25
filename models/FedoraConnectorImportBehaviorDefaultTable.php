@@ -47,9 +47,6 @@
 class FedoraConnectorImportBehaviorDefaultTable extends Omeka_Db_Table
 {
 
-    public $element_id;
-    public $behavior;
-
     /**
      * Returns the behavior record for the given DC field name.
      *
@@ -65,10 +62,34 @@ class FedoraConnectorImportBehaviorDefaultTable extends Omeka_Db_Table
             ->findByElementSetNameAndElementName('Dublin Core', $field);
 
         $record = $this->fetchObject(
-            $this->findBySql('element_id = ?', array($dcElement->id))
+            $this->getSelect()->where('element_id = ' . $dcElement->id)
         );
 
         return ($record != null) ? $record : false;
+
+    }
+
+    /**
+     * Returns the behavior record for the given DC field name,
+     * formatted to be used in the templates when constructing the
+     * dropdown selects.
+     *
+     * @param string $field The DC field to check for.
+     *
+     * @return object Omeka_record The record, or false if no record
+     * exists.
+     */
+    public function getBehaviorForSelect($field)
+    {
+
+        $dcElement = $this->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', $field);
+
+        $record = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $dcElement->id)
+        );
+
+        return ($record != null) ? $record->behavior : false;
 
     }
 

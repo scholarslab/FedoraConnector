@@ -42,70 +42,16 @@
 <?php
 
 /**
- * Table class for the default add-if-empty behavior settings records.
+ * Record class for import behavior defaults.
  */
-class FedoraConnectorAddToBlankDefaultTable extends Omeka_Db_Table
+class FedoraConnectorImportBehaviorDefault extends Omeka_record
 {
 
-    /**
-     * Returns the behavior record for the given DC field name.
-     *
-     * @param string $field The DC field to check for.
-     *
-     * @return object Omeka_record The record, or false if no record
-     * exists.
-     */
-    public function getBehavior($field)
-    {
-
-        $dcElement = $this->getTable('Element')
-            ->findByElementSetNameAndElementName('Dublin Core', $field);
-
-        $record = $this->fetchObject(
-            $this->getSelect()->where('element_id = ' . $dcElement->id)
-        );
-
-        return ($record != null) ? $record : false;
-
-    }
-
-    /**
-     * Returns the behavior record for the given DC field name,
-     * formatted to be used in the templates when constructing the
-     * dropdown selects.
-     *
-     * @param string $field The DC field to check for.
-     *
-     * @return object Omeka_record The record, or false if no record
-     * exists.
-     */
-    public function getBehaviorForSelect($field)
-    {
-
-        $dcElement = $this->getTable('Element')
-            ->findByElementSetNameAndElementName('Dublin Core', $field);
-
-        $record = $this->fetchObject(
-            $this->getSelect()->where('element_id = ' . $dcElement->id)
-        );
-
-        if ($record == null) {
-            $select = false;
-        }
-
-        else if ($record->add_to_blank == true) {
-            $select = 'yes';
-        }
-
-        else if ($record->add_to_blank == false) {
-            $select = 'no';
-        }
-
-        return $select;
-
-    }
+    public $behavior;
+    public $element_id;
 
 }
+
 
 /*
  * Local variables:
@@ -116,3 +62,4 @@ class FedoraConnectorAddToBlankDefaultTable extends Omeka_Db_Table
  */
 
 ?>
+
