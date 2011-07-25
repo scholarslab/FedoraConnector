@@ -238,3 +238,48 @@ function fedorahelpers_doItemFedoraForm($item)
     return $form;
 
 }
+
+/**
+ * Build the form for the Edit Item menu.
+ *
+ * @param object $item The item being edited.
+ *
+ * @return string The form.
+ */
+function fedorahelpers_doItemFedoraImportSettings($item)
+{
+
+    // $db = get_db();
+    // $select = $db->getTable('FedoraConnectorDatastream')->select()
+    //     ->from(array('d' => $db->prefix . 'fedora_connector_datastreams'))
+    //     ->joinLeft(array('s' => $db->prefix . 'fedora_connector_servers'), 'd.server_id = s.id')
+    //     ->columns(array('server_name' => 's.name', 'datastream_id' => 'd.id', 'parent_item' =>
+    //         "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50 LIMIT 1)"))
+    //     ->where('d.item_id = ' . $item->id);
+
+    // $datastreams = $db->getTable('FedoraConnectorDatastream')->fetchObjects($select);
+
+    $form = 'test';
+
+    // if (count($datastreams) == 0) {
+    //     $form .= '<p>There are no datastreams yet. <a href="' . uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid') . '">Add one</a>.</p>';
+    // }
+
+    // else {
+    //     $form .= '<table><thead><th>Datastream</th><th>PID</th><th>Server</th><th>Format</th><th>Import?</th>';
+    //     foreach ($datastreams as $datastream) {
+    //         $form .= '<tr>
+    //           <td class="fedora-td-small"><strong><a href="' . $datastream->getUrl() . '">' . $datastream->getNode()->getAttribute('label') . '</a></strong></td>
+    //             <td class="fedora-td-small">' . $datastream->pid . '</td>
+    //             <td class="fedora-td-small"><a href="' . uri('/fedora-connector/servers/edit/' . $datastream->server_id) . '">' . $datastream->server_name . '</a></td>
+    //             <td class="fedora-td-small">' . $datastream->metadata_stream . '</td>
+    //             <td class="fedora-td-small"><a style="color: #618310" href="' . uri('/fedora-connector/datastreams/' . $datastream->datastream_id . '/import') . '"><strong>Import</strong></a></td>
+    //             </tr>';
+    //     }
+    //     $form .= '</table>';
+    //     $form .= '<p><strong><a href="' . uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid') . '">Add another datastream -></a></strong></p>';
+    // }
+
+    return $form;
+
+}

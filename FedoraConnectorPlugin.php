@@ -350,6 +350,7 @@ class FedoraConnectorPlugin
         $item = get_current_item();
         if (isset($item->added)) {
             $tabs['Fedora Datastreams'] = fedorahelpers_doItemFedoraForm($item);
+            $tabs['Fedora Import Settings'] = fedorahelpers_doItemFedoraImportSettings($item);
         }
 
         return $tabs;
