@@ -107,6 +107,7 @@ class FedoraConnectorPlugin
 
         $db = get_db();
 
+        // Create datastream table.
         $db->query("
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
                 `id` int(10) unsigned NOT NULL auto_increment,
@@ -120,12 +121,23 @@ class FedoraConnectorPlugin
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
+        // Create servers table.
         $db->query("
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `url` tinytext collate utf8_unicode_ci,
                 `name` tinytext collate utf8_unicode_ci,
                 `is_default` tinyint(1) unsigned NOT NULL,
+                PRIMARY KEY  (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+            ");
+
+        // Create table for DC defaults for overwrite behavior.
+        $db->query("
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDcOverwriteDefault` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `element_id` int(10) unsigned NOT NULL auto_increment,
+                `behavior_id` int(10) unsigned NOT NULL auto_increment,
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
