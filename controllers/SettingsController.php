@@ -105,6 +105,22 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
             // iterate over behavior settings, check to see if record exists, if so update/do nothing, otherwise create
             // iterate over add-to-blank, check to see if record exists, if so update/do nothing, otherwise create
 
+            print_r($_POST);
+
+            $post = $this->_request->getPost();
+
+            // Set defaults.
+            set_option('fedora_connector_default_import_behavior', $post['behavior_default']);
+            set_option('fedora_connector_default_add_to_blank_behavior', $post['addifempty_default']);
+
+            foreach ($post['behavior'] as $field => $behavior) {
+
+                // $behaviorRecord = 
+
+            }
+
+            $this->_forward('setdefaults', 'settings', 'fedora-connector');
+
         } else {
 
             $this->_forward('setdefaults', 'settings', 'fedora-connector');

@@ -25,21 +25,21 @@ These settings can be customized for individual items through the "Fedora Import
 
 <hr class="fedora-divider">
 
-<form enctype="multipart/form-data" action="import" method="post">
+<form enctype="multipart/form-data" action="<?php echo uri('/fedora-connector/settings/save'); ?>" method="post">
 
 <h2>Universal Default Settings:</h2>
 
     <div class="fedora-defaults-field">
 
         <span>Import Behavior:</span>
-        <select name="behavior">
+        <select name="behavior_default">
             <option value="overwrite">Overwrite</option>
             <option value="stack">Stack</option>
             <option value="block">Block</option>
         </select>
 
         <span>Add new data if fields are empty?</span>
-        <select name="addifempty">
+        <select name="addifempty_default">
             <option value="yes">Yes</option>
             <option value="no">No</option>
         </select>
@@ -73,7 +73,7 @@ These settings can be customized for individual items through the "Fedora Import
 
     <?php endforeach; ?>
 
-    <input type="submit" name="fedora-settings-submit" id="fedora-settings-submit" value="Save Settings" action="<?php echo uri('/fedora-connector/settings/save'); ?>" />
+    <input type="submit" name="fedora-settings-submit" id="fedora-settings-submit" value="Save Settings" />
 
 </form>
 
