@@ -57,7 +57,7 @@ These settings can be customized for individual items through the "Fedora Import
 
         <div class="fedora-defaults-field">
 
-            <h3><strong><?php echo $element->name; ?></strong>:</h3>
+            <h3><strong><?php echo $element->name; if ($import != false || $addifempty != false) { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong>:</h3>
 
             <span>Import Behavior:</span>
             <select name="behavior[<?php echo $element->name; ?>]">
