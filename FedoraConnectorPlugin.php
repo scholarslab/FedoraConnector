@@ -132,30 +132,30 @@ class FedoraConnectorPlugin
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
-        // Create table for DC defaults for overwrite behaviors.
+        // Create table for DC defaults for import behaviors.
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDcOverwriteDefault` (
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehaviorDefault` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `element_id` int(10) unsigned NOT NULL,
-                `behavior` ENUM('overwrite', 'stack', 'block'),
+                `behavior` ENUM('default', 'overwrite', 'stack', 'block'),
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
         // Create table for DC defaults for overwrite behaviors.
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorItemDcOverwrite` (
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehaviorItem` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `item_id` int(10) unsigned NOT NULL,
                 `element_id` int(10) unsigned NOT NULL,
-                `behavior` ENUM('overwrite', 'stack', 'block'),
+                `behavior` ENUM('default', 'overwrite', 'stack', 'block'),
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
         // Create table for DC defaults for add-to-blank.
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDcAddToBlankDefault` (
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorAddToBlankDefault` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `element_id` int(10) unsigned NOT NULL,
                 `add_to_blank` bool NOT NULL,
@@ -165,7 +165,7 @@ class FedoraConnectorPlugin
 
         // Create table for DC defaults for add-to-blank.
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorItemAddToBlank` (
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorAddToBlankItem` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `item_id` int(10) unsigned NOT NULL,
                 `element_id` int(10) unsigned NOT NULL,

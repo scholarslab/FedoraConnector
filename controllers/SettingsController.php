@@ -115,10 +115,45 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
             foreach ($post['behavior'] as $field => $behavior) {
 
-                // $behaviorRecord = 
+                // Query for the record.
+                $behaviorRecord = $this->getTable('FedoraConnectorImportBehaviorDefault')->getBehavior($field);
+
+                // If the record exists, update it.
+                if ($behaviorRecord != false) {
+                    $behaviorRecord->behavior = $behavior;
+                    $behaviorRecord->save();
+                }
+
+                // Otherwise, create a new record.
+                else {
+                    $newBehaviorRecord = new FedoraConnectorImportBehaviorDefault;
+                    $newBehaviorRecord->behavior = $behavior;
+                    $newBehaviorRecord->save();
+                }
 
             }
 
+            foreach ($post['addifempty'] as $field => $behavior) {
+
+                // Query for the record.
+                $behaviorRecord = $this->getTable('FedoraConnectorAddToBlankDefault')->getBehavior($field);
+
+                // If the record exists, update it.
+                if ($behaviorRecord != false) {
+                    $behaviorRecord->behavior = $behavior;
+                    $behaviorRecord->save();
+                }
+
+                // Otherwise, create a new record.
+                else {
+                    $newBehaviorRecord = new FedoraConnectorAddToBlankDefault;
+                    $newBehaviorRecord->behavior = $behavior;
+                    $newBehaviorRecord->save();
+                }
+
+            }
+
+            $this->flashSuccess('Settings saved.');
             $this->_forward('setdefaults', 'settings', 'fedora-connector');
 
         } else {
