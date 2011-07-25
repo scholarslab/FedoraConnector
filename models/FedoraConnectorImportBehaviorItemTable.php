@@ -79,7 +79,7 @@ class FedoraConnectorImportBehaviorItemTable extends Omeka_Db_Table
      * @return object Omeka_record The record, or false if no record
      * exists.
      */
-    public function getBehaviorForSelect($field)
+    public function getBehaviorForSelect($field, $item)
     {
 
         $dcElement = $this->getTable('Element')

@@ -17,8 +17,8 @@ Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector
     <?php foreach ($elements as $element): ?>
 
         <?php
-            $import = $db->getTable('FedoraConnectorImportBehaviorItem')->getBehaviorForSelect($element->name);
-            $addifempty = $db->getTable('FedoraConnectorAddToBlankItem')->getBehaviorForSelect($element->name);
+            $import = $db->getTable('FedoraConnectorImportBehaviorItem')->getBehaviorForSelect($element->name, $item);
+            $addifempty = $db->getTable('FedoraConnectorAddToBlankItem')->getBehaviorForSelect($element->name, $item);
         ?>
 
         <div class="fedora-defaults-field">
