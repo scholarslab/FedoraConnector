@@ -48,24 +48,25 @@ class FedoraConnectorImportBehaviorDefaultTable extends Omeka_Db_Table
 {
 
     /**
-     * Returns servers for the main listing.
+     * Returns the behavior record for the given DC field name.
      *
-     * @param string $order The constructed SQL order clause.
+     * @param string $field The DC field to check for.
      *
-     * @return object The collections.
+     * @return object Omeka_record The record, or false if no record
+     * exists.
      */
-    public function getServers($page = null, $order = null)
+    public function getBehavior($field)
     {
 
-        $select = $this->getSelect();
-        if (isset($page)) {
-            $select->limitPage($page, get_option('per_page_admin'));
-        }
-        if (isset($order)) {
-            $select->order($order);
-        }
+        $dcElement = $this->getTable('Element')->fetchObject(
+            $this->getTable('Element')->findBySql('name = ?', array($field))
+        );
 
-        return $this->fetchObjects($select);
+        $record = $this->fetchObject(
+            $this->findBySql('element_id = ?', array($dcElement->id))
+        );
+
+        return $record ? $record : false;
 
     }
 

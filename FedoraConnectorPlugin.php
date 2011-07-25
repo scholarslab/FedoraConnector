@@ -137,7 +137,7 @@ class FedoraConnectorPlugin
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehaviorDefault` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `element_id` int(10) unsigned NOT NULL,
-                `behavior` ENUM('default', 'overwrite', 'stack', 'block'),
+                `behavior` ENUM('overwrite', 'stack', 'block'),
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
@@ -148,7 +148,7 @@ class FedoraConnectorPlugin
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `item_id` int(10) unsigned NOT NULL,
                 `element_id` int(10) unsigned NOT NULL,
-                `behavior` ENUM('default', 'overwrite', 'stack', 'block'),
+                `behavior` ENUM('overwrite', 'stack', 'block'),
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
