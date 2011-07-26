@@ -38,12 +38,6 @@ These settings can be customized for individual items through the "Fedora Import
             <option value="block"<?php if ($defaultImportBehavior == 'block') { echo ' SELECTED'; } ?>>Block</option>
         </select>
 
-        <span>Add new data if fields are empty?</span>
-        <select name="addifempty_default">
-            <option value="yes"<?php if ($defaultAddToBlank == 'yes') { echo ' SELECTED'; } ?>>Yes</option>
-            <option value="no"<?php if ($defaultAddToBlank == 'no') { echo ' SELECTED'; } ?>>No</option>
-        </select>
-
     </div>
 
 <h2 style="margin-top: 2em;">Per-Field Default Settings:</h2>
