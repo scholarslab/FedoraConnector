@@ -368,7 +368,75 @@ class FedoraConnectorPlugin
     public function afterSaveFormItem($record, $post)
     {
 
+        $db = get_db();
+        foreach ($post['behavior'] as $field => $behavior) {
 
+            // Query for the behavior record and the DC element.
+            $behaviorRecord = $db->getTable('FedoraConnectorImportSetting')
+                ->getItemBehaviorByField($record, $field);
+            $dcElement = $db->getTable('Element')
+                ->findByElementSetNameAndElementName('Dublin Core', $field);
+
+            if ($behavior != 'default') {
+
+                // If the record exists, update it.
+                if ($behaviorRecord != false) {
+                    $behaviorRecord->behavior = $behavior;
+                    $behaviorRecord->save();
+                }
+
+                // Otherwise, create a new record.
+                else {
+                    $newBehaviorRecord = new FedoraConnectorImportSetting;
+                    $newBehaviorRecord->behavior = $behavior;
+                    $newBehaviorRecord->element_id = $dcElement->id;
+                    $newBehaviorRecord->item_id = $record->id;
+                    $newBehaviorRecord->save();
+                }
+
+            }
+
+            else {
+
+                // If the record exists, delete it.
+                if ($behaviorRecord != false) {
+                    $behaviorRecord->delete();
+                }
+
+            }
+
+        }
+
+        $itemDefault = $db->getTable('FedoraConnectorImportSetting')
+            ->getItemDefault($record);
+
+        // Update item default.
+        if ($post['behavior_default'] != 'default') {
+
+            // If the record exists, update it.
+            if ($itemDefault != false) {
+                $itemDefault->behavior = $post['behavior_default'];
+                $itemDefault->save();
+            }
+
+            // Otherwise, create a new record.
+            else {
+                $itemDefault = new FedoraConnectorImportSetting;
+                $itemDefault->behavior = $post['behavior_default'];
+                $itemDefault->item_id = $record->id;
+                $itemDefault->save();
+            }
+
+        }
+
+        else {
+
+            // If the record exists, delete it.
+            if ($itemDefault != false) {
+                $itemDefault->delete();
+            }
+
+        }
 
     }
 

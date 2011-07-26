@@ -50,7 +50,9 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
     /**
      * Returns the default behavior record for the given DC element.
      *
-     * @param string $element The DC element to check for.
+     * @param Omeka_record $element The DC element to check for.
+     * @param boolean $forSelect Whether the return should be formatted to work
+     * with case branching in the admin templates.
      *
      * @return object Omeka_record The record, or false if no record
      * exists.
@@ -73,7 +75,9 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
     /**
      * Returns the default behavior record for the given DC element.
      *
-     * @param string $element The DC element to check for.
+     * @param string $field The name of the DC element to check for.
+     * @param boolean $forSelect Whether the return should be formatted to work
+     * with case branching in the admin templates.
      *
      * @return object Omeka_record The record, or false if no record
      * exists.
@@ -86,6 +90,86 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
 
         $record = $this->fetchObject(
             $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id IS NULL')
+        );
+
+        if (!$forSelect) {
+            return ($record != null) ? $record : false;
+        } else {
+            return ($record != null) ? $record->behavior : 'default';
+        }
+
+    }
+
+    /**
+     * Returns the item-specific behavior record for the given DC element.
+     *
+     * @param Omeka_record $item The item.
+     * @param Omeka_record $element The DC element to check for.
+     * @param boolean $forSelect Whether the return should be formatted to work
+     * with case branching in the admin templates.
+     *
+     * @return object Omeka_record The record, or false if no record
+     * exists.
+     */
+    public function getItemBehavior($item, $element, $forSelect = false)
+    {
+
+        $record = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id = ' . $item->id)
+        );
+
+        if (!$forSelect) {
+            return ($record != null) ? $record : false;
+        } else {
+            return ($record != null) ? $record->behavior : 'default';
+        }
+
+    }
+
+    /**
+     * Returns the item-specific behavior record for the given DC element.
+     *
+     * @param Omeka_record $item The item.
+     * @param string $field The name of the DC element to check for.
+     * @param boolean $forSelect Whether the return should be formatted to work
+     * with case branching in the admin templates.
+     *
+     * @return object Omeka_record The record, or false if no record
+     * exists.
+     */
+    public function getItemBehaviorByField($item, $field, $forSelect = false)
+    {
+
+        $element = $this->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', $field);
+
+        $record = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id = ' . $item->id)
+        );
+
+        if (!$forSelect) {
+            return ($record != null) ? $record : false;
+        } else {
+            return ($record != null) ? $record->behavior : 'default';
+        }
+
+    }
+
+    /**
+     * Returns the item-item behavior record for the given item.
+     *
+     * @param Omeka_record $item The item.
+     * @param boolean $forSelect Whether the return should be formatted to work
+     * with case branching in the admin templates.
+     *
+     * @return object Omeka_record The record, or false if no record
+     * exists.
+     */
+    public function getItemDefault($item, $forSelect = false)
+    {
+
+        $record = $this->fetchObject(
+            $this->getSelect()->where('element_id IS NULL AND item_id = ' . $item->id)
         );
 
         if (!$forSelect) {

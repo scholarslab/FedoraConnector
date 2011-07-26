@@ -16,11 +16,13 @@ Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector
 
     <div class="fedora-defaults-field">
 
-        <span>Import Behavior:</span>
+        <?php if ($itemDefault != 'default') { echo '<span style="color: #C50;">[Non-Default]</span>'; } ?>
+
         <select name="behavior_default">
-            <option value="overwrite"<?php if ($defaultImportBehavior == 'overwrite') { echo ' SELECTED'; } ?>>Overwrite</option>
-            <option value="stack"<?php if ($defaultImportBehavior == 'stack') { echo ' SELECTED'; } ?>>Stack</option>
-            <option value="block"<?php if ($defaultImportBehavior == 'block') { echo ' SELECTED'; } ?>>Block</option>
+            <option value="default"<?php if ($itemDefault == 'default') { echo ' SELECTED'; } ?>>(default)</option>
+            <option value="overwrite"<?php if ($itemDefault == 'overwrite') { echo ' SELECTED'; } ?>>Overwrite</option>
+            <option value="stack"<?php if ($itemDefault == 'stack') { echo ' SELECTED'; } ?>>Stack</option>
+            <option value="block"<?php if ($itemDefault == 'block') { echo ' SELECTED'; } ?>>Block</option>
         </select>
 
     </div>
@@ -30,16 +32,16 @@ Dublin Core field in Omeka is empty. If there is a discrepancy, Fedora Connector
     <?php foreach ($elements as $element): ?>
 
         <?php
-            // $import = $db->getTable('FedoraConnectorImportBehaviorItem')->getBehaviorForSelect($element->name, $item);
-            // $addifempty = $db->getTable('FedoraConnectorAddToBlankItem')->getBehaviorForSelect($element->name, $item);
+            $import = $db->getTable('FedoraConnectorImportSetting')->getItemBehavior($item, $element, true);
         ?>
 
         <div class="fedora-defaults-field">
 
-            <h3><strong><?php echo $element->name; if ($import != false || $addifempty != false) { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong>:</h3>
+            <h3><strong><?php echo $element->name; ?></strong>:</h3>
+            <?php if ($import != 'default') { echo '<span style="color: #C50;">[Non-Default]</span>'; } ?>
 
             <select name="behavior[<?php echo $element->name; ?>]">
-                <option value="default"<?php if ($import == false) { echo ' SELECTED'; } ?>>(default)</option>
+                <option value="default"<?php if ($import == 'default') { echo ' SELECTED'; } ?>>(default)</option>
                 <option value="overwrite"<?php if ($import == 'overwrite') { echo ' SELECTED'; } ?>>Overwrite</option>
                 <option value="stack"<?php if ($import == 'stack') { echo ' SELECTED'; } ?>>Stack</option>
                 <option value="block"<?php if ($import == 'block') { echo ' SELECTED'; } ?>>Block</option>

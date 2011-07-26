@@ -232,11 +232,9 @@ function fedorahelpers_doItemFedoraImportSettings($item)
 
     $db = get_db();
 
-    $dublinCoreSet = $db->getTable('ElementSet')->fetchObject(
-        $db->getTable('ElementSet')->getSelect()->where('name = "Dublin Core"')
-    );
-
-    $elements = $db->getTable('Element')->findBySql('element_set_id = ?', array(1));
+    $elements = $db->getTable('Element')->findBySet('Dublin Core');
+    $itemDefault = $db->getTable('FedoraConnectorImportSetting')
+            ->getItemDefault($item, true);
 
     ob_start();
     include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_settings_form.php';
