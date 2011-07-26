@@ -49,7 +49,8 @@ These settings can be customized for individual items through the "Fedora Import
 
         <div class="fedora-defaults-field">
 
-            <h3><strong><?php echo $element->name . ':'; if ($import != 'default') { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong></h3>
+            <h3><strong><?php echo $element->name . ':'; ?></strong></h3>
+            <?php if ($import != 'default') { echo '<span style="color: #C50;">[Non-Default]</span>'; } ?>
 
             <select name="behavior[<?php echo $element->name; ?>]">
                 <option value="default"<?php if ($import == 'default') { echo ' SELECTED'; } ?>>(default)</option>

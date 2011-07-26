@@ -109,7 +109,8 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
             foreach ($post['behavior'] as $field => $behavior) {
 
                 // Query for the behavior record and the DC element.
-                $behaviorRecord = $this->getTable('FedoraConnectorImportBehaviorDefault')->getDefaultBehaviorByField($field);
+                $behaviorRecord = $this->getTable('FedoraConnectorImportSetting')
+                    ->getDefaultBehaviorByField($field);
                 $dcElement = $this->getTable('Element')
                     ->findByElementSetNameAndElementName('Dublin Core', $field);
 
@@ -123,44 +124,8 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
 
                     // Otherwise, create a new record.
                     else {
-                        $newBehaviorRecord = new FedoraConnectorImportBehaviorDefault;
+                        $newBehaviorRecord = new FedoraConnectorImportSetting;
                         $newBehaviorRecord->behavior = $behavior;
-                        $newBehaviorRecord->element_id = $dcElement->id;
-                        $newBehaviorRecord->save();
-                    }
-
-                }
-
-                else {
-
-                    // If the record exists, delete it.
-                    if ($behaviorRecord != false) {
-                        $behaviorRecord->delete();
-                    }
-
-                }
-
-            }
-
-            foreach ($post['addifempty'] as $field => $behavior) {
-
-                // Query for the behavior record and the DC element.
-                $behaviorRecord = $this->getTable('FedoraConnectorAddToBlankDefault')->getBehavior($field);
-                $dcElement = $this->getTable('Element')
-                    ->findByElementSetNameAndElementName('Dublin Core', $field);
-
-                if ($behavior != 'default') {
-
-                    // If the record exists, update it.
-                    if ($behaviorRecord != false) {
-                        $behaviorRecord->add_to_blank = ($behavior == 'yes') ? true : false;
-                        $behaviorRecord->save();
-                    }
-
-                    // Otherwise, create a new record.
-                    else {
-                        $newBehaviorRecord = new FedoraConnectorAddToBlankDefault;
-                        $newBehaviorRecord->add_to_blank = ($behavior == 'yes') ? true : false;
                         $newBehaviorRecord->element_id = $dcElement->id;
                         $newBehaviorRecord->save();
                     }
