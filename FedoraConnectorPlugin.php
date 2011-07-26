@@ -53,6 +53,7 @@ class FedoraConnectorPlugin
         'define_acl',
         'config_form',
         'config',
+        'after_save_form_item',
         'public_append_to_items_show'
     );
 
@@ -142,53 +143,6 @@ class FedoraConnectorPlugin
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
-
-
-
-
-
-
-        // // Create table for DC defaults for import behaviors.
-        // $db->query("
-        //     CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehaviorDefault` (
-        //         `id` int(10) unsigned NOT NULL auto_increment,
-        //         `element_id` int(10) unsigned NOT NULL,
-        //         `behavior` ENUM('overwrite', 'stack', 'block'),
-        //         PRIMARY KEY  (`id`)
-        //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        //     ");
-
-        // // Create table for DC defaults for overwrite behaviors.
-        // $db->query("
-        //     CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehaviorItem` (
-        //         `id` int(10) unsigned NOT NULL auto_increment,
-        //         `item_id` int(10) unsigned NOT NULL,
-        //         `element_id` int(10) unsigned NOT NULL,
-        //         `behavior` ENUM('overwrite', 'stack', 'block'),
-        //         PRIMARY KEY  (`id`)
-        //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        //     ");
-
-        // // Create table for DC defaults for add-to-blank.
-        // $db->query("
-        //     CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorAddToBlankDefault` (
-        //         `id` int(10) unsigned NOT NULL auto_increment,
-        //         `element_id` int(10) unsigned NOT NULL,
-        //         `add_to_blank` bool NOT NULL,
-        //         PRIMARY KEY  (`id`)
-        //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        //     ");
-
-        // // Create table for DC defaults for add-to-blank.
-        // $db->query("
-        //     CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorAddToBlankItem` (
-        //         `id` int(10) unsigned NOT NULL auto_increment,
-        //         `item_id` int(10) unsigned NOT NULL,
-        //         `element_id` int(10) unsigned NOT NULL,
-        //         `add_to_blank` bool NOT NULL,
-        //         PRIMARY KEY  (`id`)
-        //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        //     ");
 
         // Insert default localhost server record.
         $db->query("
@@ -400,6 +354,21 @@ class FedoraConnectorPlugin
             $renderer = new FedoraConnector_Render;
             echo $renderer->display($datastream);
         }
+
+    }
+
+    /**
+     * Lock in changes made to item-specific import settings.
+     *
+     * @param $record Omeka_record the record.
+     * @param $post posted data from the form.
+     *
+     * @return void
+     */
+    public function afterSaveFormItem($record, $post)
+    {
+
+
 
     }
 
