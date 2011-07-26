@@ -45,7 +45,7 @@ These settings can be customized for individual items through the "Fedora Import
     <?php foreach ($elements as $element): ?>
 
     <?php
-        // $import = $importBehavior->getDefaultBehavior($element->name);
+        // $import = $importBehavior->getDefaultBehavior($element, true);
     ?>
 
         <div class="fedora-defaults-field">
@@ -53,7 +53,7 @@ These settings can be customized for individual items through the "Fedora Import
             <h3><strong><?php echo $element->name; if ($import != false || $addifempty != false) { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong>:</h3>
 
             <select name="behavior[<?php echo $element->name; ?>]">
-                <option value="default"<?php if ($import == false) { echo ' SELECTED'; } ?>>(default)</option>
+                <option value="default"<?php if ($import == 'default') { echo ' SELECTED'; } ?>>(default)</option>
                 <option value="overwrite"<?php if ($import == 'overwrite') { echo ' SELECTED'; } ?>>Overwrite</option>
                 <option value="stack"<?php if ($import == 'stack') { echo ' SELECTED'; } ?>>Stack</option>
                 <option value="block"<?php if ($import == 'block') { echo ' SELECTED'; } ?>>Block</option>

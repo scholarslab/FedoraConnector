@@ -48,24 +48,51 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
 {
 
     /**
-     * Returns the behavior record for the given DC field name.
+     * Returns the default behavior record for the given DC element.
      *
-     * @param string $field The DC field to check for.
+     * @param string $element The DC element to check for.
      *
      * @return object Omeka_record The record, or false if no record
      * exists.
      */
-    public function getDefaultBehavior($field)
+    public function getDefaultBehavior($element, $forSelect = false)
     {
 
-        // $dcElement = $this->getTable('Element')
-        //     ->findByElementSetNameAndElementName('Dublin Core', $field);
+        $record = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id = NULL')
+        );
 
-        // $record = $this->fetchObject(
-        //     $this->getSelect()->where('element_id = ' . $dcElement->id)
-        // );
+        if (!$forSelect) {
+            return ($record != null) ? $record : false;
+        } else {
+            return ($record != null? $record->behavior : 'default');
+        }
 
-        // return ($record != null) ? $record : false;
+    }
+
+    /**
+     * Returns the default behavior record for the given DC element.
+     *
+     * @param string $element The DC element to check for.
+     *
+     * @return object Omeka_record The record, or false if no record
+     * exists.
+     */
+    public function getDefaultBehaviorByField($field, $forSelect = false)
+    {
+
+        $element = $this->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', $field);
+
+        $record = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id = NULL')
+        );
+
+        if (!$forSelect) {
+            return ($record != null) ? $record : false;
+        } else {
+            return ($record != null? $record->behavior : 'default');
+        }
 
     }
 
