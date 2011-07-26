@@ -8,7 +8,7 @@
 
     <?php if (count($servers) == 0): ?>
 
-        <p>There are no servers. <?php echo link_to('servers', 'create', 'Create one'); ?>!</p>
+        <p>There are no servers. <a href="<?php echo html_escape(uri('fedora-connector/servers/create')); ?>">Add one</a>!</p>
 
     <?php else: ?>
 
