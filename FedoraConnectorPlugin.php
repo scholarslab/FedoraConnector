@@ -134,7 +134,7 @@ class FedoraConnectorPlugin
 
         // Create table for DC defaults for import behaviors.
         $db->query("
-            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportBehavior` (
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportSetting` (
                 `id` int(10) unsigned NOT NULL auto_increment,
                 `element_id` int(10) unsigned NULL,
                 `item_id` int(10) unsigned NULL,

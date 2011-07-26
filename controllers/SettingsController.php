@@ -85,8 +85,7 @@ class FedoraConnector_SettingsController extends Omeka_Controller_Action
         $this->view->elements = $dublinCoreSet;
         $this->view->defaultImportBehavior = get_option('fedora_connector_default_import_behavior');
         $this->view->defaultAddToBlank = get_option('fedora_connector_default_add_to_blank_behavior');
-        $this->view->importBehavior = $this->getTable('FedoraConnectorImportBehaviorDefault');
-        $this->view->addToBlank = $this->getTable('FedoraConnectorAddToBlankDefault');
+        $this->view->importBehavior = $this->getTable('FedoraConnectorImportSetting');
 
     }
 
