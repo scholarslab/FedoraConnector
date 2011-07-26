@@ -27,11 +27,10 @@ These settings can be customized for individual items through the "Fedora Import
 
 <form enctype="multipart/form-data" action="<?php echo uri('/fedora-connector/settings/save'); ?>" method="post">
 
-<h2>Universal Default Settings:</h2>
+<h2>Universal Default Setting:</h2>
 
     <div class="fedora-defaults-field">
 
-        <span>Import Behavior:</span>
         <select name="behavior_default">
             <option value="overwrite"<?php if ($defaultImportBehavior == 'overwrite') { echo ' SELECTED'; } ?>>Overwrite</option>
             <option value="stack"<?php if ($defaultImportBehavior == 'stack') { echo ' SELECTED'; } ?>>Stack</option>
@@ -45,12 +44,12 @@ These settings can be customized for individual items through the "Fedora Import
     <?php foreach ($elements as $element): ?>
 
     <?php
-        // $import = $importBehavior->getDefaultBehavior($element, true);
+        $import = $importBehavior->getDefaultBehavior($element, true);
     ?>
 
         <div class="fedora-defaults-field">
 
-            <h3><strong><?php echo $element->name; if ($import != false || $addifempty != false) { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong>:</h3>
+            <h3><strong><?php echo $element->name . ':'; if ($import != 'default') { echo ' <span style="color: #C50;">[Non-Default]</span>'; } ?></strong></h3>
 
             <select name="behavior[<?php echo $element->name; ?>]">
                 <option value="default"<?php if ($import == 'default') { echo ' SELECTED'; } ?>>(default)</option>

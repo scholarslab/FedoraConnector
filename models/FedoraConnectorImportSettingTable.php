@@ -59,13 +59,13 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
     {
 
         $record = $this->fetchObject(
-            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id = NULL')
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id IS NULL')
         );
 
         if (!$forSelect) {
             return ($record != null) ? $record : false;
         } else {
-            return ($record != null? $record->behavior : 'default');
+            return ($record != null) ? $record->behavior : 'default';
         }
 
     }
