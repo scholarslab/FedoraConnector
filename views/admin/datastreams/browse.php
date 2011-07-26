@@ -8,7 +8,7 @@
 
     <?php if (count($datastreams) == 0): ?>
 
-        <p>There are no datastreams yet.</p>
+        <p>There are no datastreams yet. <a class="add" href="<?php echo html_escape(uri('fedora-connector/datastreams/create')); ?>">Add one</a>!</p>
 
     <?php else: ?>
 
