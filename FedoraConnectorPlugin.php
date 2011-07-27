@@ -53,6 +53,7 @@ class FedoraConnectorPlugin
         'define_acl',
         'config_form',
         'config',
+        'after_save_form_item',
         'public_append_to_items_show'
     );
 
@@ -107,6 +108,7 @@ class FedoraConnectorPlugin
 
         $db = get_db();
 
+        // Create datastream table.
         $db->query("
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
                 `id` int(10) unsigned NOT NULL auto_increment,
@@ -120,6 +122,7 @@ class FedoraConnectorPlugin
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
+        // Create servers table.
         $db->query("
             CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
                 `id` int(10) unsigned NOT NULL auto_increment,
@@ -130,6 +133,18 @@ class FedoraConnectorPlugin
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
+        // Create table for DC defaults for import behaviors.
+        $db->query("
+            CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportSetting` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `element_id` int(10) unsigned NULL,
+                `item_id` int(10) unsigned NULL,
+                `behavior` ENUM('overwrite', 'stack', 'block'),
+                PRIMARY KEY  (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+            ");
+
+        // Insert default localhost server record.
         $db->query("
             INSERT INTO `$db->FedoraConnectorServer` (url, name, is_default)
             VALUES (
@@ -140,6 +155,7 @@ class FedoraConnectorPlugin
             ");
 
         set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
+        set_option('fedora_connector_default_import_behavior', 'overwrite');
 
     }
 
@@ -154,6 +170,10 @@ class FedoraConnectorPlugin
         $db = get_db();
         $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
         $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportBehaviorDefault`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportBehaviorItem`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorAddToBlankDefault`");
+        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorAddToBlankItem`");
 
         // If TeiDisplay is installed, remove Fedora TEI datastreams from its 
         // table.
@@ -261,7 +281,7 @@ class FedoraConnectorPlugin
     public function configForm()
     {
 
-        include 'config_form.php';
+        include 'forms/config_form.php';
 
     }
 
@@ -291,6 +311,7 @@ class FedoraConnectorPlugin
         $item = get_current_item();
         if (isset($item->added)) {
             $tabs['Fedora Datastreams'] = fedorahelpers_doItemFedoraForm($item);
+            $tabs['Fedora Import Settings'] = fedorahelpers_doItemFedoraImportSettings($item);
         }
 
         return $tabs;
@@ -332,6 +353,89 @@ class FedoraConnectorPlugin
         foreach ($datastreams as $datastream) {
             $renderer = new FedoraConnector_Render;
             echo $renderer->display($datastream);
+        }
+
+    }
+
+    /**
+     * Lock in changes made to item-specific import settings.
+     *
+     * @param $record Omeka_record the record.
+     * @param $post posted data from the form.
+     *
+     * @return void
+     */
+    public function afterSaveFormItem($record, $post)
+    {
+
+        $db = get_db();
+        foreach ($post['behavior'] as $field => $behavior) {
+
+            // Query for the behavior record and the DC element.
+            $behaviorRecord = $db->getTable('FedoraConnectorImportSetting')
+                ->getItemBehaviorByField($record, $field);
+            $dcElement = $db->getTable('Element')
+                ->findByElementSetNameAndElementName('Dublin Core', $field);
+
+            if ($behavior != 'default') {
+
+                // If the record exists, update it.
+                if ($behaviorRecord != false) {
+                    $behaviorRecord->behavior = $behavior;
+                    $behaviorRecord->save();
+                }
+
+                // Otherwise, create a new record.
+                else {
+                    $newBehaviorRecord = new FedoraConnectorImportSetting;
+                    $newBehaviorRecord->behavior = $behavior;
+                    $newBehaviorRecord->element_id = $dcElement->id;
+                    $newBehaviorRecord->item_id = $record->id;
+                    $newBehaviorRecord->save();
+                }
+
+            }
+
+            else {
+
+                // If the record exists, delete it.
+                if ($behaviorRecord != false) {
+                    $behaviorRecord->delete();
+                }
+
+            }
+
+        }
+
+        $itemDefault = $db->getTable('FedoraConnectorImportSetting')
+            ->getItemDefault($record);
+
+        // Update item default.
+        if ($post['behavior_default'] != 'default') {
+
+            // If the record exists, update it.
+            if ($itemDefault != false) {
+                $itemDefault->behavior = $post['behavior_default'];
+                $itemDefault->save();
+            }
+
+            // Otherwise, create a new record.
+            else {
+                $itemDefault = new FedoraConnectorImportSetting;
+                $itemDefault->behavior = $post['behavior_default'];
+                $itemDefault->item_id = $record->id;
+                $itemDefault->save();
+            }
+
+        }
+
+        else {
+
+            // If the record exists, delete it.
+            if ($itemDefault != false) {
+                $itemDefault->delete();
+            }
+
         }
 
     }

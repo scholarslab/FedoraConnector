@@ -214,27 +214,30 @@ function fedorahelpers_doItemFedoraForm($item)
 
     $datastreams = $db->getTable('FedoraConnectorDatastream')->fetchObjects($select);
 
-    $form = '';
+    ob_start();
+    include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_import_form.php';
+    return ob_get_clean();
 
-    if (count($datastreams) == 0) {
-        $form .= '<p>There are no datastreams yet. <a href="' . uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid') . '">Add one</a>.</p>';
-    }
+}
 
-    else {
-        $form .= '<table><thead><th>Datastream</th><th>PID</th><th>Server</th><th>Format</th><th>Import?</th>';
-        foreach ($datastreams as $datastream) {
-            $form .= '<tr>
-              <td class="fedora-td-small"><strong><a href="' . $datastream->getUrl() . '">' . $datastream->getNode()->getAttribute('label') . '</a></strong></td>
-                <td class="fedora-td-small">' . $datastream->pid . '</td>
-                <td class="fedora-td-small"><a href="' . uri('/fedora-connector/servers/edit/' . $datastream->server_id) . '">' . $datastream->server_name . '</a></td>
-                <td class="fedora-td-small">' . $datastream->metadata_stream . '</td>
-                <td class="fedora-td-small"><a style="color: #618310" href="' . uri('/fedora-connector/datastreams/' . $datastream->datastream_id . '/import') . '"><strong>Import</strong></a></td>
-                </tr>';
-        }
-        $form .= '</table>';
-        $form .= '<p><strong><a href="' . uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid') . '">Add another datastream -></a></strong></p>';
-    }
+/**
+ * Build the form for the Edit Item menu.
+ *
+ * @param object $item The item being edited.
+ *
+ * @return string The form.
+ */
+function fedorahelpers_doItemFedoraImportSettings($item)
+{
 
-    return $form;
+    $db = get_db();
+
+    $elements = $db->getTable('Element')->findBySet('Dublin Core');
+    $itemDefault = $db->getTable('FedoraConnectorImportSetting')
+            ->getItemDefault($item, true);
+
+    ob_start();
+    include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_settings_form.php';
+    return ob_get_clean();
 
 }

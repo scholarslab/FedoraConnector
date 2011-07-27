@@ -3,8 +3,7 @@
 }
 
 .fedora-preview {
-	max-width: 120px;
-	max-height: 120px;	
+	max-width: 80px;
 }
 
 #edit_submit-element, #delete_submit-element {
@@ -95,5 +94,41 @@ h1.fedora-nowrap {
 }
 
 table.fedora td {
+    vertical-align: middle;
+}
+
+.fedora-explanation {
+    font-size: 11px;
+    color: #767676;
+}
+
+ul.fedora-explanation {
+    list-style: disc;
+    margin: 0 0 1em 3em;
+}
+
+hr.fedora-divider {
+    height: 1px;
+    border: 0;
+    background-color: #bcbcbc;
+    margin: 0 0 1em 0;
+}
+
+div.fedora-defaults-field {
+    margin: 0 0 2em 0;
+}
+
+div.fedora-defaults-field select {
+    display: block;
+    margin: 0.5em 0 1em 0;
+}
+
+div.fedora-defaults-add-if-empty {
+    margin: 1em 0 0 0;
+}
+
+div.fedora-defaults-add-if-empty span {
+    position: relative;
+    top: -3px;
     vertical-align: middle;
 }
