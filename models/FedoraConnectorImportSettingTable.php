@@ -65,7 +65,7 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
 
         // If found, return.
         if ($fieldAndItemRecord != null) {
-            return $fieldAndItemRecord;
+            return $fieldAndItemRecord->behavior;
         }
 
         // Then look for an item-specific default.
@@ -75,7 +75,7 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
 
         // If found, return.
         if ($itemDefault != null) {
-            return $itemDefault;
+            return $itemDefault->behavior;
         }
 
         // Then look for a system-wide field default.
@@ -85,7 +85,7 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
 
         // If found, return.
         if ($fieldDefault != null) {
-            return $fieldDefault;
+            return $fieldDefault->behavior;
         }
 
         // If nothing else is found, return the master default.

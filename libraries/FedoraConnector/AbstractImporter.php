@@ -92,7 +92,7 @@ abstract class FedoraConnector_AbstractImporter
             );
 
             $behavior = $this->db
-                ->getTable('FedoraConnectorImportSetting')->getBehavior();
+                ->getTable('FedoraConnectorImportSetting')->getBehavior($element, $item);
 
             // foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
@@ -195,7 +195,7 @@ abstract class FedoraConnector_AbstractImporter
 
         // Look for existing element texts.
         $select = $this->db->getTable('ElementText')->getSelect()
-            ->where('element_id = ' . $element->id . ' AND record_id = ' . $item->id)
+            ->where('element_id = ' . $element->id . ' AND record_id = ' . $item->id);
 
         $existingTexts = $this->db->getTable('ElementText')->fetchObjects($select);
 
