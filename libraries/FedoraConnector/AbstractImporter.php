@@ -94,15 +94,16 @@ abstract class FedoraConnector_AbstractImporter
             $behavior = $this->db
                 ->getTable('FedoraConnectorImportSetting')->getBehavior();
 
-            foreach ($this->queryAll($xpath, $queries) as $node) {
+            // foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
                     $item,
                     $element,
                     $name,
-                    $node->nodeValue,
-                    $behavior
+                    // $node->nodeValue,
+                    $behavior,
+                    $this->queryAll($xpath, $queries)
                 );
-            }
+            // }
 
         }
 
@@ -190,15 +191,62 @@ abstract class FedoraConnector_AbstractImporter
      *
      * @return void
      */
-    public function addMetadata($item, $element, $name, $value, $behavior) {
+    public function addMetadata($item, $element, $name, $behavior, $nodes) {
 
-        $text = new ElementText;
-        $text->record_id = $item->id;
-        $text->record_type_id = 2;
-        $text->element_id = $element->id;
-        $text->html = 0;
-        $text->text = $value;
-        $text->save();
+        // Look for existing element texts.
+        $select = $this->db->getTable('ElementText')->getSelect()
+            ->where('element_id = ' . $element->id . ' AND record_id = ' . $item->id)
+
+        $existingTexts = $this->db->getTable('ElementText')->fetchObjects($select);
+
+        switch ($behavior) {
+
+            case 'overwrite':
+
+                // First, delete existing texts.
+                foreach ($existingTexts as $text) {
+                    $text->delete();
+                }
+
+                // Then, add the new ones.
+                foreach ($nodes as $node) {
+
+                    $text = new ElementText;
+                    $text->record_id = $item->id;
+                    $text->record_type_id = 2;
+                    $text->element_id = $element->id;
+                    $text->html = 0;
+                    $text->text = $node->nodeValue;
+                    $text->save();
+
+                }
+
+            break;
+
+            case 'stack':
+
+                // Add the new nodes, without deleting the old ones.
+                foreach ($nodes as $node) {
+
+                    $text = new ElementText;
+                    $text->record_id = $item->id;
+                    $text->record_type_id = 2;
+                    $text->element_id = $element->id;
+                    $text->html = 0;
+                    $text->text = $node->nodeValue;
+                    $text->save();
+
+                }
+
+            break;
+
+            case 'block':
+
+                return;
+
+            break;
+
+        }
 
     }
 
