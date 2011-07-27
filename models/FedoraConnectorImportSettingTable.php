@@ -48,6 +48,52 @@ class FedoraConnectorImportSettingTable extends Omeka_Db_Table
 {
 
     /**
+     * The core algorithm to get the behavior for a given item/field.
+     *
+     * @param Omeka_record $element The DC element to check for.
+     * @param Omeka_record $item The parent item that is being imported to.
+     *
+     * @return string $behavior The behavior.
+     */
+    public function getBehavior($element, $item)
+    {
+
+        // First check for an item- and field-specific record.
+        $fieldAndItemRecord = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id = ' . $item->id)
+        );
+
+        // If found, return.
+        if ($fieldAndItemRecord != null) {
+            return $fieldAndItemRecord;
+        }
+
+        // Then look for an item-specific default.
+        $itemDefault = $this->fetchObject(
+            $this->getSelect()->where('element_id IS NULL AND item_id = ' . $item->id)
+        );
+
+        // If found, return.
+        if ($itemDefault != null) {
+            return $itemDefault;
+        }
+
+        // Then look for a system-wide field default.
+        $fieldDefault = $this->fetchObject(
+            $this->getSelect()->where('element_id = ' . $element->id . ' AND item_id IS NULL')
+        );
+
+        // If found, return.
+        if ($fieldDefault != null) {
+            return $fieldDefault;
+        }
+
+        // If nothing else is found, return the master default.
+        return get_option('fedora_connector_default_import_behavior');
+
+    }
+
+    /**
      * Returns the default behavior record for the given DC element.
      *
      * @param Omeka_record $element The DC element to check for.

@@ -91,12 +91,16 @@ abstract class FedoraConnector_AbstractImporter
                 'Dublin Core'
             );
 
+            $behavior = $this->db
+                ->getTable('FedoraConnectorImportSetting')->getBehavior();
+
             foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
                     $item,
                     $element,
                     $name,
-                    $node->nodeValue
+                    $node->nodeValue,
+                    $behavior
                 );
             }
 
@@ -165,6 +169,7 @@ abstract class FedoraConnector_AbstractImporter
             ->join(array('es' => $this->db->prefix . 'element_sets'), 'e.element_set_id = es.id', array())
             ->where('es.name = ?', 'Dublin Core')
             ->order('name');
+
         $elements = $this->db->query($select);
 
         foreach ($elements->fetchAll() as $element) {
@@ -185,7 +190,7 @@ abstract class FedoraConnector_AbstractImporter
      *
      * @return void
      */
-    public function addMetadata($item, $element, $name, $value) {
+    public function addMetadata($item, $element, $name, $value, $behavior) {
 
         $text = new ElementText;
         $text->record_id = $item->id;
