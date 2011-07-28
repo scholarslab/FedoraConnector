@@ -79,6 +79,7 @@ abstract class FedoraConnector_AbstractImporter
     public function import($datastream)
     {
 
+        $db = get_db();
         $item = $this->getItem($datastream);
         $xpath = new DOMXPath($this->getMetadataXml($datastream));
         $dcNames = $this->getDublinCoreNames();
@@ -91,8 +92,7 @@ abstract class FedoraConnector_AbstractImporter
                 'Dublin Core'
             );
 
-            $behavior = $this->db
-                ->getTable('FedoraConnectorImportSetting')->getBehavior($element, $item);
+            $behavior = $this->db->getTable('FedoraConnectorImportSetting')->getBehavior($element, $item);
 
             // foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
