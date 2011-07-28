@@ -38,8 +38,8 @@
  */
 
 
-require_once __DIR__ . '/DatastreamMock.php';
-require_once __DIR__ . '/../../Renderers/100-Image.php';
+require_once dirname(__FILE__) . '/DatastreamMock.php';
+require_once dirname(__FILE__) . '/../../Renderers/100-Image.php';
 
 
 class FedoraConnector_ImageRendererTest extends PHPUnit_Framework_TestCase
