@@ -37,8 +37,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once __DIR__ . '/../../libraries/FedoraConnector/AbstractImporter.php';
-require_once __DIR__ . '/DatastreamMock.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractImporter.php';
+require_once 'DatastreamMock.php';
 
 
 class MockItem
