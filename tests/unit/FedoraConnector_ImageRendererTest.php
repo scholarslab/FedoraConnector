@@ -37,7 +37,6 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-
 require_once dirname(__FILE__) . '/DatastreamMock.php';
 require_once dirname(__FILE__) . '/../../Renderers/100-Image.php';
 
