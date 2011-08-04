@@ -241,3 +241,18 @@ function fedorahelpers_doItemFedoraImportSettings($item)
     return ob_get_clean();
 
 }
+
+/**
+ * Truncate a string to a given length and add '...'.
+ *
+ * @param string $string The string to be truncated.
+ * @param int $length The length to truncate to.
+ *
+ * @return string The truncated and formatted string.
+ */
+function fedorahelpers_previewString($string, $length)
+{
+
+    return substr($string, 0, $length) . '...';
+
+}
