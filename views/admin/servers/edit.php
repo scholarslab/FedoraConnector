@@ -4,7 +4,7 @@
 
     <?php echo flash(); ?>
 
-<h2>Edit Server "<?php echo $server->name; ?>":</h2>
+    <h2>Edit Server "<?php echo $server->name; ?>":</h2>
 
     <?php echo $this->form; ?>
 

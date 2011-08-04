@@ -82,7 +82,7 @@ p.fedora-connector-search-reset {
 }
 
 .fedora-connector-datastreams-form label {
-    width: 400px;
+    width: 750px;
 }
 
 h1.fedora-nowrap {
@@ -137,4 +137,8 @@ span.datastream-detail {
     color: gray;
     font-size: 0.8em;
     margin: 0 0 0 1em;
+}
+
+#datastreams-label label, #metadataformat-label label {
+    margin-bottom: 1em;
 }

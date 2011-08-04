@@ -10,9 +10,9 @@
 
     <?php else: ?>
 
-            <table>
+            <h2 class="fedora-select-item">Select an existing item to add the datastream to:</h2>
 
-                <h2 class="fedora-select-item">Select an item to add a datastream to:</h2>
+            <table>
 
                 <div id="simple-search-form">
                     <form id="simple-search" action="<?php echo uri('fedora-connector/datastreams/create'); ?>" method="get">
