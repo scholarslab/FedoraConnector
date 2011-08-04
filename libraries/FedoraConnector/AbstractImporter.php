@@ -79,7 +79,6 @@ abstract class FedoraConnector_AbstractImporter
     public function import($datastream)
     {
 
-        $db = get_db();
         $item = $this->getItem($datastream);
         $xpath = new DOMXPath($this->getMetadataXml($datastream));
         $dcNames = $this->getDublinCoreNames();
