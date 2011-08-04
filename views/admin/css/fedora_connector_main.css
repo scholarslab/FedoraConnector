@@ -76,7 +76,7 @@ dd#metadataformat-element select {
 p.fedora-connector-search-reset {
     clear: both;
     float: right;
-    margin: -12px 3px 0 0;
+    margin: -12px 3px 15px 0;
     font-size: 1em;
     position: relative;
 }
