@@ -38,11 +38,11 @@
  */
 
 
-require_once __DIR__ . '/DatastreamMock.php';
-require_once __DIR__ . '/../../Renderers/200-TeiXml.php';
+require_once dirname(__FILE__) . '/DatastreamMock.php';
+require_once dirname(__FILE__) . '/../../Renderers/200-TeiXml.php';
 
 if (! function_exists('tei_display_installed')) {
-    require_once __DIR__ . '/tei_display_mock.php';
+    require_once dirname(__FILE__) . '/tei_display_mock.php';
 }
 
 

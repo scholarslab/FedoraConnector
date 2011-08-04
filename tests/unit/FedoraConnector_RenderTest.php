@@ -37,8 +37,8 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once __DIR__ . '/../../libraries/FedoraConnector/Render.php';
-require_once __DIR__ . '/DatastreamMock.php';
+require_once dirname(__FILE__) . '/../../libraries/FedoraConnector/Render.php';
+require_once dirname(__FILE__) . '/DatastreamMock.php';
 
 
 class FedoraConnector_RenderTest extends PHPUnit_Framework_TestCase

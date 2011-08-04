@@ -41,7 +41,7 @@
 
 <?php
 
-class FedoraConnector_HelpersTest extends Omeka_Test_AppTestCase
+class FedoraConnector_HelpersTest extends PHPUnit_Framework_TestCase
 {
 
     public function setUp()
