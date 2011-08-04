@@ -132,3 +132,9 @@ div.fedora-defaults-add-if-empty span {
     top: -3px;
     vertical-align: middle;
 }
+
+span.datastream-detail {
+    color: gray;
+    font-size: 0.8em;
+    margin: 0 0 0 1em;
+}

@@ -18,7 +18,7 @@
                         <?php browse_headings(array(
                             'Datastream' => 'datastream',
                             'PID' => 'pid',
-                            'Mime Type' => 'mime_type',
+                            // 'Mime Type' => 'mime_type',
                             'Item' => 'parent_item',
                             'Server' => 'server_name',
                             // 'Object Metadata' => 'metadata_stream',
@@ -33,13 +33,15 @@
                             <td width="220">
                                 <strong><a href="<?php echo $datastream->getUrl(); ?>"><?php echo $datastream->getNode()->getAttribute('label'); ?></a></strong>
                                 <br />
-                                <span style="color: gray; font-size: 0.8em">id: <?php echo $datastream->datastream; ?></span>
+                                <span class="datastream-detail"><strong>id</strong>: <?php echo $datastream->datastream; ?></span>
                                 <br />
-                                <span style="color: gray; font-size: 0.8em">format: <?php echo $datastream->metadata_stream; ?></span>
+                                <span class="datastream-detail"><strong>mime type</strong>: <?php echo $datastream->mime_type; ?></span>
+                                <br />
+                                <span class="datastream-detail"><strong>format</strong>: <?php echo $datastream->metadata_stream; ?></span>
                             </td>
                             <td width="100" class="fedora-td-small"><?php echo $datastream->pid; ?></td>
-                            <td width="80" class="fedora-td-small"><?php echo $datastream->mime_type; ?></td>
-                            <td class="fedora-td-small"><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo $datastream->parent_item; ?></a></td>
+                            <!-- <td width="80" class="fedora-td-small"><?php echo $datastream->mime_type; ?></td> -->
+                            <td class="fedora-td-small"><a href="<?php echo public_uri('items/show/' . $datastream->item_id); ?>"><?php echo fedorahelpers_previewString($datastream->parent_item, 25); ?></a></td>
                             <td class="fedora-td-small"><a href="<?php echo uri('fedora-connector/servers/edit/' . $datastream->server_id); ?>"><?php echo $datastream->server_name; ?></a></td>
                             <!-- <td><?php echo $datastream->metadata_stream; ?></td> -->
                             <td style="text-align: center;"><?php echo $datastream->renderPreview(); ?></td>
