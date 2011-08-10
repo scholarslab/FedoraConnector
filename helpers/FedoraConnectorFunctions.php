@@ -253,6 +253,12 @@ function fedorahelpers_doItemFedoraImportSettings($item)
 function fedorahelpers_previewString($string, $length)
 {
 
-    return substr($string, 0, $length) . '...';
+    if (count($string) > $length) {
+        return substr($string, 0, $length) . '...';
+    }
+
+    else {
+        return $string;
+    }
 
 }
