@@ -1,5 +1,5 @@
 <?php if (count($datastreams) == 0): ?>
-    <p>There are no datastreams yet. <a href="<?php echo uri('/fedora-connector/datastreams/create/item/' . $item->id); ?>/pid') . '">Add one</a>.</p>
+    <p>There are no datastreams yet. <a href="<?php echo uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid'); ?>">Add one</a>.</p>
 
 <?php else: ?>
 

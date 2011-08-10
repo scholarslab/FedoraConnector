@@ -4,7 +4,7 @@
 
     <?php echo flash(); ?>
 
-    <?php if (count($items) == 0): ?>
+    <?php if (count($items) == 0 && $search == null): ?>
 
         <p>There are no items yet.</p>
 
