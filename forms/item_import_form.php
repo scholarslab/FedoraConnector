@@ -25,6 +25,6 @@
 
     </table>
 
-    <p><strong><a href="<?php uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid'); ?>">Add another datastream -></a></strong></p>
+    <p><strong><a href="<?php echo uri('/fedora-connector/datastreams/create/item/' . $item->id . '/pid'); ?>">Add another datastream -></a></strong></p>
 
 <?php endif; ?>
