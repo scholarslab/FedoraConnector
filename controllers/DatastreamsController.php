@@ -234,7 +234,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
                 $this->flashError('No datastreams were added.');
             }
 
-            $this->_forward('browse', 'datastreams', 'fedora-connector');
+            $this->_redirect('fedora-connector/datastreams');
 
         }
 
