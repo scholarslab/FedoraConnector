@@ -296,6 +296,8 @@ class FedoraConnectorPlugin
         set_option('fedora_connector_omitted_datastreams',
             $_POST['fedora_connector_omitted_datastreams']);
 
+        print_r($_POST);
+
     }
 
     /**
