@@ -8,8 +8,8 @@
 <h1><?php echo $header['title']; ?></h1>
 <ul id="section-nav" class="navigation">
 <?php echo nav(array(
-    'Servers' => uri('fedora-connector/servers'),
     'Datastreams'  => uri('fedora-connector/datastreams'),
+    'Servers' => uri('fedora-connector/servers'),
     'Import Settings'  => uri('fedora-connector/settings')
 ))?>
 </ul>
