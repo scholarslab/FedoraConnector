@@ -330,7 +330,7 @@ class FedoraConnectorPlugin
     {
 
         if (has_permission('FedoraConnector_Servers', 'index')) {
-            $tabs['Fedora Connector'] = uri('fedora-connector/servers');
+            $tabs['Fedora Connector'] = uri('fedora-connector/datastreams');
         }
 
         return $tabs;
