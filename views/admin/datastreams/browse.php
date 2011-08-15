@@ -32,12 +32,11 @@
                         <tr>
                             <td width="220">
                                 <strong><a href="<?php echo $datastream->getUrl(); ?>"><?php echo $datastream->getNode()->getAttribute('label'); ?></a></strong>
-                                <br />
-                                <span class="datastream-detail"><strong>id</strong>: <?php echo $datastream->datastream; ?></span>
-                                <br />
-                                <span class="datastream-detail"><strong>mime type</strong>: <?php echo $datastream->mime_type; ?></span>
-                                <br />
-                                <span class="datastream-detail"><strong>format</strong>: <?php echo $datastream->metadata_stream; ?></span>
+                                <ul>
+                                  <li><span class="datastream-detail"><strong>id</strong>: <?php echo $datastream->datastream; ?></span></li>
+                                  <li><span class="datastream-detail"><strong>mime type</strong>: <?php echo $datastream->mime_type; ?></span></li>
+                                  <li><span class="datastream-detail"><strong>format</strong>: <?php echo $datastream->metadata_stream; ?></span></li>
+                                </ul>
                             </td>
                             <td width="100" class="fedora-td-small"><?php echo $datastream->pid; ?></td>
                             <!-- <td width="80" class="fedora-td-small"><?php echo $datastream->mime_type; ?></td> -->
