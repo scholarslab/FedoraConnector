@@ -167,6 +167,21 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
     }
 
+    /**
+     * Returns true if there is already a server with the supplied name.
+     *
+     * @param string $name The name to check.
+     *
+     * @return boolean True if a server exists with that name.
+     */
+    public function checkServerNameUnique($name)
+    {
+
+        $match = $this->findBySql('name = ?', array($name));
+        return (bool) $match;
+
+    }
+
 }
 
 /*

@@ -199,6 +199,11 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
                 $this->_redirect('fedora-connector/servers/create');
             }
 
+            else if ($this->getTable('FedoraConnectorServer')->checkServerNameUnique($data['name'])) {
+                $this->flashError('A server already exists with that name.');
+                $this->_redirect('fedora-connector/servers/create');
+            }
+
             else {
 
                 // Create server, process success.
