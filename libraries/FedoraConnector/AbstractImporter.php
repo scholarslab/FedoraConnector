@@ -98,7 +98,6 @@ abstract class FedoraConnector_AbstractImporter
                     $item,
                     $element,
                     $name,
-                    // $node->nodeValue,
                     $behavior,
                     $this->queryAll($xpath, $queries)
                 );

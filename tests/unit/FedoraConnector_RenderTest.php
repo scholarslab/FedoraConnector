@@ -47,7 +47,7 @@ class FedoraConnector_RenderTest extends PHPUnit_Framework_TestCase
     var $mocks;
 
     function setUp() {
-        $this->diss = new FedoraConnector_Render(__DIR__ . '/diss');
+        $this->diss = new FedoraConnector_Render(dirname(__FILE__) . '/diss');
 
         $server = 'http://localhost:8000/';
         $this->mocks = array(
