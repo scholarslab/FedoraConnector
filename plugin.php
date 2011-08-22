@@ -43,8 +43,15 @@
 <?php
 
 // {{{ constants
-define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
-define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
+
+if (!defined('FEDORA_CONNECTOR_PLUGIN_VERSION')) {
+    define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
+}
+
+if (!defined('FEDORA_CONNECTOR_PLUGIN_DIR')) {
+    define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
+}
+
 // }}}
 
 // {{{ requires
