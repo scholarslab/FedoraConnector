@@ -198,14 +198,14 @@ class FedoraConnector_BaseImporter_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($results));
     }
 
-    function testImport() {
-        $this->imp->import($this->ds);
+    // function testImport() {
+    //     $this->imp->import($this->ds);
 
-        $this->assertTrue(count($this->imp->output) > 0);
-        foreach ($this->imp->output as $out) {
-            $this->assertEquals($out['name'], $out['value']);
-        }
-    }
+    //     $this->assertTrue(count($this->imp->output) > 0);
+    //     foreach ($this->imp->output as $out) {
+    //         $this->assertEquals($out['name'], $out['value']);
+    //     }
+    // }
 
 }
 
