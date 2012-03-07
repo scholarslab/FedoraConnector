@@ -153,4 +153,3 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
  * End:
  */
 
-?>
