@@ -144,16 +144,6 @@ class FedoraConnectorPlugin
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
             ");
 
-        // Insert default localhost server record.
-        $db->query("
-            INSERT INTO `$db->FedoraConnectorServer` (url, name, is_default)
-            VALUES (
-                'http://localhost:8080/fedora/',
-                'Default Fedora Server',
-                1
-            )
-            ");
-
         set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
         set_option('fedora_connector_default_import_behavior', 'overwrite');
 
