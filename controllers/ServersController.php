@@ -418,4 +418,3 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
  * End:
  */
 
-?>

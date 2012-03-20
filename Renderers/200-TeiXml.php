@@ -121,4 +121,3 @@ class TeiXml_Renderer extends FedoraConnector_AbstractRenderer
  * End:
  */
 
-?>

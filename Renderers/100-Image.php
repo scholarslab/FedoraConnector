@@ -121,4 +121,3 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
  * End:
  */
 
-?>

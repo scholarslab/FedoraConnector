@@ -385,7 +385,6 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
 
 }
 
-
 /*
  * Local variables:
  * tab-width: 4
@@ -394,4 +393,3 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
  * End:
  */
 
-?>
