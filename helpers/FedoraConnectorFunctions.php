@@ -37,9 +37,6 @@
  * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
-?>
-
-<?php
 
 /**
  * A homebrew colum sorter, implemented so as to keep more control
@@ -53,11 +50,11 @@
 function fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir)
 {
 
-    if (isset($sort_dir)) {
-        $sort_dir = ($sort_dir == 'a') ? 'ASC' : 'DESC';
-    }
+  if (isset($sort_dir)) {
+    $sort_dir = ($sort_dir == 'a') ? 'ASC' : 'DESC';
+  }
 
-    return (isset($sort_field)) ? trim(implode(' ', array($sort_field, $sort_dir))) : '';
+  return (isset($sort_field)) ? trim(implode(' ', array($sort_field, $sort_dir))) : '';
 
 }
 
@@ -72,21 +69,21 @@ function fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir)
 function fedorahelpers_getQueryNodes($uri, $xpath)
 {
 
-    $xml = new DomDocument();
+  $xml = new DomDocument();
 
-    try {
+  try {
 
-        $xml->load($uri);
-        $query = new DOMXPath($xml);
-        $result = $query->query($xpath);
+    $xml->load($uri);
+    $query = new DOMXPath($xml);
+    $result = $query->query($xpath);
 
-    } catch (Exception $e) {
+  } catch (Exception $e) {
 
-        $result = false;
+    $result = false;
 
-    }
+  }
 
-    return $result;
+  return $result;
 
 }
 
@@ -102,38 +99,40 @@ function fedorahelpers_getQueryNodes($uri, $xpath)
 function fedorahelpers_getItems($page = null, $order = null, $search = null)
 {
 
-    $db = get_db();
-    $itemTable = $db->getTable('Item');
+  $db = get_db();
+  $itemTable = $db->getTable('Item');
 
-    // Wretched query. Fallback from weird issue with left join where item id was
-    // getting overwritten. Fix.
-    $select = $db->select()
-        ->from(array('item' => $db->prefix . 'items'))
-        ->columns(array('item_id' => 'item.id', 
-            'Type' =>
-            "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
-            'item_name' =>
-            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1)",
-            'creator' =>
-            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 39)"
-            ));
+  // Wretched query. Fallback from weird issue with left join where item id was
+  // getting overwritten. Fix.
+  $select = $db->select()
+    ->from(array('item' => $db->prefix . 'items'))
+    ->columns(array('item_id' => 'item.id', 
+    'Type' =>
+    "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
+    'item_name' =>
+    "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1)",
+    'creator' =>
+    "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 39)"
+  ));
 
-    if (isset($page)) {
-        $select->limitPage($page, get_option('per_page_admin'));
-    }
-    if (isset($order)) {
-        $select->order($order);
-    }
-    if (isset($search)) {
-        $select->where("(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1) like '%" . $search . "%'");
-    }
+  if (isset($page)) {
+    $select->limitPage($page, get_option('per_page_admin'));
+  }
+  if (isset($order)) {
+    $select->order($order);
+  }
+  if (isset($search)) {
+    $select->where("(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1) like '%" . $search . "%'");
+  }
 
-    return $itemTable->fetchObjects($select);
+  return $itemTable->fetchObjects($select);
 
 }
 
 /**
  * Retrieves a single item with added columns with name, etc.
+ *
+ * TODO: wtf
  *
  * @param $id The id of the item.
  *
@@ -142,24 +141,24 @@ function fedorahelpers_getItems($page = null, $order = null, $search = null)
 function fedorahelpers_getSingleItem($id)
 {
 
-    $db = get_db();
-    $itemTable = $db->getTable('Item');
+  $db = get_db();
+  $itemTable = $db->getTable('Item');
 
-    // Wretched query. Fallback from weird issue with left join where item id was
-    // getting overwritten. Fix.
-    $select = $db->select()
-        ->from(array('item' => $db->prefix . 'items'))
-        ->columns(array('item_id' => 'item.id', 
-            'Type' =>
-            "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
-            'item_name' =>
-            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1)",
-            'creator' =>
-            "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 39)"
-            ))
-        ->where('item.id = ' . $id);
+  // Wretched query. Fallback from weird issue with left join where item id was
+  // getting overwritten. Fix.
+  $select = $db->select()
+    ->from(array('item' => $db->prefix . 'items'))
+    ->columns(array('item_id' => 'item.id', 
+    'Type' =>
+    "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
+    'item_name' =>
+    "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 50 LIMIT 1)",
+    'creator' =>
+    "(SELECT text from `$db->ElementText` WHERE record_id = item.id AND element_id = 39)"
+  ))
+  ->where('item.id = ' . $id);
 
-    return $itemTable->fetchObject($select);
+  return $itemTable->fetchObject($select);
 
 }
 
@@ -173,9 +172,9 @@ function fedorahelpers_getSingleItem($id)
 function fedorahelpers_formatDate($date)
 {
 
-    $date = new DateTime($date);
-    return '<strong>' . $date->format('F j, Y') . '</strong> at ' .
-       $date->format('g:i a');
+  $date = new DateTime($date);
+  return '<strong>' . $date->format('F j, Y') . '</strong> at ' .
+    $date->format('g:i a');
 
 }
 
@@ -189,8 +188,8 @@ function fedorahelpers_formatDate($date)
 function fedorahelpers_isOmittedDatastream($datastream)
 {
 
-    $omittedStreams = explode(',', get_option('fedora_connector_omitted_datastreams'));
-    return in_array($datastream->getAttribute('dsid'), $omittedStreams) ? true : false;
+  $omittedStreams = explode(',', get_option('fedora_connector_omitted_datastreams'));
+  return in_array($datastream->getAttribute('dsid'), $omittedStreams) ? true : false;
 
 }
 
@@ -204,19 +203,19 @@ function fedorahelpers_isOmittedDatastream($datastream)
 function fedorahelpers_doItemFedoraForm($item)
 {
 
-    $db = get_db();
-    $select = $db->getTable('FedoraConnectorDatastream')->select()
-        ->from(array('d' => $db->prefix . 'fedora_connector_datastreams'))
-        ->joinLeft(array('s' => $db->prefix . 'fedora_connector_servers'), 'd.server_id = s.id')
-        ->columns(array('server_name' => 's.name', 'datastream_id' => 'd.id', 'parent_item' =>
-            "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50 LIMIT 1)"))
-        ->where('d.item_id = ' . $item->id);
+  $db = get_db();
+  $select = $db->getTable('FedoraConnectorDatastream')->select()
+    ->from(array('d' => $db->prefix . 'fedora_connector_datastreams'))
+    ->joinLeft(array('s' => $db->prefix . 'fedora_connector_servers'), 'd.server_id = s.id')
+    ->columns(array('server_name' => 's.name', 'datastream_id' => 'd.id', 'parent_item' =>
+    "(SELECT text from `$db->ElementText` WHERE record_id = d.item_id AND element_id = 50 LIMIT 1)"))
+    ->where('d.item_id = ' . $item->id);
 
-    $datastreams = $db->getTable('FedoraConnectorDatastream')->fetchObjects($select);
+  $datastreams = $db->getTable('FedoraConnectorDatastream')->fetchObjects($select);
 
-    ob_start();
-    include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_import_form.php';
-    return ob_get_clean();
+  ob_start();
+  include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_import_form.php';
+  return ob_get_clean();
 
 }
 
@@ -230,15 +229,15 @@ function fedorahelpers_doItemFedoraForm($item)
 function fedorahelpers_doItemFedoraImportSettings($item)
 {
 
-    $db = get_db();
+  $db = get_db();
 
-    $elements = $db->getTable('Element')->findBySet('Dublin Core');
-    $itemDefault = $db->getTable('FedoraConnectorImportSetting')
-            ->getItemDefault($item, true);
+  $elements = $db->getTable('Element')->findBySet('Dublin Core');
+  $itemDefault = $db->getTable('FedoraConnectorImportSetting')
+    ->getItemDefault($item, true);
 
-    ob_start();
-    include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_settings_form.php';
-    return ob_get_clean();
+  ob_start();
+  include FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/item_settings_form.php';
+  return ob_get_clean();
 
 }
 
@@ -253,12 +252,46 @@ function fedorahelpers_doItemFedoraImportSettings($item)
 function fedorahelpers_previewString($string, $length)
 {
 
-    if (count($string) > $length) {
-        return substr($string, 0, $length) . '...';
-    }
+  if (count($string) > $length) {
+    return substr($string, 0, $length) . '...';
+  }
 
-    else {
-        return $string;
-    }
+  else {
+    return $string;
+  }
 
 }
+
+function fedorahelper_isFedoraStream($item)
+{
+  $db = get_db();
+  $datastreams = $db->getTable('FedoraConnectorDatastream')
+    ->findBySql('item_id = ?', array($item->id));
+
+  $result = false;
+  if(!empty($datastreams)) {
+    $result = true;
+  }
+
+  return $result;
+}
+
+function fedorahelpers_getItemsShow($item)
+{
+
+  $html = '';
+  
+  $db = get_db();
+  $datastreams = $db->getTable('FedoraConnectorDatastream')
+    ->findBySql('item_id = ?', array($item->id));
+
+
+  foreach ($datastreams as $datastream) {
+    $renderer = new FedoraConnector_Render;
+    $html .= $renderer->display($datastream);
+  }
+
+  return $html;
+
+}
+
