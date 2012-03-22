@@ -55,7 +55,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
     /**
      * This constructs an instance.
      */
-    function __construct() {
+    function __construct()
+    {
 
         $this->sizes = array(
             'thumb'  => 80,
@@ -72,7 +73,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return boolean True if this can display the datastream.
      */
-    function canDisplay($datastream) {
+    function canDisplay($datastream)
+    {
 
         return ($datastream->mime_type == 'image/jp2');
 
@@ -85,7 +87,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return boolean True if this can display the datastream.
      */
-    function canPreview($datastream) {
+    function canPreview($datastream)
+    {
 
         return $this->canDisplay($datastream);
 
@@ -98,7 +101,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The display HTML for the datastream.
      */
-    function display($datastream) {
+    function display($datastream)
+    {
 
         $html = $this->_display($datastream, '*');
         return $html;
@@ -112,7 +116,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The preview HTML for the datastream.
      */
-    function preview($datastream) {
+    function preview($datastream)
+    {
 
         $html = $this->_display($datastream, 'thumb');
         return $html;
@@ -127,7 +132,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The HTML for the datastream.
      */
-    private function _display($datastream, $size='*') {
+    private function _display($datastream, $size='*') 
+    {
 
         if (array_key_exists($size, $this->sizes)) {
             $px = $this->sizes[$size];
@@ -139,6 +145,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
             . "/methods/djatoka:jp2SDef/getRegion?scale={$px},{$px}";
 
         $html = "<img alt='image' src='{$url}' />";
+
         return $html;
 
     }
