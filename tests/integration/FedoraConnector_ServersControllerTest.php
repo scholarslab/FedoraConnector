@@ -62,101 +62,33 @@ class FedoraConnector_ServersControllerTest extends Omeka_Test_AppTestCase
 
     }
 
-    public function testDefaultServer()
-    {
-
-        $this->dispatch('fedora-connector');
-        $this->assertEquals(1, $this->db->getTable('FedoraConnectorServer')->count());
-        $this->assertQueryContentContains('strong', 'Default Fedora Server');
-        $this->assertQueryContentContains('a', 'http://localhost:8080/fedora/');
-
-    }
-
     public function testAddServer()
     {
 
+        $this->assertEquals(0, $this->db->getTable('FedoraConnectorServer')->count());
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'name' => 'TestServer',
+                'url' => 'http://TestUrl.com/fedora/',
+                'is_default' => 0
+            )
+        );
+
+        $this->dispatch('fedora-connector/servers/insert');
         $this->assertEquals(1, $this->db->getTable('FedoraConnectorServer')->count());
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'name' => 'TestServer',
-                'url' => 'http://TestUrl',
-                'is_default' => 0
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/insert');
-        $this->assertEquals(1, $this->db->getTable('FedoraConnectorServer')->count());
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'name' => 'TestServer',
-                'url' => 'http://TestUrl.com/fedora/',
-                'is_default' => 0
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/insert');
-        $this->assertEquals(2, $this->db->getTable('FedoraConnectorServer')->count());
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'name' => 'TestServer2',
-                'url' => 'http://TestUrl.com/fedora/',
-                'is_default' => 1
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/insert');
-        $this->assertEquals(3, $this->db->getTable('FedoraConnectorServer')->count());
-        $this->assertEquals(1, count($this->db->getTable('FedoraConnectorServer')->findBySql('is_default = ?', array(1))));
-
-    }
-
-    public function testEditServer()
-    {
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'name' => 'TestServer',
-                'url' => 'http://TestUrl.com/fedora/',
-                'is_default' => 0
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/insert');
-        $this->assertEquals(2, $this->db->getTable('FedoraConnectorServer')->count());
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'name' => 'TestServer',
-                'url' => 'http://TestUrl.com/fedora/',
-                'is_default' => 1,
-                'id' => 2,
-                'edit_submit' => 'Save'
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/edit/update');
-        $this->assertEquals(1, count($this->db->getTable('FedoraConnectorServer')->findBySql('is_default = ?', array(1))));
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'name' => 'TestServerUpdate',
-                'url' => 'http://TestUrl.com/fedora/',
-                'is_default' => 1,
-                'id' => 2,
-                'edit_submit' => 'Save'
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/edit/update');
-        $this->assertEquals('TestServerUpdate', $this->db->getTable('FedoraConnectorServer')->find(2)->name);
 
     }
 
     public function testDeleteServer()
     {
+
+        // Create server.
+        $server = new FedoraConnectorServer();
+        $server->name = 'Test Server';
+        $server->url = 'http://TestUrl.com/fedora/';
+        $server->is_default = true;
+        $server->save();
 
         $this->request->setMethod('POST')
             ->setPost(array(
@@ -164,7 +96,7 @@ class FedoraConnector_ServersControllerTest extends Omeka_Test_AppTestCase
             )
         );
 
-        $this->dispatch('fedora-connector/servers/delete/1');
+        $this->dispatch('fedora-connector/servers/delete/' . $server->id);
         $this->assertEquals(0, $this->db->getTable('FedoraConnectorServer')->count());
 
     }

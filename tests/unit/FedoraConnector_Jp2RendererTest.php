@@ -76,7 +76,7 @@ class FedoraConnector_Jp2_Renderer_Test extends PHPUnit_Framework_TestCase
     function testDisplay() {
         $this->assertEquals(
             "<img alt='image' src='http://localhost:8000/get/m:0/"
-            . "djatoka:jp2SDef/getRegion?scale=400,400' />",
+            . "methods/djatoka:jp2SDef/getRegion?scale=400,400' />",
             $this->diss->display($this->mocks['image/jp2'])
         );
     }
@@ -84,7 +84,7 @@ class FedoraConnector_Jp2_Renderer_Test extends PHPUnit_Framework_TestCase
     function testPreview() {
         $this->assertEquals(
             "<img alt='image' src='http://localhost:8000/get/m:0/"
-            . "djatoka:jp2SDef/getRegion?scale=80,80' />",
+            . "methods/djatoka:jp2SDef/getRegion?scale=80,80' />",
             $this->diss->preview($this->mocks['image/jp2'])
         );
     }
