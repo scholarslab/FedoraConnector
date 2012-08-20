@@ -2,16 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * FedoraConnector Omeka plugin allows users to reuse content managed in
- * institutional repositories in their Omeka repositories.
- *
- * The FedoraConnector plugin provides methods to generate calls against Fedora-
- * based content disemminators. Unlike traditional ingestion techniques, this
- * plugin provides a facade to Fedora-Commons repositories and records pointers
- * to the "real" objects rather than creating new physical copies. This will
- * help ensure longer-term durability of the content streams, as well as allow
- * you to pull from multiple institutions with open Fedora-Commons
- * respositories.
+ * Servers controller.
  *
  * PHP version 5
  *
@@ -31,20 +22,10 @@
  * @author      Wayne Graham <wayne.graham@virginia.edu>
  * @author      Eric Rochester <err8n@virginia.edu>
  * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2010 The Board and Visitors of the University of Virginia
+ * @copyright   2012 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  * @version     $Id$
- * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
- * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
-
-?>
-
-<?php
-
-// require "Zend/Form/Element.php";
-// include_once '../form_utils.php';
-// include_once '../form_db.php';
 
 class FedoraConnector_ServersController extends Omeka_Controller_Action
 {
@@ -78,7 +59,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
         $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
 
-        $this->view->servers = $servers;
+        $this->view->fedoraServers = $servers;
         $this->view->current_page = $page;
         $this->view->total_results = $this->getTable('FedoraConnectorServer')->count();
         $this->view->results_per_page = get_option('per_page_admin');

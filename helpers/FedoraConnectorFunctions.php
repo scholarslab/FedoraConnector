@@ -148,7 +148,7 @@ function fedorahelpers_getSingleItem($id)
   // getting overwritten. Fix.
   $select = $db->select()
     ->from(array('item' => $db->prefix . 'items'))
-    ->columns(array('item_id' => 'item.id', 
+    ->columns(array('item_id' => 'item.id',
     'Type' =>
     "(SELECT name from `$db->ItemType` WHERE id = item.item_type_id)",
     'item_name' =>
@@ -280,7 +280,7 @@ function fedorahelpers_getItemsShow($item)
 {
 
   $html = '';
-  
+
   $db = get_db();
   $datastreams = $db->getTable('FedoraConnectorDatastream')
     ->findBySql('item_id = ?', array($item->id));
@@ -293,5 +293,16 @@ function fedorahelpers_getItemsShow($item)
 
   return $html;
 
+}
+
+/**
+ * Determines whether there are any neatlines to loop on the view.
+ *
+ * @return boolean
+ */
+function has_fedora_servers_for_loop()
+{
+    $view = __v();
+    return ($view->fedoraServers and count($view->fedoraServers));
 }
 

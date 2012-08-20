@@ -58,7 +58,7 @@ head(array('content_class' => 'fedora', 'title' => $title));
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($servers as $server): ?>
+            <?php foreach ($fedoraServers as $server): ?>
                 <tr>
                     <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
                     <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
