@@ -1,71 +1,102 @@
-<?php echo $this->partial('servers/admin-header.php', array('subtitle' => 'Servers')); ?>
+<?php
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/**
+ * Main portal view for Neatline.
+ *
+ * PHP version 5
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * @package     omeka
+ * @subpackage  neatline
+ * @author      Scholars' Lab <>
+ * @author      Bethany Nowviskie <bethany@virginia.edu>
+ * @author      Adam Soroka <ajs6f@virginia.edu>
+ * @author      David McClure <david.mcclure@virginia.edu>
+ * @copyright   2011 The Board and Visitors of the University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ */
+?>
+
+<?php
+$title = __('Fedora Connector | Browse Servers');
+head(array('content_class' => 'fedora', 'title' => $title));
+?>
+
+<h1><?php echo $title; ?></h1>
+<p class="add-button">
+    <a class="add" href="<?php echo html_escape(uri('fedora-connector/add')); ?>">
+<?php echo __('Add a Server'); ?>
+    </a>
+</p>
 
 <div id="primary">
 
-    <p id="add-item" class="add-button"><a class="add" href="<?php echo html_escape(uri('fedora-connector/servers/create')); ?>">Add a Server</a></p>
-
     <?php echo flash(); ?>
 
-    <?php if (count($servers) == 0): ?>
+    <?php if (has_fedora_servers_for_loop()): ?>
+    <div class="pagination"><?php echo pagination_links(); ?></div>
 
-        <p>There are no servers. <a href="<?php echo html_escape(uri('fedora-connector/servers/create')); ?>">Add one</a>!</p>
+    <table>
+        <thead>
+            <tr>
+                <?php browse_headings(array(
+                    'Name' => 'name',
+                    'URL' => 'url',
+                    'Status' => null,
+                    'Version' => null,
+                    'Default?' => 'is_default',
+                    'Actions' => null
+                )); ?>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($servers as $server): ?>
+                <tr>
+                    <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
+                    <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
+                    <td>
+                    <?php
+                        if ($server->isOnline()) {
+                            echo '<span style="font-size: 0.8em; color: green;">Online</span>';
+                        } else {
+                            echo '<span style="font-size: 0.8em; color: red;">Offline</span>';
+                        }
+                    ?>
+                    </td>
+                    <td>
+                    <?php
+                        if ($server->isOnline()) {
+                            echo $server->getVersion();
+                        } else {
+                            echo '<span style="font-size: 0.8em; color: gray;">[not available]</span>';
+                        }
+                    ?></td>
+                    <td><?php if ($server->is_default) { echo 'Yes'; } ?></td>
+                    <td><?php echo $this->partial('datastreams/servers-actions.php', array('id' => $server->id)); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="pagination"><?php echo pagination_links(); ?></div>
 
     <?php else: ?>
 
-            <table>
-                <thead>
-                    <tr>
-                        <?php browse_headings(array(
-                            'Name' => 'name',
-                            'URL' => 'url',
-                            'Status' => null,
-                            'Version' => null,
-                            'Default?' => 'is_default',
-                            'Actions' => null
-                        )); ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($servers as $server): ?>
-                        <tr>
-                            <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
-                            <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
-                            <td>
-                            <?php
-                                if ($server->isOnline()) {
-                                    echo '<span style="font-size: 0.8em; color: green;">Online</span>';
-                                } else {
-                                    echo '<span style="font-size: 0.8em; color: red;">Offline</span>';
-                                }
-                            ?>
-                            </td>
-                            <td>
-                            <?php
-                                if ($server->isOnline()) {
-                                    echo $server->getVersion();
-                                } else {
-                                    echo '<span style="font-size: 0.8em; color: gray;">[not available]</span>';
-                                }
-                            ?></td>
-                            <td><?php if ($server->is_default) { echo 'Yes'; } ?></td>
-                            <td><?php echo $this->partial('datastreams/servers-actions.php', array('id' => $server->id)); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <p class="neatline-alert"><?php echo __('There are no Neatline exhibits yet.'); ?>
+        <?php if (has_permission('Neatline_Index', 'add')): ?>
+          <a href="<?php echo uri('neatline-exhibits/add'); ?>"><?php echo __('Create one!'); ?></a>
+        <?php endif; ?>
+        </p>
 
     <?php endif; ?>
-
-    <div class="pagination">
-
-      <?php echo pagination_links(array('scrolling_style' => 'All', 
-      'page_range' => '5',
-      'partial_file' => 'common/pagination_control.php',
-      'page' => $current_page,
-      'per_page' => $results_per_page,
-      'total_results' => $total_results)); ?>
-
-    </div>
 
 </div>
 
