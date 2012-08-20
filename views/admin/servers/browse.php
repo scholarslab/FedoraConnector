@@ -63,13 +63,13 @@ head(array('content_class' => 'fedora', 'title' => $title));
                     <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
                     <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
                     <td>
-                        <?php if ($server->isOnline()): ?><span class="online">Online</span>
-                        <?php else: ?><span class="offline">Offline</span>
+                        <?php if ($server->isOnline()): ?><span class="online status">Online</span>
+                        <?php else: ?><span class="offline status">Offline</span>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if ($server->isOnline()): echo $server->getVersion(); ?>
-                        <?php else: ?><span class="unavailable">[not available]</span>
+                        <?php else: ?><span class="unavailable status">[not available]</span>
                         <?php endif; ?>
                     </td>
 
