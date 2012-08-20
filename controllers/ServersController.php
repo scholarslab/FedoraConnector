@@ -31,16 +31,13 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 {
 
     /**
-     * Redirect by default to browse action.
+     * Initialize.
      *
      * @return void
      */
-    public function indexAction()
+    public function init()
     {
-
-        // Ping to browse by default.
-        $this->_forward('browse', 'servers', 'fedora-connector');
-
+        $this->serversTable = $this->getTable('FedoraConnectorServer');
     }
 
     /**
@@ -50,20 +47,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function browseAction()
     {
-
-        $sort_field = $this->_request->getParam('sort_field');
-        $sort_dir = $this->_request->getParam('sort_dir');
-
-        // Get the servers.
-        $page = $this->_request->page;
-        $order = fedorahelpers_doColumnSortProcessing($sort_field, $sort_dir);
-        $servers = $this->getTable('FedoraConnectorServer')->getServers($page, $order);
-
-        $this->view->fedoraServers = $servers;
-        $this->view->current_page = $page;
-        $this->view->total_results = $this->getTable('FedoraConnectorServer')->count();
-        $this->view->results_per_page = get_option('per_page_admin');
-
+        $this->view->servers = $this->serversTable->findAll();
     }
 
     /**
@@ -73,10 +57,8 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function createAction()
     {
-
         $form = $this->_doServerForm();
         $this->view->form = $form;
-
     }
 
     /**

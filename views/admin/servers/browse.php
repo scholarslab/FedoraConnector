@@ -41,7 +41,7 @@ head(array('content_class' => 'fedora', 'title' => $title));
 
     <?php echo flash(); ?>
 
-    <?php if (has_fedora_servers_for_loop()): ?>
+    <?php if ($servers): ?>
     <div class="pagination"><?php echo pagination_links(); ?></div>
 
     <table>
@@ -58,29 +58,23 @@ head(array('content_class' => 'fedora', 'title' => $title));
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($fedoraServers as $server): ?>
+            <?php foreach ($servers as $server): ?>
                 <tr>
                     <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
                     <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
                     <td>
-                    <?php
-                        if ($server->isOnline()) {
-                            echo '<span style="font-size: 0.8em; color: green;">Online</span>';
-                        } else {
-                            echo '<span style="font-size: 0.8em; color: red;">Offline</span>';
-                        }
-                    ?>
+                        <?php if ($server->isOnline()): ?><span class="online">Online</span>
+                        <?php else: ?><span class="offline">Offline</span>
+                        <?php endif; ?>
                     </td>
                     <td>
-                    <?php
-                        if ($server->isOnline()) {
-                            echo $server->getVersion();
-                        } else {
-                            echo '<span style="font-size: 0.8em; color: gray;">[not available]</span>';
-                        }
-                    ?></td>
+                        <?php if ($server->isOnline()): echo $server->getVersion(); ?>
+                        <?php else: ?><span class="unavailable">[not available]</span>
+                        <?php endif; ?>
+                    </td>
+
                     <td><?php if ($server->is_default) { echo 'Yes'; } ?></td>
-                    <td><?php echo $this->partial('datastreams/servers-actions.php', array('id' => $server->id)); ?></td>
+                    <td></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -92,7 +86,7 @@ head(array('content_class' => 'fedora', 'title' => $title));
 
         <p class="neatline-alert"><?php echo __('There are no Neatline exhibits yet.'); ?>
         <?php if (has_permission('Neatline_Index', 'add')): ?>
-          <a href="<?php echo uri('neatline-exhibits/add'); ?>"><?php echo __('Create one!'); ?></a>
+            <a href="<?php echo uri('neatline-exhibits/add'); ?>"><?php echo __('Create one!'); ?></a>
         <?php endif; ?>
         </p>
 
@@ -101,4 +95,3 @@ head(array('content_class' => 'fedora', 'title' => $title));
 </div>
 
 <?php foot(); ?>
-

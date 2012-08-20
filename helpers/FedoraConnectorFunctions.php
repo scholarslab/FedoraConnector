@@ -294,15 +294,3 @@ function fedorahelpers_getItemsShow($item)
   return $html;
 
 }
-
-/**
- * Determines whether there are any neatlines to loop on the view.
- *
- * @return boolean
- */
-function has_fedora_servers_for_loop()
-{
-    $view = __v();
-    return ($view->fedoraServers and count($view->fedoraServers));
-}
-

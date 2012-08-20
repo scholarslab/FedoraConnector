@@ -142,9 +142,9 @@ class FedoraConnectorPlugin
         `element_id` int(10) unsigned NULL,
         `item_id` int(10) unsigned NULL,
         `behavior` ENUM('overwrite', 'stack', 'block'),
-    PRIMARY KEY  (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-  ");
+        PRIMARY KEY  (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+      ");
 
     set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
     set_option('fedora_connector_default_import_behavior', 'overwrite');
@@ -158,31 +158,10 @@ class FedoraConnectorPlugin
    */
   public function uninstall()
   {
-
     $db = get_db();
     $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
     $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
-    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportBehaviorDefault`");
-    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportBehaviorItem`");
-    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorAddToBlankDefault`");
-    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorAddToBlankItem`");
-
-    // If TeiDisplay is installed, remove Fedora TEI datastreams from its 
-    // table.
-    //
-    // XXX: Test that this function doesn't exist whenever the TeiDisplay 
-    // plugin directory is in omeka/plugins. Make sure that it only exists 
-    // whenever the plugin has been installed.
-    if (function_exists('tei_display_installed')) {
-      $teiFiles = $db
-        ->getTable('TeiDisplay_Config')
-        ->findBySql('is_fedora_datastream = ?', array(1));
-
-      foreach ($teiFiles as $teiFile) {
-        $teiFile->delete();
-      }
-    }
-
+    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportSetting`");
   }
 
   /**
@@ -231,38 +210,9 @@ class FedoraConnectorPlugin
    */
   public function defineRoutes($router)
   {
-
-    $router->addConfig(new Zend_Config_Ini(FEDORA_CONNECTOR_PLUGIN_DIR .
-      DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
-
-  }
-
-  /**
-   * Establish ACL privilges.
-   *
-   * @param Omeka_Acl $acl The ACL instance controlling the access list.
-   *
-   * @return void
-   */
-  public function defineAcl($acl)
-  {
-
-    if (version_compare(OMEKA_VERSION, '2.0-dev', '<')) {
-      $serversResource = new Omeka_Acl_Resource('FedoraConnector_Servers');
-      $datastreamsResource = new Omeka_Acl_Resource('FedoraConnector_Datastreams');
-    } else {
-      $serversResource = new Zend_Acl_Resource('FedoraConnector_Servers');
-      $datastreamsResource = new Zend_Acl_Resource('FedoraConnector_Datastreams');
-    }
-
-    $acl->add($serversResource);
-    $acl->add($datastreamsResource);
-
-    $acl->allow('super', 'FedoraConnector_Servers');
-    $acl->allow('admin', 'FedoraConnector_Servers');
-    $acl->allow('super', 'FedoraConnector_Datastreams');
-    $acl->allow('admin', 'FedoraConnector_Datastreams');
-
+      $router->addConfig(
+          new Zend_Config_Ini(FEDORA_CONNECTOR_PLUGIN_DIR . '/routes.ini', 'routes')
+      );
   }
 
   /**
@@ -272,9 +222,7 @@ class FedoraConnectorPlugin
    */
   public function configForm()
   {
-
     include 'forms/config_form.php';
-
   }
 
   /**
@@ -284,13 +232,8 @@ class FedoraConnectorPlugin
    */
   public function config()
   {
-
     set_option('fedora_connector_omitted_datastreams',
       $_POST['fedora_connector_omitted_datastreams']);
-
-    set_option('fedora_connector_enable_virgo_import',
-      $_POST['enable_virgo_import']);
-
   }
 
   /**
@@ -323,13 +266,8 @@ class FedoraConnectorPlugin
    */
   public function adminNavigationMain($tabs)
   {
-
-    if (has_permission('FedoraConnector_Servers', 'index')) {
-      $tabs['Fedora Connector'] = uri('fedora-connector/datastreams');
-    }
-
+    $tabs['Fedora Connector'] = uri('fedora-connector');
     return $tabs;
-
   }
 
   /**
@@ -339,13 +277,12 @@ class FedoraConnectorPlugin
    */
   public function publicAppendToItemsShow()
   {
-
     $item = get_current_item();
     echo fedorahelpers_getItemsShow($item);
   }
 
   /**
-   * Lock in changes made to item-specific import settings.
+   * Commit changes made to item-specific import settings.
    *
    * @param $record Omeka_record the record.
    * @param $post posted data from the form.
@@ -430,39 +367,13 @@ class FedoraConnectorPlugin
   /**
    * Filter to add in Fedora Items
    *
-   * @param $html
-   *
    */
   function exhibitBuilderExhibitDisplayItem($html, $displayFilesOptions, $linkProperties, $item)
   {
     if(fedorahelper_isFedoraStream($item)) {
       $html = fedorahelpers_getItemsShow($item);
     }
-
     return $html;
   }
 
-  /**
-   * 
-   */ 
-  function exhibitBuilderExhibitThumbnailGallery($html, $start, $end, $props, $thumbnail_type)
-  {
-    //$html = '';
-
-    //for ($i=(int)$start; $i <= (int)$end; $i++) {
-      //$item = exhibit_builder_use_exhibit_page_item($i);
-
-      //$html .= "\n" . '<div class="exhibit-item">';
-
-      //if (fedorahelper_isFedoraStream($item) ) {
-        //$thumbnail = item_image($thumbnailType, $props);
-        //$html .= exhibit_builder_link_to_exhibit_item($thumbnail);
-        //$html .= exhibit_builder_exhibit_display_caption($i);
-      //}
-
-      //$html .= '</div>' . "\n";
-
-    //}
-    //return $html;
-  }
 }
