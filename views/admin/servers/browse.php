@@ -77,7 +77,11 @@ head(array('content_class' => 'fedora', 'title' => $title));
                                 <img src="<?php echo img('silk-icons/tick.png'); ?>" />
                             <?php endif; ?>
                         </td>
-                        <td></td>
+                        <td>
+                            <?php echo $this->partial('servers/_action_buttons.php', array(
+                                'uriSlug' => 'fedora-connector',
+                                'server' => $server)); ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
