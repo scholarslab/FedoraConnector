@@ -48,42 +48,40 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 {
 
     /**
-     * Returns servers for the main listing.
+     * Create a new server.
      *
-     * @param string $order The constructed SQL order clause.
+     * @param Omeka_Reocrd $server The server.
+     * @param array $post The field data posted from the form.
      *
-     * @return object The collections.
+     * @return boolean True if insert succeeds.
      */
-    public function getServers($page = null, $order = null)
+    public function updateServer($server, $post)
     {
 
-        $select = $this->getSelect();
-        if (isset($page)) {
-            $select->limitPage($page, get_option('per_page_admin'));
-        }
-        if (isset($order)) {
-            $select->order($order);
+        // Create server.
+        $server->name = $post['name'];
+        $server->url = $post['url'];
+        $server->is_default = $post['active'];
+
+        // If there is a trailing slash on the URL, remove it.
+        if (substr($server->url, -1) == '/') {
+            $server->url = substr($server->url, 0, -1);
         }
 
-        return $this->fetchObjects($select);
+        // Save.
+        $server->save();
+
+        return $server;
 
     }
 
-    /**
-     * Delete server by id.
-     *
-     * @param string $id The id of the server to delete.
-     *
-     * @return boolean True if delete succeeds.
-     */
-    public function deleteServer($id)
-    {
 
-        $server = $this->find($id);
-        $server->delete();
-        return true;
 
-    }
+
+
+
+
+
 
     /**
      * Save server information.

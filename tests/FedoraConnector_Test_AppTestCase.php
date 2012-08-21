@@ -40,14 +40,15 @@
 require_once '../FedoraConnectorPlugin.php';
 
 /**
- * This class sets up the system for testing this plugin.
- *
- * This borrows from the SimplePages plugin rather extensively.
+ * Set up the system for testing this plugin.
  */
 class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 {
     const PLUGIN_NAME = 'FedoraConnector';
 
+    /**
+     * Set up the system for testing this plugin.
+     */
     public function setUp() {
 
         parent::setUp();
@@ -63,17 +64,47 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $pluginHelper = new Omeka_Test_Helper_Plugin();
         $pluginHelper->setUp(self::PLUGIN_NAME);
 
+        // Get tables.
+        $this->serversTable = $this->db->getTable('FedoraConnectorServer');
+
     }
 
+    /**
+     * Run the plugin.
+     *
+     * @return void.
+     */
     public function _addPluginHooksAndFilters($pluginBroker, $pluginName) {
-
-        // Set the current plugin so the add_plugin_hook function works.
         $pluginBroker->setCurrentPluginDirName($pluginName);
-
         new FedoraConnectorPlugin;
+    }
+
+    /**
+     * Create a server.
+     *
+     * @return Omeka_Record $server The server.
+     */
+    public function __server(
+        $name='Test Server',
+        $url='http://www.test.org/fedora',
+        $is_default=1)
+    {
+
+        $server = new FedoraConnectorServer;
+        $server->name = $name;
+        $server->url = $url;
+        $server->is_default = $is_default;
+        $server->save();
+
+        return $server;
 
     }
 
+    /**
+     * Create an item.
+     *
+     * @return Omeka_Record $item The item.
+     */
     public function _createItem($name)
     {
 
@@ -94,13 +125,16 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     }
 
+    /**
+     * Create a collection of items.
+     *
+     * @return void.
+     */
     public function _createItems($count)
     {
-
         for ($i=0; $i<$count; $i++) {
             $this->_createItem('TestingItem' . $i);
         }
-
     }
 
 }
