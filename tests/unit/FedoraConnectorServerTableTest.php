@@ -76,11 +76,11 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
      *
      * @return void.
      */
-    // public function testGetActiveServerWhenNoServerExists()
-    // {
-    //     // Get active server.
-    //     $this->assertFalse($this->serversTable->getActiveServer());
-    // }
+    public function testGetActiveServerWhenNoServerExists()
+    {
+        // Get active server.
+        $this->assertFalse($this->serversTable->getActiveServer());
+    }
 
     /**
      * getActiveServer() should return the active server when at least
@@ -88,16 +88,16 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
      *
      * @return void.
      */
-    // public function testGetActiveServerWhenServerExists()
-    // {
+    public function testGetActiveServerWhenServerExists()
+    {
 
-    //     // Create server.
-    //     $server = $this->__server();
+        // Create server.
+        $server = $this->__server();
 
-    //     // Get active server.
-    //     $retrieved = $this->serversTable->getActiveServer();
-    //     $this->assertEquals($retrieved->id, $server->id);
+        // Get active server.
+        $retrieved = $this->serversTable->getActiveServer();
+        $this->assertEquals($retrieved->id, $server->id);
 
-    // }
+    }
 
 }

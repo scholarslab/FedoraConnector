@@ -75,108 +75,20 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
     }
 
-
-
-
-
-
-
-
-
     /**
-     * Save server information.
+     * Get active server.
      *
-     * @param array $data The field data posted from the form.
-     *
-     * @return boolean True if save succeeds.
+     * @return Omeka_Record $server The active server.
      */
-    public function saveServer($data)
+    public function getActiveServer()
     {
 
-        $server = $this->find($data['id']);
-        $server->name = $data['name'];
-        $server->url = $data['url'];
+        // Try to get a server.
+        $server = $this->fetchObject(
+            $this->getSelect()->where('is_default = 1')
+        );
 
-        // If server is set to default and it wasn't before, find
-        // the old default and unset it.
-        if ($data['is_default'] == 1 && $server->is_default == 0) {
-            $this->unsetDefault();
-        }
-
-        $server->is_default = $data['is_default'];
-
-        return $server->save() ? true : false;
-
-    }
-
-    /**
-     * Unset default server.
-     *
-     * @return void.
-     */
-    public function unsetDefault()
-    {
-
-        $select = $this->getSelect()->where('is_default = 1');
-        $old_default_server = $this->fetchObject($select);
-        if (count($old_default_server) != 0) {
-            $old_default_server->is_default = 0;
-            $old_default_server->save();
-        }
-
-    }
-
-    /**
-     * Create a new server.
-     *
-     * @param array $data The field data posted from the form.
-     *
-     * @return boolean True if insert succeeds.
-     */
-    public function createServer($data)
-    {
-
-        $server = new FedoraConnectorServer;
-        $server->name = $data['name'];
-        $server->url = $data['url'];
-        $server->is_default = $data['is_default'];
-
-        if ($server->is_default) {
-            $this->unsetDefault();
-        }
-
-        return $server->save() ? true : false;
-
-    }
-
-    /**
-     * Runs a regex on the server URL to make sure it's a valid
-     * Fedora server path.
-     *
-     * @param string $url The url of the server.
-     *
-     * @return boolean True if format is correct.
-     */
-    public function checkServerUrlFormat($url)
-    {
-
-        $pattern = '/(http\:\/\/).+(\/fedora\/)/';
-        return preg_match($pattern, $url) ? true : false;
-
-    }
-
-    /**
-     * Returns true if there is already a server with the supplied name.
-     *
-     * @param string $name The name to check.
-     *
-     * @return boolean True if a server exists with that name.
-     */
-    public function checkServerNameUnique($name)
-    {
-
-        $match = $this->findBySql('name = ?', array($name));
-        return (bool) $match;
+        return $server ? $server : false;
 
     }
 

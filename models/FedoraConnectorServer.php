@@ -137,6 +137,52 @@ class FedoraConnectorServer extends Omeka_record
 
     }
 
+    /**
+     * Manage unique `is_default` field on save.
+     *
+     * @return void.
+     */
+    public function save()
+    {
+
+        // Get the current active server.
+        $serversTable = $this->getTable('FedoraConnectorServer');
+        $active = $serversTable->getActiveServer();
+
+        // Is active set to true?
+        if ($this->is_default == 1) {
+
+            // Is the current active non-self?
+            if ($active && $active->id !== $this->id) {
+
+                // Switch active server.
+                $active->is_default = 0;
+                $active->parentSave();
+
+            }
+
+        }
+
+        // If there is no current active server, set self active.
+        else if (!$active) {
+            $this->is_default = 1;
+        }
+
+        // Call parent.
+        parent::save();
+
+    }
+
+    /**
+     * Direct save.
+     *
+     * @return void.
+     */
+    public function parentSave()
+    {
+        parent::save();
+    }
+
 }
 
 
