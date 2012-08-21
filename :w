@@ -85,9 +85,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     {
 
         // Get server.
-        $server = $this->serversTable->find(
-            $this->_request->id
-        );
+        $server = $this->findById();
 
         // Get form.
         $form = new FedoraConnector_Form_Server;
@@ -96,7 +94,10 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
         $form->populate(array(
             'name' => $server->name,
             'url' => $server->url,
-            'active' => $server->is_default
+            'workspace' => $server->namespace,
+            'username' => $server->username,
+            'password' => $server->password,
+            'active' => $server->active
         ));
 
         // If a form as been posted.
@@ -109,7 +110,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             if ($form->isValid($post)) {
 
                 // Create server.
-                $this->serversTable->updateServer($server, $post);
+                $this->_table->updateServer($server, $post);
 
                 // Redirect to browse.
                 $this->redirect->goto('browse');
@@ -133,8 +134,31 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
 
 
+    /**
+     * Show form to edit existing server.
+     *
+     * @return void
+     */
+    public function editAction()
+    {
 
+        $id = $this->_request->id;
+        $server = $this->getTable('FedoraConnectorServer')->find($id);
 
+        // Get the form.
+        $form = $this->_doServerForm('edit', $id);
+
+        // Fill it with the data.
+        $form->populate(array(
+            'name' => $server->name,
+            'url' => $server->url,
+            'is_default' => $server->is_default
+        ));
+
+        $this->view->form = $form;
+        $this->view->server = $server;
+
+    }
 
     /**
      * Process edit form - delete or save.

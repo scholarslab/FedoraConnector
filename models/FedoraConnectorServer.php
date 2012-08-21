@@ -60,7 +60,7 @@ class FedoraConnectorServer extends Omeka_record
     {
 
         $version = fedorahelpers_getQueryNodes(
-            "{$this->url}describe?xml=true",
+            "{$this->url}/describe?xml=true",
             "//*[local-name() = 'repositoryVersion']"
           );
 
@@ -109,7 +109,7 @@ class FedoraConnectorServer extends Omeka_record
     {
 
         $nodes = fedorahelpers_getQueryNodes(
-            "{$this->url}objects/$pid/datastreams?format=xml",
+            "{$this->url}/objects/$pid/datastreams?format=xml",
             "//*[local-name() = 'datastream']"
         );
 
@@ -129,7 +129,7 @@ class FedoraConnectorServer extends Omeka_record
     {
 
         $stream = fedorahelpers_getQueryNodes(
-            "{$this->url}objects/$pid/datastreams?format=xml",
+            "{$this->url}/objects/$pid/datastreams?format=xml",
             "//*[local-name() = 'datastream'][@dsid='" . $datastream . "']"
         );
 
