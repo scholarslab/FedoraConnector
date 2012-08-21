@@ -81,8 +81,8 @@ head(array('content_class' => 'fedora', 'title' => $title));
 
     <?php else: ?>
 
-        <p class="neatline-alert"><?php echo __('There are no Neatline exhibits yet.'); ?>
-        <a href="<?php echo uri('neatline-exhibits/add'); ?>"><?php echo __('Create one!'); ?></a>
+        <p class="neatline-alert"><?php echo __('There are no Fedora servers yet.'); ?>
+        <a href="<?php echo uri('fedora-connector/servers/add'); ?>"><?php echo __('Create one!'); ?></a>
         </p>
 
     <?php endif; ?>
