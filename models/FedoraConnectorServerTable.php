@@ -61,7 +61,6 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
         // Create server.
         $server->name = $post['name'];
         $server->url = $post['url'];
-        $server->is_default = $post['active'];
 
         // If there is a trailing slash on the URL, remove it.
         if (substr($server->url, -1) == '/') {
@@ -70,25 +69,7 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
 
         // Save.
         $server->save();
-
         return $server;
-
-    }
-
-    /**
-     * Get active server.
-     *
-     * @return Omeka_Record $server The active server.
-     */
-    public function getActiveServer()
-    {
-
-        // Try to get a server.
-        $server = $this->fetchObject(
-            $this->getSelect()->where('is_default = 1')
-        );
-
-        return $server ? $server : false;
 
     }
 

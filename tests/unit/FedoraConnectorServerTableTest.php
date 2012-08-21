@@ -29,8 +29,7 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
         // Mock post.
         $post = array(
             'name' => 'New Title',
-            'url' => 'http://www.new.org/fedora',
-            'active' => 0
+            'url' => 'http://www.new.org/fedora'
         );
 
         // Pass in new data, re-get.
@@ -40,7 +39,6 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
         // Check for updated values.
         $this->assertEquals($newServer->name, 'New Title');
         $this->assertEquals($newServer->url, 'http://www.new.org/fedora');
-        $this->assertEquals($newServer->is_default, 0);
 
     }
 
@@ -58,8 +56,7 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
         // Mock post.
         $post = array(
             'name' => 'New Title',
-            'url' => 'http://www.test.org/fedora/',
-            'active' => 0
+            'url' => 'http://www.test.org/fedora/'
         );
 
         // Pass in new data, re-get.
@@ -68,35 +65,6 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
 
         // Check for updated values.
         $this->assertEquals($newServer->url, 'http://www.test.org/fedora');
-
-    }
-
-    /**
-     * getActiveServer() should return false when no servers exist.
-     *
-     * @return void.
-     */
-    public function testGetActiveServerWhenNoServerExists()
-    {
-        // Get active server.
-        $this->assertFalse($this->serversTable->getActiveServer());
-    }
-
-    /**
-     * getActiveServer() should return the active server when at least
-     * one server exists.
-     *
-     * @return void.
-     */
-    public function testGetActiveServerWhenServerExists()
-    {
-
-        // Create server.
-        $server = $this->__server();
-
-        // Get active server.
-        $retrieved = $this->serversTable->getActiveServer();
-        $this->assertEquals($retrieved->id, $server->id);
 
     }
 

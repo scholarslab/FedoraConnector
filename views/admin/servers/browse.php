@@ -50,7 +50,6 @@ head(array('content_class' => 'fedora', 'title' => $title));
                         'URL' => 'url',
                         'Status' => null,
                         'Version' => null,
-                        'Default?' => 'is_default',
                         'Actions' => null
                     )); ?>
                 </tr>
@@ -68,12 +67,6 @@ head(array('content_class' => 'fedora', 'title' => $title));
                         <td>
                             <?php if ($server->isOnline()): echo $server->getVersion(); ?>
                             <?php else: ?><span class="unavailable status">[not available]</span>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <?php if ($server->is_default): ?>
-                                <img src="<?php echo img('silk-icons/tick.png'); ?>" />
                             <?php endif; ?>
                         </td>
                         <td>

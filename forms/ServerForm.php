@@ -82,13 +82,6 @@ class FedoraConnector_Form_Server extends Omeka_Form
             )
         ));
 
-        // Active.
-        $this->addElement('checkbox', 'active', array(
-            'label'         => __('Active'),
-            'description'   => __('Should this server be used to handle new GeoTiff uploads?'),
-            'checked'       => true
-        ));
-
         // Submit.
         $this->addElement('submit', 'submit', array(
             'label' => __('Save')
@@ -96,7 +89,7 @@ class FedoraConnector_Form_Server extends Omeka_Form
 
         // Group the data fields.
         $this->addDisplayGroup(array(
-            'name', 'url', 'active'
+            'name', 'url'
         ), 'server');
 
         // Group the submit button sparately.

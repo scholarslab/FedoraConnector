@@ -129,7 +129,6 @@ class FedoraConnectorPlugin
         `id` int(10) unsigned NOT NULL auto_increment,
         `url` tinytext collate utf8_unicode_ci,
         `name` tinytext collate utf8_unicode_ci,
-        `is_default` tinyint(1) unsigned NOT NULL,
         PRIMARY KEY  (`id`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
       ");

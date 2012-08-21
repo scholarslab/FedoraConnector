@@ -86,14 +86,12 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      */
     public function __server(
         $name='Test Server',
-        $url='http://www.test.org/fedora',
-        $is_default=1)
+        $url='http://www.test.org/fedora')
     {
 
         $server = new FedoraConnectorServer;
         $server->name = $name;
         $server->url = $url;
-        $server->is_default = $is_default;
         $server->save();
 
         return $server;
