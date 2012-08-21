@@ -22,7 +22,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function init()
     {
-        $this->serversTable = $this->getTable('FedoraConnectorServer');
+        $this->_table = $this->getTable('FedoraConnectorServer');
     }
 
     /**
@@ -32,7 +32,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
      */
     public function browseAction()
     {
-        $this->view->servers = $this->serversTable->findAll();
+        $this->view->servers = $this->_table->findAll();
     }
 
     /**
@@ -57,7 +57,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             if ($form->isValid($post)) {
 
                 // Create server.
-                $this->serversTable->updateServer($server, $post);
+                $this->_table->updateServer($server, $post);
 
                 // Redirect to browse.
                 $this->redirect->goto('browse');
@@ -85,7 +85,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
     {
 
         // Get server.
-        $server = $this->serversTable->find(
+        $server = $this->_table->find(
             $this->_request->id
         );
 
@@ -108,7 +108,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             if ($form->isValid($post)) {
 
                 // Create server.
-                $this->serversTable->updateServer($server, $post);
+                $this->_table->updateServer($server, $post);
 
                 // Redirect to browse.
                 $this->redirect->goto('browse');
@@ -127,90 +127,52 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
 
     }
 
-
-
-
-
-
-
-
-
-
     /**
-     * Add new server.
+     * Sets the add success message.
      *
-     * @return void
+     * @param Omeka_Record $server The server.
+     *
+     * @return string The message.
      */
-    public function insertAction()
+    protected function _getAddSuccessMessage($server)
     {
-
-        // Get the data, instantiate validator.
-        $data = $this->_request->getPost();
-        $form = $this->_doServerForm();
-
-        // Are all the fields filled out?
-        if ($form->isValid($data)) {
-
-            if (!$this->getTable('FedoraConnectorServer')->checkServerUrlFormat($data['url'])) {
-                $this->flashError('Server URL must be of format "http://[host]/fedora/"');
-                $this->_redirect('fedora-connector/servers/create');
-            }
-
-            else if ($this->getTable('FedoraConnectorServer')->checkServerNameUnique($data['name'])) {
-                $this->flashError('A server already exists with that name.');
-                $this->_redirect('fedora-connector/servers/create');
-            }
-
-            else {
-
-                // Create server, process success.
-                if ($this->getTable('FedoraConnectorServer')->createServer($data)) {
-                    $this->flashSuccess('Server created.');
-                    $this->redirect->goto('browse');
-                } else {
-                    $this->flashError('Error: The server was not created');
-                    $this->redirect->goto('browse');
-                }
-
-            }
-
-        }
-
-        else {
-
-            $this->flashError('Enter a name and URL.');
-            $this->_redirect('fedora-connector/servers/create');
-
-        }
-
+        return __('The server "%s" was successfully added!', $server->name);
     }
 
     /**
-     * Confirm delete, do delete.
+     * Sets the edit success message.
      *
-     * @return void
+     * @param Omeka_Record $server The server.
+     *
+     * @return string The message.
      */
-    public function deleteAction()
+    protected function _getEditSuccessMessage($server)
     {
+        return __('The server "%s" was successfully changed!', $server->name);
+    }
 
-        $id = $this->_request->id;
-        $server = $this->getTable('FedoraConnectorServer')->find($id);
-        $post = $this->_request->getPost();
+    /**
+     * Sets the delete success message.
+     *
+     * @param Omeka_Record $server The server.
+     *
+     * @return string The message.
+     */
+    protected function _getDeleteSuccessMessage($server)
+    {
+        return __('The server "%s" was successfully deleted!', $server->name);
+    }
 
-        if (isset($post['deleteconfirm_submit'])) {
-
-            if ($this->getTable('FedoraConnectorServer')->deleteServer($id)) {
-                $this->flashSuccess('Server ' . $server->name . ' deleted');
-                $this->redirect->goto('browse');
-            } else {
-                $this->flashError('Error: Server ' . $server->name . ' was not deleted');
-                $this->redirect->goto('browse');
-            }
-
-        }
-
-        $this->view->name = $server->name;
-
+    /**
+     * Sets the delete confirm message.
+     *
+     * @param Omeka_Record $server The server.
+     *
+     * @return string The message.
+     */
+    protected function _getDeleteConfirmMessage($server)
+    {
+        return __('This will delete the server "%s".', $server->name);
     }
 
 }
