@@ -57,7 +57,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_Action
             if ($form->isValid($post)) {
 
                 // Create server.
-                $this->_table->updateServer($server, $post);
+                $this->serversTable->updateServer($server, $post);
 
                 // Redirect to browse.
                 $this->redirect->goto('browse');

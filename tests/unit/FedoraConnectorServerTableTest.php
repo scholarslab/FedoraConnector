@@ -33,7 +33,7 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
             'active' => 0
         );
 
-        // Pass in the new data.
+        // Pass in new data, re-get.
         $this->serversTable->updateServer($server, $post);
         $newServer = $this->serversTable->find($server->id);
 
@@ -62,7 +62,7 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
             'active' => 0
         );
 
-        // Pass in the new data.
+        // Pass in new data, re-get.
         $this->serversTable->updateServer($server, $post);
         $newServer = $this->serversTable->find($server->id);
 
