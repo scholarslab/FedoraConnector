@@ -80,25 +80,4 @@ class FedoraConnector_ServersControllerTest extends Omeka_Test_AppTestCase
 
     }
 
-    public function testDeleteServer()
-    {
-
-        // Create server.
-        $server = new FedoraConnectorServer();
-        $server->name = 'Test Server';
-        $server->url = 'http://TestUrl.com/fedora/';
-        $server->is_default = true;
-        $server->save();
-
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'deleteconfirm_submit' => 'Delete'
-            )
-        );
-
-        $this->dispatch('fedora-connector/servers/delete/' . $server->id);
-        $this->assertEquals(0, $this->db->getTable('FedoraConnectorServer')->count());
-
-    }
-
 }

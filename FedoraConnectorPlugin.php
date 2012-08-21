@@ -50,7 +50,6 @@ class FedoraConnectorPlugin
     'before_delete_item',
     'admin_theme_header',
     'define_routes',
-    'define_acl',
     'config_form',
     'config',
     'after_save_form_item',
