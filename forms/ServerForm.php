@@ -75,7 +75,7 @@ class FedoraConnector_Form_Server extends Omeka_Form
                 array('validator' => 'IsUrl', 'breakChainOnFailure' => true, 'options' =>
                     array(
                         'messages' => array(
-                            Neatline_Validate_IsUrl::INVALID_URL => ('Enter a valid URL.')
+                            FedoraConnector_Validate_IsUrl::INVALID_URL => ('Enter a valid URL.')
                         )
                     )
                 )
@@ -101,37 +101,6 @@ class FedoraConnector_Form_Server extends Omeka_Form
 
         // Group the submit button sparately.
         $this->addDisplayGroup(array('submit'), 'submit_button');
-
-    }
-
-    /**
-     * Get the list of images for the dropdown select.
-     *
-     * @return array $images The images.
-     */
-    public function getImagesForSelect()
-    {
-
-        $files = array('none' => '-');
-
-        // Get file table.
-        $_db = get_db();
-        $_files = $_db->getTable('File');
-
-        // Build select.
-        $select = $_files->getSelect()->where(
-            'f.has_derivative_image = 1'
-        )->order('original_filename DESC');
-
-        // Fetch and return.
-        $records = $_files->fetchObjects($select);
-
-        // Build the array.
-        foreach($records as $record) {
-            $files[$record->id] = $record->original_filename;
-        };
-
-        return $files;
 
     }
 

@@ -30,12 +30,11 @@ $title = __('Fedora Connector | Browse Servers');
 head(array('content_class' => 'fedora', 'title' => $title));
 ?>
 
-<h1><?php echo $title; ?></h1>
-<p class="add-button">
-    <a class="add" href="<?php echo html_escape(uri('fedora-connector/add')); ?>">
-<?php echo __('Add a Server'); ?>
-    </a>
-</p>
+<?php echo $this->partial('servers/_header.php', array(
+    'title' => $title,
+    'add_button_uri' => 'fedora-connector/servers/add',
+    'add_button_text' => __('Add a Server')
+)); ?>
 
 <div id="primary">
 
