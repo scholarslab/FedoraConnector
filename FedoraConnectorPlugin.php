@@ -152,7 +152,16 @@ class FedoraConnectorPlugin
   {
 
     if (in_array($request->getModuleName(), array('fedora-connector', 'default'))) {
+
+      // Admin css.
       queue_css('fedora_connector_main');
+
+      // Datastreams application.
+      queue_js('vendor/underscore/underscore');
+      queue_js('vendor/backbone/backbone');
+      queue_js('vendor/backbone/marionette');
+      queue_js('datastreams/app');
+
     }
 
   }
