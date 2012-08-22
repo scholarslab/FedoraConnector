@@ -45,7 +45,7 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
         $this->addElement('select', 'image_id', array(
             'label'         => __('Server'),
             'description'   => __('Select a Fedora server.'),
-            'multiOptions'  => array()
+            'multiOptions'  => $this->getServersForSelect()
         ));
 
         // PID.
@@ -60,6 +60,31 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
             'label'         => __('Datastream'),
             'description'   => __('Choose a datastream.')
         ));
+
+    }
+
+    /**
+     * Get the list of Fedora servers.
+     *
+     * @return array $servers The server.
+     */
+    public function getServersForSelect()
+    {
+
+        // Get file table.
+        $_db = get_db();
+        $_servers = $_db->getTable('FedoraConnectorServer');
+
+        // Fetch.
+        $records = $_servers->findAll();
+
+        // Build the array.
+        $servers = array();
+        foreach($records as $record) {
+            $servers[$record->id] = $record->name;
+        };
+
+        return $servers;
 
     }
 

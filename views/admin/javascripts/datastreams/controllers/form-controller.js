@@ -1,7 +1,7 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2 */
 
 /**
- * Form view.
+ * Form controller.
  *
  * @package     omeka
  * @subpackage  fedoraconnector
@@ -11,29 +11,26 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-FedoraDatastreams.Views.Form = Backbone.View.extend({
+FedoraDatastreams.Controllers.Form = (function(Backbone, Ov) {
 
-  events: {
-    'keyup input[@name="pid"]': 'processKeystroke'
-  },
+  var Form = {};
+
+
+  // ---------------
+  // Initialization.
+  // ---------------
 
   /*
-   * Get markup.
+   * Instantiate timer and points.
    *
    * @return void.
    */
-  initialize: function() {
-    this.input = this.$el.find('input[@name="pid"]');
-    console.log('test');
-  },
+  FedoraDatastreams.addInitializer(function() {
+    Form.Form = new FedoraDatastreams.Views.Form({
+      el: '#fedora-datastreams-metadata'
+    });
+  });
 
-  /*
-   * Clear out the stacks.
-   *
-   * @return void.
-   */
-  processKeystroke: function() {
-    console.log(this.input.val());
-  }
+  return Form;
 
 });
