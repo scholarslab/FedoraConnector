@@ -25,8 +25,6 @@
 class FedoraConnector_Form_Server extends Omeka_Form
 {
 
-    private $_server;
-
     /**
      * Build the form.
      *
@@ -95,16 +93,6 @@ class FedoraConnector_Form_Server extends Omeka_Form
         // Group the submit button sparately.
         $this->addDisplayGroup(array('submit'), 'submit_button');
 
-    }
-
-    /**
-     * Set the active server record.
-     *
-     * @return void.
-     */
-    public function setServer(FedoraConnectorServer $server)
-    {
-        $this->_server = $server;
     }
 
 }

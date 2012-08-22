@@ -80,6 +80,16 @@ class FedoraConnectorPlugin
 
     $db = get_db();
 
+    // Create servers table.
+    $db->query("
+      CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
+        `id` int(10) unsigned NOT NULL auto_increment,
+        `url` tinytext collate utf8_unicode_ci,
+        `name` tinytext collate utf8_unicode_ci,
+        PRIMARY KEY  (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+      ");
+
     // Create datastream table.
     $db->query("
       CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
@@ -90,16 +100,6 @@ class FedoraConnectorPlugin
         `datastream` tinytext collate utf8_unicode_ci,
         `mime_type` tinytext collate utf8_unicode_ci,
         `metadata_stream` tinytext collate utf8_unicode_ci,
-        PRIMARY KEY  (`id`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-      ");
-
-    // Create servers table.
-    $db->query("
-      CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
-        `id` int(10) unsigned NOT NULL auto_increment,
-        `url` tinytext collate utf8_unicode_ci,
-        `name` tinytext collate utf8_unicode_ci,
         PRIMARY KEY  (`id`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
       ");
@@ -204,7 +204,7 @@ class FedoraConnectorPlugin
 
     $item = get_current_item();
     if (isset($item->added)) {
-      $tabs['Fedora Datastreams'] = 'test';
+      $tabs['Fedora Datastreams'] = new FedoraConnector_Form_Datastream();
     }
 
     return $tabs;
