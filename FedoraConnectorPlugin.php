@@ -2,44 +2,16 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * FedoraConnector Omeka plugin allows users to reuse content managed in
- * institutional repositories in their Omeka repositories.
- *
- * The FedoraConnector plugin provides methods to generate calls against Fedora-
- * based content disemminators. Unlike traditional ingestion techniques, this
- * plugin provides a facade to Fedora-Commons repositories and records pointers
- * to the "real" objects rather than creating new physical copies. This will
- * help ensure longer-term durability of the content streams, as well as allow
- * you to pull from multiple institutions with open Fedora-Commons
- * respositories.
- *
- * PHP version 5
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Plugin runner.
  *
  * @package     omeka
  * @subpackage  fedoraconnector
  * @author      Scholars' Lab <>
- * @author      Ethan Gruber <ewg4x@virginia.edu>
- * @author      Adam Soroka <ajs6f@virginia.edu>
- * @author      Wayne Graham <wayne.graham@virginia.edu>
- * @author      Eric Rochester <err8n@virginia.edu>
  * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2010 The Board and Visitors of the University of Virginia
+ * @copyright   2012 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
- * @version     $Id$
- * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
- * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
-?>
 
-<?php
 
 class FedoraConnectorPlugin
 {
@@ -52,7 +24,6 @@ class FedoraConnectorPlugin
     'define_routes',
     'config_form',
     'config',
-    'after_save_form_item',
     'public_append_to_items_show'
   );
 
@@ -133,19 +104,7 @@ class FedoraConnectorPlugin
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
       ");
 
-    // Create table for DC defaults for import behaviors.
-    $db->query("
-      CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorImportSetting` (
-        `id` int(10) unsigned NOT NULL auto_increment,
-        `element_id` int(10) unsigned NULL,
-        `item_id` int(10) unsigned NULL,
-        `behavior` ENUM('overwrite', 'stack', 'block'),
-        PRIMARY KEY  (`id`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-      ");
-
     set_option('fedora_connector_omitted_datastreams', 'RELS-EXT,RELS-INT,AUDIT');
-    set_option('fedora_connector_default_import_behavior', 'overwrite');
 
   }
 
@@ -159,7 +118,6 @@ class FedoraConnectorPlugin
     $db = get_db();
     $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
     $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
-    $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorImportSetting`");
   }
 
   /**
@@ -279,93 +237,11 @@ class FedoraConnectorPlugin
   }
 
   /**
-   * Commit changes made to item-specific import settings.
-   *
-   * @param $record Omeka_record the record.
-   * @param $post posted data from the form.
-   *
-   * @return void
-   */
-  public function afterSaveFormItem($record, $post)
-  {
-
-    $db = get_db();
-    foreach ($post['behavior'] as $field => $behavior) {
-
-      // Query for the behavior record and the DC element.
-      $behaviorRecord = $db->getTable('FedoraConnectorImportSetting')
-        ->getItemBehaviorByField($record, $field);
-      $dcElement = $db->getTable('Element')
-        ->findByElementSetNameAndElementName('Dublin Core', $field);
-
-      if ($behavior != 'default') {
-
-        // If the record exists, update it.
-        if ($behaviorRecord != false) {
-          $behaviorRecord->behavior = $behavior;
-          $behaviorRecord->save();
-        }
-
-        // Otherwise, create a new record.
-        else {
-          $newBehaviorRecord = new FedoraConnectorImportSetting;
-          $newBehaviorRecord->behavior = $behavior;
-          $newBehaviorRecord->element_id = $dcElement->id;
-          $newBehaviorRecord->item_id = $record->id;
-          $newBehaviorRecord->save();
-        }
-
-      }
-
-      else {
-
-        // If the record exists, delete it.
-        if ($behaviorRecord != false) {
-          $behaviorRecord->delete();
-        }
-
-      }
-
-    }
-
-    $itemDefault = $db->getTable('FedoraConnectorImportSetting')
-      ->getItemDefault($record);
-
-    // Update item default.
-    if ($post['behavior_default'] != 'default') {
-
-      // If the record exists, update it.
-      if ($itemDefault != false) {
-        $itemDefault->behavior = $post['behavior_default'];
-        $itemDefault->save();
-      }
-
-      // Otherwise, create a new record.
-      else {
-        $itemDefault = new FedoraConnectorImportSetting;
-        $itemDefault->behavior = $post['behavior_default'];
-        $itemDefault->item_id = $record->id;
-        $itemDefault->save();
-      }
-
-    }
-
-    else {
-
-      // If the record exists, delete it.
-      if ($itemDefault != false) {
-        $itemDefault->delete();
-      }
-
-    }
-
-  }
-
-  /**
    * Filter to add in Fedora Items
    *
    */
-  function exhibitBuilderExhibitDisplayItem($html, $displayFilesOptions, $linkProperties, $item)
+  function exhibitBuilderExhibitDisplayItem(
+      $html, $filesOptions, $linkProperties, $item)
   {
     if(fedorahelper_isFedoraStream($item)) {
       $html = fedorahelpers_getItemsShow($item);
