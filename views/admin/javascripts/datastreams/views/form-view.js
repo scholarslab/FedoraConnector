@@ -24,8 +24,12 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    */
   initialize: function() {
 
-    // Get input and uri's.
-    this.input = this.$el.find('input[name="pid"]');
+    // Get inputs.
+    this.server = this.$el.find('select[name="server"]');
+    this.datastream = this.$el.find('select[name="datastream"]');
+    this.pid = this.$el.find('input[name="pid"]');
+
+    // Get the datastreams uri.
     this.datastreamsUri = this.$el.find('input[name="datastreamsuri"]').val();
 
   },
@@ -37,12 +41,46 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    */
   getDatastreams: function() {
 
+    var params = {
+      server: this.server.val(),
+      pid: this.pid.val()
+    };
+
     // Fetch datastreams.
     $.ajax({
       url: this.datastreamsUri,
-      success: function(data) { console.log(data); }
+      dataTyle: 'json',
+      data: params,
+      success: _.bind(function(data) {
+        this.renderDatastreams(data);
+      }, this)
     });
 
+  },
+
+  /*
+   * Render datastreams.
+   *
+   * @param {Object} data: The JSON.
+   *
+   * @return void.
+   */
+  renderDatastreams: function(data) {
+
+    _.each(data, _.bind(function(node) {
+      var option = $('<option>').text(node.label).val(node.dsid);
+      this.datastream.append(option);
+    }, this));
+
+  },
+
+  /*
+   * Empty datastreams.
+   *
+   * @return void.
+   */
+  clearDatastreams: function() {
+    this.datastream.empty();
   }
 
 });

@@ -22,7 +22,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
      */
     public function init()
     {
-        $this->_table = $this->getTable('FedoraConnectorServer');
+        $this->_servers = $this->getTable('FedoraConnectorServer');
     }
 
     /**
@@ -37,6 +37,25 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         // Supress the default Zend layout-sniffer functionality.
         $this->_helper->viewRenderer->setNoRender(true);
         $this->getResponse()->setHeader('Content-type', 'application/json');
+
+        // Gather server and pid.
+        $server = (int) $this->_request->server;
+        $pid = $this->_request->pid;
+
+        // Get datastreams.
+        $server = $this->_servers->find($server);
+        $nodes = $server->getDatastreamNodes($pid);
+
+        // Construct array.
+        $datastreams = array();
+        foreach ($nodes as $node) {
+            $datastreams[] = array(
+                'dsid' => $node->getAttribute('dsid'),
+                'label' => $node->getAttribute('label')
+            );
+        }
+
+        echo json_encode($datastreams);
 
     }
 
