@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * Servers controller integration tests.
+ * Servers controller.
  *
  * @package     omeka
  * @subpackage  fedoraconnector

@@ -23,16 +23,26 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    * @return void.
    */
   initialize: function() {
+
+    // Get input and uri's.
     this.input = this.$el.find('input[name="pid"]');
+    this.datastreamsUri = this.$el.find('input[name="datastreamsuri"]').val();
+
   },
 
   /*
-   * Clear out the stacks.
+   * Get datastreams.
    *
    * @return void.
    */
   getDatastreams: function() {
-    console.log(this.input.val());
+
+    // Fetch datastreams.
+    $.ajax({
+      url: this.datastreamsUri,
+      success: function(data) { console.log(data); }
+    });
+
   }
 
 });

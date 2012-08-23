@@ -61,6 +61,11 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
             'description'   => __('Choose a datastream.')
         ));
 
+        // Query datastreams uri.
+        $this->addElement('hidden', 'datastreams-uri', array(
+            'value'   => uri('fedora-connector/datastreams/query-datastreams')
+        ));
+
     }
 
     /**

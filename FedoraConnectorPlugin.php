@@ -211,7 +211,7 @@ class FedoraConnectorPlugin
 
     $item = get_current_item();
     if (isset($item->added)) {
-      $tabs['Fedora Datastreams'] = new FedoraConnector_Form_Datastream();
+      $tabs['Fedora'] = new FedoraConnector_Form_Datastream();
     }
 
     return $tabs;

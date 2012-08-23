@@ -16,10 +16,10 @@ $ = jQuery;
 
 // Get script path.
 Fedora.scripts = $('script');
-Fedora.src = Fedora.scripts[Fedora.scripts.length-1].src.replace(/[^\/]+.js/, '');
+Fedora.js = Fedora.scripts[Fedora.scripts.length-1].src.replace(/[^\/]+.js/, '');
 
-var a = Fedora.src+'datastreams/';
-var v = Fedora.src+'vendor/';
+var a = Fedora.js+'datastreams/';
+var v = Fedora.js+'vendor/';
 
 load(
 

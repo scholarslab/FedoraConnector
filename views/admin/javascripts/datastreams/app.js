@@ -31,6 +31,6 @@ FedoraDatastreams.Views = {};
  */
 FedoraDatastreams.addInitializer(function() {
   new FedoraDatastreams.Views.Form({
-    el: '#fedora-datastreams-metadata'
+    el: '#fedora-metadata'
   });
 });
