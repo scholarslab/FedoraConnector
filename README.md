@@ -1,5 +1,8 @@
 # Fedora Connector
 
+[![Build Status](https://secure.travis-ci.org/scholarslab/FedoraConnector.png)](http://travis-ci.org/scholarslab/FedoraConnector)
+
+
 FedoraConnector makes it possible to connect an Omeka site with [Fedora Commons] repositories. The plugin allows you to link Omeka
 items with "datastreams" on the Fedora repository and
 automatically populate the Dublin Core fields for the Omeka item with
