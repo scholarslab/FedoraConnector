@@ -157,14 +157,8 @@ class FedoraConnectorPlugin
       queue_css('fedora_connector_main');
 
       // Datastreams dependencies.
-      queue_js('vendor/underscore/underscore');
-      queue_js('vendor/backbone/backbone');
-      queue_js('vendor/backbone/marionette');
-
-      // Datastreams application.
-      queue_js('datastreams/app');
-      queue_js('datastreams/controllers/form-controller');
-      queue_js('datastreams/views/form-view');
+      queue_js('vendor/load/load');
+      queue_js('load-datastreams');
 
     }
 

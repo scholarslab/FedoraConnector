@@ -14,7 +14,7 @@
 FedoraDatastreams.Views.Form = Backbone.View.extend({
 
   events: {
-    'keyup input[@name="pid"]': 'processKeystroke'
+    'keyup input[name="pid"]': 'getDatastreams'
   },
 
   /*
@@ -23,8 +23,7 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    * @return void.
    */
   initialize: function() {
-    this.input = this.$el.find('input[@name="pid"]');
-    console.log('test');
+    this.input = this.$el.find('input[name="pid"]');
   },
 
   /*
@@ -32,7 +31,7 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    *
    * @return void.
    */
-  processKeystroke: function() {
+  getDatastreams: function() {
     console.log(this.input.val());
   }
 
