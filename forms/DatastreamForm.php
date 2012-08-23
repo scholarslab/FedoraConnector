@@ -65,7 +65,7 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
 
         // Import.
         $this->addElement('checkbox', 'import', array(
-            'label'         => 'Import',
+            'label'         => 'Import?',
             'description'   => 'Import Fedora data when the Item form is saved.'
         ));
 

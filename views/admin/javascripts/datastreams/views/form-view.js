@@ -67,20 +67,15 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    */
   renderDatastreams: function(data) {
 
+    // Clear select.
+    this.datastream.empty();
+
+    // Render options.
     _.each(data, _.bind(function(node) {
       var option = $('<option>').text(node.label).val(node.dsid);
       this.datastream.append(option);
     }, this));
 
-  },
-
-  /*
-   * Empty datastreams.
-   *
-   * @return void.
-   */
-  clearDatastreams: function() {
-    this.datastream.empty();
   }
 
 });
