@@ -20,6 +20,7 @@ class FedoraConnectorPlugin
         'install',
         'uninstall',
         'before_delete_item',
+        'after_save_form_item',
         'admin_theme_header',
         'define_routes',
         'config_form',
@@ -215,6 +216,19 @@ class FedoraConnectorPlugin
       }
 
       return $tabs;
+
+    }
+
+    /**
+     * Save/update datastream, do import.
+     *
+     * @param Item  $item The item.
+     * @param array $post The complete $_POST.
+     *
+     * @return void.
+     */
+    public function afterSaveFormItem($item, $post)
+    {
 
     }
 
