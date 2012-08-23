@@ -14,7 +14,7 @@
 ?>
 
 <?php
-$title = __('Fedora Connector | Edit Server');
+$title = __('Fedora Connector | Create Server');
 head(array('content_class' => 'fedora', 'title' => $title));
 ?>
 
