@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * Datastream row manager.
+ * Object row manager.
  *
  * @package     omeka
  * @subpackage  fedoraconnector
@@ -16,7 +16,7 @@
 /**
  * Record class for datastreams.
  */
-class FedoraConnectorDatastream extends Omeka_record
+class FedoraConnectorObject extends Omeka_record
 {
 
     public $item_id;

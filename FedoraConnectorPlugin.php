@@ -41,7 +41,7 @@ class FedoraConnectorPlugin
     public function __construct()
     {
         $this->_db = get_db();
-        $this->_datastreams = $this->_db->getTable('FedoraConnectorDatastream');
+        $this->_objects = $this->_db->getTable('FedoraConnectorObject');
         self::addHooksAndFilters();
     }
 
@@ -66,8 +66,7 @@ class FedoraConnectorPlugin
     }
 
     /**
-     * Create tables for datastreams and servers, insert place-holder server,
-     * set which datastreams should be omitted by default.
+     * Install.
      *
      * @return void
      */
@@ -75,34 +74,44 @@ class FedoraConnectorPlugin
     {
 
         // Servers.
-        $this->_db->query("CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
-            `id` int(10) unsigned NOT NULL auto_increment,
-            `url` tinytext collate utf8_unicode_ci,
-            `name` tinytext collate utf8_unicode_ci,
-            PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+        $this->_db->query(
+            "CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}fedora_connector_servers` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `url` tinytext collate utf8_unicode_ci,
+                `name` tinytext collate utf8_unicode_ci,
+                PRIMARY KEY  (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"
+        );
 
-        // Create datastream table.
-        $this->_db->query("CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
-            `id` int(10) unsigned NOT NULL auto_increment,
-            `item_id` int(10) unsigned,
-            `server_id` int(10) unsigned,
-            `pid` tinytext collate utf8_unicode_ci,
-            `dsids` tinytext collate utf8_unicode_ci,
-            PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+        // Objects.
+        $this->_db->query(
+            "CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}fedora_connector_objects` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `item_id` int(10) unsigned,
+                `server_id` int(10) unsigned,
+                `pid` tinytext collate utf8_unicode_ci,
+                `dsids` tinytext collate utf8_unicode_ci,
+                PRIMARY KEY  (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"
+        );
 
     }
 
     /**
-     * Drop tables, scrubs out Fedora TEI datastreams.
+     * Uninstall.
      *
      * @return void
      */
     public function uninstall()
     {
-        $this->_db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
-        $this->_db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
+
+        // Drop the servers table.
+        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_servers`";
+        $this->_db->query($sql);
+
+        // Drop the objects table.
+        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_objects`";
+        $this->_db->query($sql);
     }
 
     /**
@@ -146,15 +155,15 @@ class FedoraConnectorPlugin
     /**
      * Add Fedora tab to the Items interface.
      *
-     * @param array $tabs An array mapping tab name to HTML for that tab.
+     * @param array $tabs Array of tab names => markup.
      *
-     * @return array The $tabs array updated with the Fedora Datastreams tab.
+     * @return array Updated $tabs array.
      */
     public function adminItemsFormTabs($tabs)
     {
 
         // Construct the form, strip the <form> tag.
-        $form = new FedoraConnector_Form_Datastream();
+        $form = new FedoraConnector_Form_Object();
         $form->removeDecorator('form');
 
         // Get the item.
@@ -164,7 +173,7 @@ class FedoraConnectorPlugin
         if (!is_null($item->id)) {
 
             // Try to get a datastream.
-            $datastream = $this->_datastreams->findByItem($item);
+            $datastream = $this->_objects->findByItem($item);
 
             // Populate fields.
             if ($datastream) {
@@ -194,7 +203,7 @@ class FedoraConnectorPlugin
     {
 
         // Create or update the datastream.
-        $datastream = $this->_datastreams->createOrUpdate(
+        $datastream = $this->_objects->createOrUpdate(
             $item, (int) $post['server'], $post['pid'], $post['dsids']
         );
 

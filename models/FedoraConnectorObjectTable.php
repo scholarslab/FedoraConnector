@@ -12,7 +12,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-class FedoraConnectorDatastreamTable extends Omeka_Db_Table
+class FedoraConnectorObjectTable extends Omeka_Db_Table
 {
 
     /**

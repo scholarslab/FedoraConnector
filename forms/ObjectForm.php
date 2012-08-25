@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * Server form.
+ * Object form.
  *
  * PHP version 5
  *
@@ -22,7 +22,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-class FedoraConnector_Form_Datastream extends Omeka_Form
+class FedoraConnector_Form_Object extends Omeka_Form
 {
 
     private $_server;
