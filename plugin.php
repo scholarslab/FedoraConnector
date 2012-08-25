@@ -38,6 +38,8 @@ require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.ph
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Import.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Render.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Plugins.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractImporter.php';
+require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractRenderer.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ObjectForm.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ServerForm.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/Validate/isUrl.php';
