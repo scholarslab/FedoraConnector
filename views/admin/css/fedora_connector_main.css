@@ -39,6 +39,6 @@
     color: gray;
 }
 
-select[name="datastream"] {
+select[name="dsid"] {
     width: 230px;
 }

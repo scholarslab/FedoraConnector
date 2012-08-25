@@ -56,7 +56,7 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
         ));
 
         // Datastream.
-        $this->addElement('select', 'datastream', array(
+        $this->addElement('select', 'dsid', array(
             'label'         => __('Datastream'),
             'description'   => __('Choose a datastream.'),
             'attribs'       => array('size' => 20),

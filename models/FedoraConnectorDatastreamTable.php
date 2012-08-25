@@ -29,7 +29,7 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
             $this->getSelect()->where('item_id=?', $item->id)
         );
 
-        return (bool) $datastream;
+        return $datastream ? $datastream : false;
 
     }
 
@@ -54,15 +54,17 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
         // If no record exists, create a new one.
         if (!$record) { $record = new FedoraConnectorDatastream(); }
 
-        // Update.
+        // If data is empty, delete.
+        if ($pid === '') { $record->delete(); }
+
         else {
 
-          // Update and save.
-          $record->item_id = $item->id;
-          $record->server_id = $serverId;
-          $record->pid = $pid;
-          $record->dsid = $dsid;
-          $record->save();
+            // Update and save.
+            $record->item_id = $item->id;
+            $record->server_id = $serverId;
+            $record->pid = $pid;
+            $record->dsid = $dsid;
+            $record->save();
 
         }
 
