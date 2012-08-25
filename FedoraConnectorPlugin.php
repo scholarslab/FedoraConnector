@@ -252,9 +252,15 @@ class FedoraConnectorPlugin
     {
 
         // Create or update the datastream.
-        $this->_datastreams->createOrUpdate(
+        $datastream = $this->_datastreams->createOrUpdate(
             $item, (int) $post['server'], $post['pid'], $post['dsid']
         );
+
+        // Import.
+        if ((bool) $post['import']) {
+            $importer = new FedoraConnector_Import();
+            $importer->import($datastream);
+        }
 
     }
 
