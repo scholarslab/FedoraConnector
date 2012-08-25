@@ -75,7 +75,7 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
         ));
 
         // Saved dsid.
-        $this->addElement('hidden', 'saved-dsid');
+        $this->addElement('hidden', 'saved-dsids');
 
     }
 

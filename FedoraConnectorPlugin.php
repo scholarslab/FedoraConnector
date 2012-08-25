@@ -16,6 +16,7 @@
 class FedoraConnectorPlugin
 {
 
+    // Hooks.
     private static $_hooks = array(
         'install',
         'uninstall',
@@ -26,12 +27,11 @@ class FedoraConnectorPlugin
         'public_append_to_items_show'
     );
 
+    // Filters.
     private static $_filters = array(
         'admin_items_form_tabs',
         'admin_navigation_main'
     );
-
-    private $_db;
 
     /**
      * Add hooks and filers, get tables.
@@ -46,7 +46,7 @@ class FedoraConnectorPlugin
     }
 
     /**
-     * Iterate over hooks and filters, define callbacks.
+     * Connect hooks and filters with callbacks.
      *
      * @return void
      */
@@ -74,29 +74,23 @@ class FedoraConnectorPlugin
     public function install()
     {
 
-        $db = get_db();
-
-        // Create servers table.
-        $db->query("
-          CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
+        // Servers.
+        $this->_db->query("CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorServer` (
             `id` int(10) unsigned NOT NULL auto_increment,
             `url` tinytext collate utf8_unicode_ci,
             `name` tinytext collate utf8_unicode_ci,
             PRIMARY KEY  (`id`)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        ");
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
 
         // Create datastream table.
-        $db->query("
-          CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
+        $this->_db->query("CREATE TABLE IF NOT EXISTS `$db->FedoraConnectorDatastream` (
             `id` int(10) unsigned NOT NULL auto_increment,
             `item_id` int(10) unsigned,
             `server_id` int(10) unsigned,
             `pid` tinytext collate utf8_unicode_ci,
             `dsids` tinytext collate utf8_unicode_ci,
             PRIMARY KEY  (`id`)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        ");
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
 
     }
 
@@ -107,34 +101,12 @@ class FedoraConnectorPlugin
      */
     public function uninstall()
     {
-        $db = get_db();
-        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
-        $db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
+        $this->_db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorDatastream`");
+        $this->_db->query("DROP TABLE IF EXISTS `$db->FedoraConnectorServer`");
     }
 
     /**
-     * On item delete, get rid of datastreams associated with that item.
-     *
-     * @param Omeka_Record $item The item being deleted.
-     *
-     * @return void
-     */
-    public function beforeDeleteItem($item)
-    {
-
-        $db = get_db();
-        $datastreams = $db
-            ->getTable('FedoraConnectorDatastream')
-            ->findBySql('item_id = ?', array($item['id']));
-
-        foreach ($datastreams as $datastream){
-            $datastream->delete();
-        }
-
-    }
-
-    /**
-     * Add plugin specific CSS.
+     * Add plugin static assets.
      *
      * @param Zend_Controller_Request_Http $request The request.
      *
@@ -158,9 +130,9 @@ class FedoraConnectorPlugin
     }
 
     /**
-     * Wire up the routes in routes.ini.
+     * Register routes.
      *
-     * @param object $router Router passed in by the front controller.
+     * @param object $router Front controller router.
      *
      * @return void
      */
@@ -172,7 +144,7 @@ class FedoraConnectorPlugin
     }
 
     /**
-     * Add Fedora Datastreams tab to the Items interface.
+     * Add Fedora tab to the Items interface.
      *
      * @param array $tabs An array mapping tab name to HTML for that tab.
      *
@@ -199,14 +171,13 @@ class FedoraConnectorPlugin
                 $form->populate(array(
                     'server' => $datastream->server_id,
                     'pid' => $datastream->pid,
-                    'saved-dsid' => $datastream->dsid
+                    'saved-dsids' => $datastream->dsids
                 ));
             }
         }
 
-        // Add the 'Fedora' tab.
+        // Add tab.
         $tabs['Fedora'] = $form;
-
         return $tabs;
 
     }
@@ -223,42 +194,28 @@ class FedoraConnectorPlugin
     {
 
         // Create or update the datastream.
-        $datastreams = $this->_datastreams->createOrUpdate(
+        $datastream = $this->_datastreams->createOrUpdate(
             $item, (int) $post['server'], $post['pid'], $post['dsids']
         );
 
         // Import.
         if ((bool) $post['import']) {
-            foreach ($datastreams as $datastream) {
-                $datastream->import();
-            }
+            // ** dev: import
         }
 
     }
 
     /**
-     * Add link to main admin menu bar.
+     * Add Fedora tab to admin menu bar.
      *
-     * @param array $tabs This is an array of label => URI pairs.
+     * @param array $tabs Array of label => URI.
      *
-     * @return array The tabs array passed in with Fedora Connector links possibly
-     * added.
+     * @return array The modified tabs array.
      */
     public function adminNavigationMain($tabs)
     {
         $tabs['Fedora Connector'] = uri('fedora-connector');
         return $tabs;
-    }
-
-    /**
-     * Render the datastream in the public view of the item.
-     *
-     * @return void.
-     */
-    public function publicAppendToItemsShow()
-    {
-        $item = get_current_item();
-        echo fedorahelpers_getItemsShow($item);
     }
 
 }

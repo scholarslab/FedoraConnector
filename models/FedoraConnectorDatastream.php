@@ -120,24 +120,6 @@ class FedoraConnectorDatastream extends Omeka_record
 
     }
 
-    /**
-     * Import data.
-     *
-     * @return void.
-     */
-    public function import()
-    {
-
-        // Get elements.
-        $elements = $this->getTable('Element')->findBySet('Dublin Core');
-
-        // Write new texts.
-        foreach ($elements as $element) {
-
-        };
-
-    }
-
 }
 
 
