@@ -93,7 +93,6 @@ abstract class FedoraConnector_AbstractImporter
 
             $behavior = $this->db->getTable('FedoraConnectorImportSetting')->getBehavior($element, $item);
 
-            // foreach ($this->queryAll($xpath, $queries) as $node) {
                 $this->addMetadata(
                     $item,
                     $element,
@@ -101,7 +100,6 @@ abstract class FedoraConnector_AbstractImporter
                     $behavior,
                     $this->queryAll($xpath, $queries)
                 );
-            // }
 
         }
 

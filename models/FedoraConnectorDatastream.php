@@ -23,7 +23,6 @@ class FedoraConnectorDatastream extends Omeka_record
     public $server_id;
     public $pid;
     public $dsid;
-    public $stream;
 
     /**
      * This returns the datastream's base URL.
@@ -79,7 +78,7 @@ class FedoraConnectorDatastream extends Omeka_record
     public function getMetadataUrl()
     {
         $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}{$this->stream}/content";
+        return "{$baseUrl}{$this->format}/content";
     }
 
     /**

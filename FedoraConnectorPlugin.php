@@ -23,8 +23,6 @@ class FedoraConnectorPlugin
         'after_save_form_item',
         'admin_theme_header',
         'define_routes',
-        'config_form',
-        'config',
         'public_append_to_items_show'
     );
 
@@ -96,15 +94,9 @@ class FedoraConnectorPlugin
             `server_id` int(10) unsigned,
             `pid` tinytext collate utf8_unicode_ci,
             `dsid` tinytext collate utf8_unicode_ci,
-            `stream` tinytext collate utf8_unicode_ci,
             PRIMARY KEY  (`id`)
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
         ");
-
-        set_option(
-          'fedora_connector_omitted_datastreams',
-          'RELS-EXT,RELS-INT,AUDIT'
-        );
 
     }
 
@@ -177,28 +169,6 @@ class FedoraConnectorPlugin
         $router->addConfig(new Zend_Config_Ini(
             FEDORA_CONNECTOR_PLUGIN_DIR . '/routes.ini', 'routes'
         ));
-    }
-
-    /**
-     * Do config form.
-     *
-     * @return void
-     */
-    public function configForm()
-    {
-        include 'forms/ConfigForm.php';
-    }
-
-    /**
-     * Save config form (omitted datastreams csv).
-     *
-     * @return void
-     */
-    public function config()
-    {
-        set_option('fedora_connector_omitted_datastreams',
-            $_POST['fedora_connector_omitted_datastreams']
-        );
     }
 
     /**

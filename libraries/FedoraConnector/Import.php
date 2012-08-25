@@ -38,7 +38,6 @@
  * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-define('FEDORA_CONNECTOR_PLUGIN_DIR', BASE_DIR . '/plugins/FedoraConnector');
 
 class FedoraConnector_Import
 {
