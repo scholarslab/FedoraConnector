@@ -41,18 +41,6 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
     }
 
     /**
-     * This tests whether this renderer can preview a datastream.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return boolean True if this can display the datastream.
-     */
-    function canPreview($datastream)
-    {
-        return $this->canDisplay($datastream);
-    }
-
-    /**
      * This displays an object.
      *
      * @param Omeka_Record $object The Fedora object record.
@@ -62,18 +50,6 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
     function display($object)
     {
         return $this->_display($object, '*');
-    }
-
-    /**
-     * This displays a datastream's preview.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return string The preview HTML for the datastream.
-     */
-    function preview($datastream)
-    {
-        return $this->_display($datastream, 'thumb');
     }
 
     /**
