@@ -36,12 +36,14 @@ class FedoraConnectorPlugin
     private $_db;
 
     /**
-     * Add hooks and filers.
+     * Add hooks and filers, get tables.
      *
      * @return void
      */
     public function __construct()
     {
+        $this->_db = get_db();
+        $this->_datastreams = $this->_db->getTable('FedoraConnectorDatastream');
         self::addHooksAndFilters();
     }
 
@@ -93,9 +95,7 @@ class FedoraConnectorPlugin
             `item_id` int(10) unsigned,
             `server_id` int(10) unsigned,
             `pid` tinytext collate utf8_unicode_ci,
-            `datastream` tinytext collate utf8_unicode_ci,
-            `mime_type` tinytext collate utf8_unicode_ci,
-            `metadata_stream` tinytext collate utf8_unicode_ci,
+            `dsid` tinytext collate utf8_unicode_ci,
             PRIMARY KEY  (`id`)
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
         ");
@@ -231,7 +231,12 @@ class FedoraConnectorPlugin
      */
     public function afterSaveFormItem($item, $post)
     {
-        print_r($post);
+
+        // Create or update the datastream.
+        $this->_datastreams->createOrUpdate(
+            $item, (int) $post['server'], $post['pid'], $post['dsid']
+        );
+
     }
 
     /**

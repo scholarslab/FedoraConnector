@@ -50,9 +50,7 @@ class FedoraConnectorDatastream extends Omeka_record
     public $item_id;
     public $server_id;
     public $pid;
-    public $datastream;
-    public $mime_type;
-    public $metadata_stream;
+    public $dsid;
 
     /**
      * This returns the datastream's base URL.
@@ -84,7 +82,7 @@ class FedoraConnectorDatastream extends Omeka_record
     public function getUrl()
     {
 
-        return $this->getBaseUrl() . $this->datastream;
+        return $this->getBaseUrl() . $this->dsid;
 
     }
 
@@ -128,7 +126,7 @@ class FedoraConnectorDatastream extends Omeka_record
     {
 
         $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}{$this->datastream}/content";
+        return "{$baseUrl}{$this->dsid}/content";
 
     }
 
@@ -175,7 +173,7 @@ class FedoraConnectorDatastream extends Omeka_record
         $server = $this->getServer();
         return fedorahelpers_getQueryNodes(
              "{$server->url}objects/$this->pid/datastreams?format=xml",
-             "//*[local-name() = 'datastream'][@dsid='" . $this->datastream . "']"
+             "//*[local-name() = 'datastream'][@dsid='" . $this->dsid . "']"
         )->item(0);
 
     }
