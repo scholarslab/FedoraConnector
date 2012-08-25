@@ -210,12 +210,14 @@ class FedoraConnectorPlugin
     public function adminItemsFormTabs($tabs)
     {
 
-      $item = get_current_item();
-      if (isset($item->added)) {
-          $tabs['Fedora'] = new FedoraConnector_Form_Datastream();
-      }
+        // Construct the form, strip the <form> tag.
+        $form = new FedoraConnector_Form_Datastream();
+        $form->removeDecorator('form');
 
-      return $tabs;
+        // Add the 'Fedora' tab.
+        $tabs['Fedora'] = $form;
+
+        return $tabs;
 
     }
 
@@ -229,7 +231,7 @@ class FedoraConnectorPlugin
      */
     public function afterSaveFormItem($item, $post)
     {
-
+        print_r($post);
     }
 
     /**
