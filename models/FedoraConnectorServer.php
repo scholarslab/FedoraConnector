@@ -47,7 +47,14 @@
 class FedoraConnectorServer extends Omeka_record
 {
 
+    /**
+     * The name of the server [string].
+     */
     public $name;
+
+    /**
+     * The server URL [string].
+     */
     public $url;
 
     /**
@@ -58,12 +65,13 @@ class FedoraConnectorServer extends Omeka_record
     public function getVersion()
     {
 
+        // Query for version.
         $version = fedorahelpers_getQueryNodes(
             "{$this->url}/describe?xml=true",
-            "//*[local-name() = 'repositoryVersion']"
-          );
+            "//*[local-name() = 'repositoryVersion']");
 
-        return $version != false ? $version->item(0)->nodeValue : false;
+        // Extract node value.
+        return $version->item(0)->nodeValue;
 
     }
 
@@ -138,14 +146,3 @@ class FedoraConnectorServer extends Omeka_record
     }
 
 }
-
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
-?>

@@ -19,31 +19,57 @@
 class FedoraConnectorObject extends Omeka_record
 {
 
-    public $item_id;
-    public $server_id;
-    public $pid;
-    public $dsids;
 
     /**
-     * This returns the datastream's base URL.
+     * The id of the parent item [integer].
+     */
+    public $item_id;
+
+    /**
+     * The id of the parent server [integer].
+     */
+    public $server_id;
+
+    /**
+     * The Fedora object pid [string].
+     */
+    public $pid;
+
+    /**
+     * A comma-delimited list of dsids [string].
+     */
+    public $dsids;
+
+
+    /**
+     * Get parent server.
      *
-     * This gets the server URL from the datastream's server_id. It also must query
-     * the Fedora server to determine its version. Fedora 2 uses 'get' in the URL,
-     * while Fedora 3 uses 'objects.'
+     * @return Omeka_Record The server.
+     */
+    public function getServer()
+    {
+        return $this->getTable('FedoraConnectorServer')->find($this->server_id);
+    }
+
+    /**
+     * Get parent item.
      *
-     * @param Omeka_Record $datastream The data stream to return the base URL for.
+     * @return Omeka_Record The item.
+     */
+    public function getItem()
+    {
+        return $this->getTable('Item')->find($this->item_id);
+    }
+
+    /**
+     * Construct the object base URL.
      *
-     * @return string The base URL.
+     * @return string The URL.
      */
     public function getBaseUrl()
     {
-
-        $server = $this->getTable('FedoraConnectorServer')
-            ->find($this->server_id);
-
-        $url = "{$server->url}/{$server->getService()}/{$this->pid}/datastreams";
-        return $url;
-
+        $server = $this->getServer();
+        return "{$server->url}/{$server->getService()}/{$this->pid}/datastreams";
     }
 
     /**
@@ -69,16 +95,16 @@ class FedoraConnectorObject extends Omeka_record
     }
 
     /**
-     * This returns the URL for the object metadata datastream.
+     * Build the URL for the XML output for a given dsid.
      *
-     * @param Omeka_Record $datastream The datastream.
+     * @param string $dsid The dsid to load.
      *
      * @return string The URL for the datastream.
      */
-    public function getMetadataUrl()
+    public function getMetadataUrl($dsid)
     {
         $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}/dc/content";
+        return "{$baseUrl}/{$dsid}/content";
     }
 
     /**
@@ -94,41 +120,4 @@ class FedoraConnectorObject extends Omeka_record
         return "{$baseUrl}/{$this->dsid}/content";
     }
 
-    /**
-     * Get server.
-     *
-     * @return object The server.
-     */
-    public function getServer()
-    {
-        return $this->getTable('FedoraConnectorServer')->find($this->server_id);
-    }
-
-    /**
-     * Fetches the datastream node from Fedora.
-     *
-     * @return object The node.
-     */
-    public function getNode()
-    {
-
-        $server = $this->getServer();
-        return fedorahelpers_getQueryNodes(
-             "{$server->url}objects/$this->pid/datastreams?format=xml",
-             "//*[local-name() = 'datastream'][@dsid='" . $this->dsid . "']"
-        )->item(0);
-
-    }
-
 }
-
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
-?>
