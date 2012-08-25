@@ -93,7 +93,7 @@ class FedoraConnectorPlugin
             `item_id` int(10) unsigned,
             `server_id` int(10) unsigned,
             `pid` tinytext collate utf8_unicode_ci,
-            `dsid` tinytext collate utf8_unicode_ci,
+            `dsids` tinytext collate utf8_unicode_ci,
             PRIMARY KEY  (`id`)
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
         ");
@@ -223,14 +223,15 @@ class FedoraConnectorPlugin
     {
 
         // Create or update the datastream.
-        $datastream = $this->_datastreams->createOrUpdate(
-            $item, (int) $post['server'], $post['pid'], $post['dsid']
+        $datastreams = $this->_datastreams->createOrUpdate(
+            $item, (int) $post['server'], $post['pid'], $post['dsids']
         );
 
         // Import.
         if ((bool) $post['import']) {
-            $importer = new FedoraConnector_Import();
-            $importer->import($datastream);
+            foreach ($datastreams as $datastream) {
+                $datastream->import();
+            }
         }
 
     }

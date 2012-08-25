@@ -41,11 +41,11 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
      * @param Omeka_record $item The item.
      * @param integer $serverId The server id.
      * @param string $pid The datastream pid.
-     * @param string $dsid The datastream dsid.
+     * @param array $dsids The datastream dsids.
      *
      * @return Omeka_record $edition The new or updated service.
      */
-    public function createOrUpdate($item, $serverId, $pid, $dsid)
+    public function createOrUpdate($item, $serverId, $pid, $dsids)
     {
 
         // Try to get existing record.
@@ -63,7 +63,7 @@ class FedoraConnectorDatastreamTable extends Omeka_Db_Table
             $record->item_id = $item->id;
             $record->server_id = $serverId;
             $record->pid = $pid;
-            $record->dsid = $dsid;
+            $record->dsids = implode(',', $dsids);
             $record->save();
 
         }

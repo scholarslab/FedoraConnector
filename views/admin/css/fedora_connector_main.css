@@ -39,6 +39,6 @@
     color: gray;
 }
 
-select[name="dsid"] {
+select[name="dsids[]"] {
     width: 230px;
 }

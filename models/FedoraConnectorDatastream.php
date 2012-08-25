@@ -22,7 +22,7 @@ class FedoraConnectorDatastream extends Omeka_record
     public $item_id;
     public $server_id;
     public $pid;
-    public $dsid;
+    public $dsids;
 
     /**
      * This returns the datastream's base URL.
@@ -41,7 +41,7 @@ class FedoraConnectorDatastream extends Omeka_record
         $server = $this->getTable('FedoraConnectorServer')
             ->find($this->server_id);
 
-        $url = "{$server->url}{$server->getService()}/{$this->pid}/datastreams/";
+        $url = "{$server->url}/{$server->getService()}/{$this->pid}/datastreams";
         return $url;
 
     }
@@ -78,7 +78,7 @@ class FedoraConnectorDatastream extends Omeka_record
     public function getMetadataUrl()
     {
         $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}{$this->format}/content";
+        return "{$baseUrl}/dc/content";
     }
 
     /**
@@ -91,7 +91,7 @@ class FedoraConnectorDatastream extends Omeka_record
     public function getContentUrl()
     {
         $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}{$this->dsid}/content";
+        return "{$baseUrl}/{$this->dsid}/content";
     }
 
     /**
@@ -117,6 +117,24 @@ class FedoraConnectorDatastream extends Omeka_record
              "{$server->url}objects/$this->pid/datastreams?format=xml",
              "//*[local-name() = 'datastream'][@dsid='" . $this->dsid . "']"
         )->item(0);
+
+    }
+
+    /**
+     * Import data.
+     *
+     * @return void.
+     */
+    public function import()
+    {
+
+        // Get elements.
+        $elements = $this->getTable('Element')->findBySet('Dublin Core');
+
+        // Write new texts.
+        foreach ($elements as $element) {
+
+        };
 
     }
 

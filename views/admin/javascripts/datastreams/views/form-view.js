@@ -26,7 +26,7 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
 
     // Get inputs.
     this.server = this.$el.find('select[name="server"]');
-    this.datastream = this.$el.find('select[name="dsid"]');
+    this.datastream = this.$el.find('select[name="dsids[]"]');
     this.pid = this.$el.find('input[name="pid"]');
 
     // Get values in hidden fields.
