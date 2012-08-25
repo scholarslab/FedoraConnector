@@ -24,6 +24,7 @@ class FedoraConnectorPlugin
         'after_save_form_item',
         'admin_theme_header',
         'define_routes',
+        'admin_append_to_items_show_primary',
         'public_append_to_items_show'
     );
 
@@ -226,6 +227,35 @@ class FedoraConnectorPlugin
     {
         $tabs['Fedora Connector'] = uri('fedora-connector');
         return $tabs;
+    }
+
+    /**
+     * Render the datastream on admin show page.
+     *
+     * @return void.
+     */
+    public function adminAppendToItemsShowPrimary()
+    {
+
+        // Get the item and object.
+        $item = get_current_item();
+        $object = $this->_objects->findByItem($item);
+
+        if ($object) {
+            $renderer = new FedoraConnector_Render();
+            echo $renderer->display($object);
+        }
+
+    }
+
+    /**
+     * Render the datastream on public show page.
+     *
+     * @return void.
+     */
+    public function publicAppendToItemsShow()
+    {
+
     }
 
 }
