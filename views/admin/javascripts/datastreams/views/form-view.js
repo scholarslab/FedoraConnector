@@ -29,7 +29,7 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
     this.datastream = this.$el.find('select[name="dsid"]');
     this.pid = this.$el.find('input[name="pid"]');
 
-    // Get the datastreams uri.
+    // Get get-datastreams uri.
     this.datastreamsUri = this.$el.find('input[name="datastreamsuri"]').val();
 
   },
