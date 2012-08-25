@@ -52,7 +52,7 @@ class FedoraConnectorObjectTable extends Omeka_Db_Table
         $record = $this->findByItem($item);
 
         // If no record exists, create a new one.
-        if (!$record) { $record = new FedoraConnectorDatastream(); }
+        if (!$record) { $record = new FedoraConnectorObject(); }
 
         // If data is empty, delete.
         if ($pid === '') { $record->delete(); }
