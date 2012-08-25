@@ -29,8 +29,12 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
     this.datastream = this.$el.find('select[name="dsid"]');
     this.pid = this.$el.find('input[name="pid"]');
 
-    // Get get-datastreams uri.
+    // Get values in hidden fields.
     this.datastreamsUri = this.$el.find('input[name="datastreamsuri"]').val();
+    this.savedDsid = this.$el.find('input[name="saveddsid"]').val();
+
+    // If the pid is populated, get datastreams.
+    if (!_.isEmpty(this.pid)) this.getDatastreams();
 
   },
 
@@ -75,6 +79,11 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
       var option = $('<option>').text(node.label).val(node.dsid);
       this.datastream.append(option);
     }, this));
+
+    // Populated saved dsid.
+    if (!_.isEmpty(this.savedDsid)) {
+      this.datastream.val(this.savedDsid);
+    }
 
   }
 

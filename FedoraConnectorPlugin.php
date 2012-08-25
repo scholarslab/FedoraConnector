@@ -214,6 +214,25 @@ class FedoraConnectorPlugin
         $form = new FedoraConnector_Form_Datastream();
         $form->removeDecorator('form');
 
+        // Get the item.
+        $item = get_current_item();
+
+        // If the item is saved.
+        if (!is_null($item->id)) {
+
+            // Try to get a datastream.
+            $datastream = $this->_datastreams->findByItem($item);
+
+            // Populate fields.
+            if ($datastream) {
+                $form->populate(array(
+                    'server' => $datastream->server_id,
+                    'pid' => $datastream->pid,
+                    'saved-dsid' => $datastream->dsid
+                ));
+            }
+        }
+
         // Add the 'Fedora' tab.
         $tabs['Fedora'] = $form;
 
