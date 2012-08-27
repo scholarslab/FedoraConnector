@@ -1,4 +1,4 @@
-/* vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2 */
+/* vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2; */
 
 /**
  * Datastreams management application.
@@ -12,5 +12,25 @@
  */
 
 FedoraDatastreams = new Backbone.Marionette.Application();
+
+// ---------------------
+// Component namespaces.
+// ---------------------
 FedoraDatastreams.Controllers = {};
 FedoraDatastreams.Views = {};
+
+
+// ---------------
+// Initialization.
+// ---------------
+
+/*
+ * Instantiate form.
+ *
+ * @return void.
+ */
+FedoraDatastreams.addInitializer(function() {
+  new FedoraDatastreams.Views.Form({
+    el: '#fedora-metadata'
+  });
+});

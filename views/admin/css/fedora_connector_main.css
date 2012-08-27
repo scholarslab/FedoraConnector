@@ -38,3 +38,7 @@
 .status.unavailable {
     color: gray;
 }
+
+select[name="dsid"] {
+    width: 230px;
+}

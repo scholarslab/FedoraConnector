@@ -92,9 +92,7 @@ class FedoraConnectorServer extends Omeka_record
      */
     public function isOnline()
     {
-
         return ($this->getVersion() != '') ? true : false;
-
     }
 
     /**
@@ -107,12 +105,15 @@ class FedoraConnectorServer extends Omeka_record
     public function getDatastreamNodes($pid)
     {
 
-        $nodes = fedorahelpers_getQueryNodes(
-            "{$this->url}/objects/$pid/datastreams?format=xml",
+        // Construct url.
+        $url = "{$this->url}/objects/$pid/datastreams?format=xml";
+
+        // Query for nodes.
+        $nodes = fedorahelpers_getQueryNodes($url,
             "//*[local-name() = 'datastream']"
         );
 
-        return $nodes != false ? $nodes : false;
+        return $nodes ? $nodes : false;
 
     }
 

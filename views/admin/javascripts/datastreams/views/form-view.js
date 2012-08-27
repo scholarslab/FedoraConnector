@@ -14,7 +14,7 @@
 FedoraDatastreams.Views.Form = Backbone.View.extend({
 
   events: {
-    'keyup input[@name="pid"]': 'processKeystroke'
+    'keyup input[name="pid"]': 'getDatastreams'
   },
 
   /*
@@ -23,17 +23,68 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
    * @return void.
    */
   initialize: function() {
-    this.input = this.$el.find('input[@name="pid"]');
-    console.log('test');
+
+    // Get inputs.
+    this.server = this.$el.find('select[name="server"]');
+    this.datastream = this.$el.find('select[name="dsid"]');
+    this.pid = this.$el.find('input[name="pid"]');
+
+    // Get values in hidden fields.
+    this.datastreamsUri = this.$el.find('input[name="datastreamsuri"]').val();
+    this.savedDsid = this.$el.find('input[name="saveddsid"]').val();
+
+    // If the pid is populated, get datastreams.
+    if (!_.isEmpty(this.pid)) this.getDatastreams();
+
   },
 
   /*
-   * Clear out the stacks.
+   * Get datastreams.
    *
    * @return void.
    */
-  processKeystroke: function() {
-    console.log(this.input.val());
+  getDatastreams: function() {
+
+    var params = {
+      server: this.server.val(),
+      pid: this.pid.val()
+    };
+
+    // Fetch datastreams.
+    $.ajax({
+      url: this.datastreamsUri,
+      dataTyle: 'json',
+      data: params,
+      success: _.bind(function(data) {
+        this.renderDatastreams(data);
+      }, this)
+    });
+
+  },
+
+  /*
+   * Render datastreams.
+   *
+   * @param {Object} data: The JSON.
+   *
+   * @return void.
+   */
+  renderDatastreams: function(data) {
+
+    // Clear select.
+    this.datastream.empty();
+
+    // Render options.
+    _.each(data, _.bind(function(node) {
+      var option = $('<option>').text(node.label).val(node.dsid);
+      this.datastream.append(option);
+    }, this));
+
+    // Populated saved dsid.
+    if (!_.isEmpty(this.savedDsid)) {
+      this.datastream.val(this.savedDsid);
+    }
+
   }
 
 });

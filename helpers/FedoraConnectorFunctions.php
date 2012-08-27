@@ -78,9 +78,7 @@ function fedorahelpers_getQueryNodes($uri, $xpath)
     $result = $query->query($xpath);
 
   } catch (Exception $e) {
-
     $result = false;
-
   }
 
   return $result;

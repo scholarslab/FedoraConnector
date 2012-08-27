@@ -42,7 +42,7 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
         $this->addElementPrefixPath('FedoraConnector', dirname(__FILE__));
 
         // Server.
-        $this->addElement('select', 'image_id', array(
+        $this->addElement('select', 'server', array(
             'label'         => __('Server'),
             'description'   => __('Select a Fedora server.'),
             'multiOptions'  => $this->getServersForSelect()
@@ -56,10 +56,26 @@ class FedoraConnector_Form_Datastream extends Omeka_Form
         ));
 
         // Datastream.
-        $this->addElement('radio', 'datastream', array(
+        $this->addElement('select', 'dsid', array(
             'label'         => __('Datastream'),
-            'description'   => __('Choose a datastream.')
+            'description'   => __('Choose a datastream.'),
+            'attribs'       => array('size' => 20),
+            'multiOptions'  => array()
         ));
+
+        // Import.
+        $this->addElement('checkbox', 'import', array(
+            'label'         => 'Import now?',
+            'description'   => 'Import Fedora data when the Item form is saved.'
+        ));
+
+        // Query datastreams uri.
+        $this->addElement('hidden', 'datastreams-uri', array(
+            'value'   => uri('fedora-connector/datastreams/query-datastreams')
+        ));
+
+        // Saved dsid.
+        $this->addElement('hidden', 'saved-dsid');
 
     }
 
