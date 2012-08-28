@@ -57,8 +57,29 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         new FedoraConnectorPlugin;
     }
 
+
+    /**
+     * Test helpers.
+     */
+
+
+    /**
+     * Create an item.
+     *
+     * @return Omeka_record $item The item.
+     */
+    public function __item()
+    {
+        $item = new Item;
+        $item->save();
+        return $item;
+    }
+
     /**
      * Create a server.
+     *
+     * @param string $name The server name.
+     * @param string $url The server url.
      *
      * @return Omeka_Record $server The server.
      */
@@ -73,6 +94,45 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $server->save();
 
         return $server;
+
+    }
+
+    /**
+     * Create a service.
+     *
+     * @param OmekaItem $item Parent item.
+     * @param OmekaItem $server Parent server.
+     * @param string $pid The object pid.
+     * @param string $dsids Comma-deliimited dsids.
+     *
+     * @return Omeka_Record $object The object.
+     */
+    public function __object(
+        $item=null,
+        $server=null,
+        $pid='pid:test',
+        $dsids='DC,content'
+    )
+    {
+
+        // If no item, create one.
+        if (is_null($item)) {
+            $item = $this->__item();
+        }
+
+        // If no server, create one.
+        if (is_null($server)) {
+            $item = $this->__server();
+        }
+
+        $object = new FedoraConnectorObject();
+        $object->item_id = $item->id;
+        $object->server_id = $server->id;
+        $object->pid = $pid;
+        $object->dsids = $dsids;
+        $object->save();
+
+        return $object;
 
     }
 

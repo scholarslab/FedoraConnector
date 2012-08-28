@@ -61,8 +61,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $server2 = $this->__server('Test Title 2', 'http://test2.org/fedora');
 
         // Create item.
-        $item = new Item();
-        $item->save();
+        $item = $this->__item();
 
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
@@ -93,20 +92,14 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     {
 
         // Create item.
-        $item = new Item();
-        $item->save();
+        $item = $this->__item();
 
         // Create servers.
         $server1 = $this->__server('Test Title 1', 'http://test1.org/fedora');
         $server2 = $this->__server('Test Title 2', 'http://test2.org/fedora');
 
         // Create Fedora object.
-        $object = new FedoraConnectorObject;
-        $object->item_id = $item->id;
-        $object->server_id = $server2->id;
-        $object->pid = 'pid:test';
-        $object->dsids = 'DC,content';
-        $object->save();
+        $object = $this->__object($item, $server2);
 
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
@@ -171,8 +164,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     {
 
         // Create item.
-        $item = new Item();
-        $item->save();
+        $item = $this->__item();
 
         // Capture starting count.
         $count = $this->objectsTable->count();
