@@ -122,7 +122,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // If no server, create one.
         if (is_null($server)) {
-            $item = $this->__server();
+            $server = $this->__server();
         }
 
         $object = new FedoraConnectorObject();

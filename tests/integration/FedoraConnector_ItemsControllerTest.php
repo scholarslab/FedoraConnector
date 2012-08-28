@@ -197,4 +197,50 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
     }
 
+    /**
+     * When an item is edited and Fedora data is entered, the service should
+     * be created.
+     *
+     * @return void.
+     */
+    public function testFedoraObjectUpdateOnItemEdit()
+    {
+
+        // Create item.
+        $item = $this->__item();
+
+        // Create Fedora object.
+        $object = $this->__object($item);
+
+        // Capture starting count.
+        $count = $this->objectsTable->count();
+
+        // Set exhibit id.
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'public' => 1,
+                'featured' => 0,
+                'Elements' => array(),
+                'order' => array(),
+                'server' => 1,
+                'pid' => 'pid:test2',
+                'dsids' => array('DC2', 'content2'),
+                'import' => 0
+            )
+        );
+
+        // Hit item edit.
+        $this->dispatch('items/edit/' . $item->id);
+
+        // +0 editions.
+        $this->assertEquals($this->objectsTable->count(), $count);
+
+        // Get out service and check.
+        $object = $this->objectsTable->find(1);
+        $this->assertEquals($object->server_id, 1);
+        $this->assertEquals($object->pid, 'pid:test2');
+        $this->assertEquals($object->dsids, 'DC2,content2');
+
+    }
+
 }
