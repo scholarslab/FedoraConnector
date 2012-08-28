@@ -54,15 +54,6 @@ class FedoraConnector_HelpersTest extends PHPUnit_Framework_TestCase
 
     }
 
-    public function testFedoraHelpersColumnSorting()
-    {
-
-        $this->assertEquals(fedorahelpers_doColumnSortProcessing('name', ''), 'name DESC');
-        $this->assertEquals(fedorahelpers_doColumnSortProcessing('name', 'd'), 'name DESC');
-        $this->assertEquals(fedorahelpers_doColumnSortProcessing('name', 'a'), 'name ASC');
-
-    }
-
     public function testFedoraHelpersGetQueryNodes()
     {
 
@@ -76,43 +67,6 @@ class FedoraConnector_HelpersTest extends PHPUnit_Framework_TestCase
         $nodes = fedorahelpers_getQueryNodes($url, $query);
         $this->assertEquals(1, $nodes->length);
         $this->assertEquals('image/jp2', $nodes->item(0)->getAttribute('mimeType'));
-
-    }
-
-    public function testFedoraHelpersGetItems()
-    {
-
-        $this->helper->_createItems(20);
-
-        $items = fedorahelpers_getItems();
-        $this->assertEquals(21, count($items));
-
-        $items = fedorahelpers_getItems(1, null, null);
-        $this->assertEquals(get_option('per_page_admin'), count($items));
-
-        $items = fedorahelpers_getItems(1, null, '12');
-        $this->assertEquals(1, count($items));
-        $this->assertEquals($items[0]->item_name, 'TestingItem12');
-
-    }
-
-    public function testFedoraHelpersGetSingleItem()
-    {
-
-        $this->helper->_createItems(1);
-        $items = fedorahelpers_getItems();
-        $this->assertEquals(2, count($items));
-        $this->assertEquals($items[1]->item_name, 'TestingItem0');
-
-    }
-
-    public function testFedoraHelpersIsOmittedDatastream()
-    {
-
-        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/_files/testXML.xml';
-        $query = '//*[local-name() = "datastream"][@dsid="content"]';
-        $datastream = fedorahelpers_getQueryNodes($url, $query)->item(0);
-        $this->assertFalse(fedorahelpers_isOmittedDatastream($datastream));
 
     }
 
