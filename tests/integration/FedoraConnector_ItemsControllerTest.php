@@ -121,4 +121,88 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
     }
 
+    /**
+     * When an item is added and Fedora data is entered, the service should
+     * be created.
+     *
+     * @return void.
+     */
+    public function testFedoraObjectCreationOnItemAdd()
+    {
+
+        // Capture starting count.
+        $count = $this->objectsTable->count();
+
+        // Set exhibit id.
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'public' => 1,
+                'featured' => 0,
+                'Elements' => array(),
+                'order' => array(),
+                'server' => 1,
+                'pid' => 'pid:test',
+                'dsids' => array('DC', 'content'),
+                'import' => 0
+            )
+        );
+
+        // Hit item edit.
+        $this->dispatch('items/add');
+
+        // +1 editions.
+        $this->assertEquals($this->objectsTable->count(), $count+1);
+
+        // Get out service and check.
+        $object = $this->objectsTable->find(1);
+        $this->assertEquals($object->server_id, 1);
+        $this->assertEquals($object->pid, 'pid:test');
+        $this->assertEquals($object->dsids, 'DC,content');
+
+    }
+
+    /**
+     * When an item is edited and Fedora data is entered, the service should
+     * be created.
+     *
+     * @return void.
+     */
+    public function testFedoraObjectCreationOnItemEdit()
+    {
+
+        // Create item.
+        $item = new Item();
+        $item->save();
+
+        // Capture starting count.
+        $count = $this->objectsTable->count();
+
+        // Set exhibit id.
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'public' => 1,
+                'featured' => 0,
+                'Elements' => array(),
+                'order' => array(),
+                'server' => 1,
+                'pid' => 'pid:test',
+                'dsids' => array('DC', 'content'),
+                'import' => 0
+            )
+        );
+
+        // Hit item edit.
+        $this->dispatch('items/edit/' . $item->id);
+
+        // +1 editions.
+        $this->assertEquals($this->objectsTable->count(), $count+1);
+
+        // Get out service and check.
+        $object = $this->objectsTable->find(1);
+        $this->assertEquals($object->server_id, 1);
+        $this->assertEquals($object->pid, 'pid:test');
+        $this->assertEquals($object->dsids, 'DC,content');
+
+    }
+
 }

@@ -43,6 +43,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // Get tables.
         $this->serversTable = $this->db->getTable('FedoraConnectorServer');
+        $this->objectsTable = $this->db->getTable('FedoraConnectorObject');
 
     }
 
