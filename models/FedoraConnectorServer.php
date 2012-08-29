@@ -35,7 +35,7 @@ class FedoraConnectorServer extends Omeka_record
     {
 
         // Query for version.
-        $version = __fedoraNodes(
+        $version = FedoraGateway::query(
             "{$this->url}/describe?xml=true",
             "//*[local-name() = 'repositoryVersion']");
 
@@ -86,7 +86,7 @@ class FedoraConnectorServer extends Omeka_record
         $url = "{$this->url}/objects/$pid/datastreams?format=xml";
 
         // Query for nodes.
-        $nodes = __fedoraNodes($url,
+        $nodes = FedoraGateway::query($url,
             "//*[local-name() = 'datastream']"
         );
 
@@ -106,7 +106,7 @@ class FedoraConnectorServer extends Omeka_record
     {
 
         // Query for mime type.
-        $stream = __fedoraNodes(
+        $stream = FedoraGateway::query(
             "{$this->url}/objects/$pid/datastreams?format=xml",
             "//*[local-name() = 'datastream'][@dsid='" . $dsid . "']"
         );

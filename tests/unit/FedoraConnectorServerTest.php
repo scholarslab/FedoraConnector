@@ -16,12 +16,15 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 {
 
     /**
-     * .
+     * getVersion() should return the Fedora version.
      *
      * @return void.
      */
-    public function test()
+    public function testGetVersion()
     {
+
+        // Create server.
+        $server = $this->__server();
 
     }
 

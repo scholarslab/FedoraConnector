@@ -12,7 +12,7 @@ Here's the basic workflow:
 
 - <strong>Associate Omeka items with Fedora objects</strong>: Each item in the Omeka collection can be linked to one or more of the datastreams emitted by a Fedora object.
 
-- <strong>Import data</strong>: The plugin retrieves data from the Fedora datastreams and maps it onto the fields in the Dublin Core record for the item.
+- <strong>Populate item records with Fedora data</strong>: The plugin retrieves data from the Fedora datastreams and maps it onto the fields in the Dublin Core record for the item. For datastreams that do not deliver plain-text data than can be mapped directly onto Omeka metadata elements, the plugin can also pipe in markup displaying content (like images) pulled directly from the repository.
 
 [Fedora Commons]: http://www.fedora-commons.org/
 
