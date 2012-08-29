@@ -21,7 +21,7 @@
  *
  * @return object The matching nodes.
  */
-function fedorahelpers_getQueryNodes($uri, $xpath)
+function __fedoraNodes($uri, $xpath)
 {
 
   $xml = new DomDocument();

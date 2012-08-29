@@ -16,6 +16,8 @@
 class FedoraConnectorPlugin
 {
 
+    public static $test = 'test';
+
     // Hooks.
     private static $_hooks = array(
         'install',
