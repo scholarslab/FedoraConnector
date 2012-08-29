@@ -3,7 +3,7 @@
          convertWarningsToExceptions="true"
          verbose="true">
     <testsuite name="FedoraConnector Tests">
-        <directory>unit</directory>
         <directory>integration</directory>
+        <directory>unit</directory>
     </testsuite>
 </phpunit>

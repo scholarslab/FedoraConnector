@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Server table tests.
+ * Object table tests.
  *
  * @package     omeka
  * @subpackage  fedoraconnector
@@ -12,7 +12,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
+class FedoraConnectorTableTest extends FedoraConnector_Test_AppTestCase
 {
 
     /**
