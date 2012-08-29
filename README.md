@@ -2,35 +2,24 @@
 
 [![Build Status](https://secure.travis-ci.org/scholarslab/FedoraConnector.png)](http://travis-ci.org/scholarslab/FedoraConnector)
 
+The FedoraConnector plugin makes it possible to connect items in an Omeka collection with objects in [Fedora Commons] repositories. One-to-one associations can be created between individual Omeka items and Fedora objects, and the plugin will automatically populate the Dublin Core record for the item with values extracted from datastreams associated with the Fedora object.
 
-FedoraConnector makes it possible to connect an Omeka site with [Fedora Commons] repositories. The plugin allows you to link Omeka
-items with "datastreams" on the Fedora repository and
-automatically populate the Dublin Core fields for the Omeka item with
-the values defined by the datastream.
+The plugin also exposes a system of extensible "sub-plugins" that makes it possible to easily add custom importers and renderers to handle different datastream formats (basic Dublin Core and image handlers come pre-installed).
 
-The plugin introduces two basic taxonomies - Servers and Datastreams. A
-server corresponds to a Fedora repository, while a datastream represents
-an individual bundle of metadata contained within a specific object in
-the repository.
+Here's the basic workflow:
 
-The basic workflow for importing Fedora data into Omeka is as follows:
+- <strong>Add server records that point to Fedora Commons repositories</strong>: Different items in the same Omeka collection can pull from objects in different Fedora repositories.
 
-- <strong>Create server records for Fedora Commons repositories</strong>: Set the name and base
-  URL for the external Fedora Commons repository;
+- <strong>Associate Omeka items with Fedora objects</strong>: Each item in the Omeka collection can be linked to one or more of the datastreams emitted by a Fedora object.
 
-- <strong>Link Fedora datastreams to an Omeka item</strong>: After
-  choosing the
-  item that you want to associate the new datastreams with, enter the
-PID of the object on the Fedora repository and select one or more of the
-component datastreams;
-
-- <strong>Import datastreams</strong>: The plugin fetches the data from Fedora and populates the
-  Dublin Core fields for the item with the information from the
-datastream.
+- <strong>Import data</strong>: The plugin retrieves data from the Fedora datastreams and maps it onto the fields in the Dublin Core record for the item.
 
 [Fedora Commons]: http://www.fedora-commons.org/
 
 ## Requirements
+
+
+
 
 The plugin assumes that your Fedora Commons repository is active and
 accessible, either on localhost (the default) or the web. Currently,
