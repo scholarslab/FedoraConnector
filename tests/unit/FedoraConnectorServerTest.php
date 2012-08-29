@@ -23,8 +23,23 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     public function testGetVersion()
     {
 
+        // Generate response fixture.
+        $gateway = new FedoraGateway();
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/fixtures/describe.xml';
+        $xpath = "//*[local-name() = 'repositoryVersion']";
+        $fixture = $gateway->query($url, $xpath);
+
         // Create server.
         $server = $this->__server();
+
+        // Stub gateway.
+        $gateway = $this->getMock('FedoraGateway')
+            ->expects($this->any())
+            ->method('query')
+            ->will($this->returnValue($fixture));
+
+        // Get version.
+        $this->assertEquals($server->getVersion(), '3.4.2');
 
     }
 

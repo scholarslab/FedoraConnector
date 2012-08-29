@@ -24,22 +24,22 @@ class FedoraGateway
      *
      * @return object The matching nodes.
      */
-    static function query($url, $xpath)
+    public function query($url, $xpath)
     {
 
-      $xml = new DomDocument();
+        $xml = new DOMDocument();
 
-      try {
+        try {
 
-        $xml->load($uri);
-        $query = new DOMXPath($xml);
-        $result = $query->query($xpath);
+            $xml->load($url);
+            $query = new DOMXPath($xml);
+            $result = $query->query($xpath);
 
-      } catch (Exception $e) {
-        $result = false;
-      }
+        } catch (Exception $e) {
+            $result = false;
+        }
 
-      return $result;
+        return $result;
 
     }
 
