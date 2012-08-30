@@ -73,28 +73,6 @@ class FedoraConnectorObject extends Omeka_record
     }
 
     /**
-     * This returns the datastream's URL.
-     *
-     * @return string The URL.
-     */
-    public function getUrl()
-    {
-        return $this->getBaseUrl() . $this->dsid;
-    }
-
-    /**
-     * This returns the URL for the object metadata datastream.
-     *
-     * @param Omeka_Record $datastream The datastream.
-     *
-     * @return string The URL for the datastream.
-     */
-    public function getServerService()
-    {
-        return $this->getServer()->getService();
-    }
-
-    /**
      * Build the URL for the XML output for a given dsid.
      *
      * @param string $dsid The dsid to load.

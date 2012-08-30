@@ -137,40 +137,26 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
     }
 
     /**
-     * Create an item.
+     * Set a mock FedoraGateway class.
      *
-     * @return Omeka_Record $item The item.
-     */
-    public function _createItem($name)
-    {
-
-        $item = new Item;
-        $item->featured = 0;
-        $item->public = 1;
-        $item->save();
-
-        $element_text = new ElementText;
-        $element_text->record_id = $item->id;
-        $element_text->record_type_id = 2;
-        $element_text->element_id = 50;
-        $element_text->html = 0;
-        $element_text->text = $name;
-        $element_text->save();
-
-        return $item;
-
-    }
-
-    /**
-     * Create a collection of items.
+     * @param string $fixture The name of the fixture xml.
+     * @param string $query The xpath query to run on the fixture.
      *
      * @return void.
      */
-    public function _createItems($count)
+    public function __mockFedora($fixture, $query)
     {
-        for ($i=0; $i<$count; $i++) {
-            $this->_createItem('TestingItem' . $i);
-        }
+
+        // Generate response.
+        $gateway = new FedoraGateway();
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/fixtures/' . $fixture;
+        $response = $gateway->query($url, $query);
+
+        // Mock the gateway.
+        $mock = $this->getMock('FedoraGateway');
+        $mock->expects($this->any())->method('query')->will($this->returnValue($response));
+        Zend_Registry::set('gateway', $mock);
+
     }
 
 }
