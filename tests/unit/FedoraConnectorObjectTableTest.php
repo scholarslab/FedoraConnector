@@ -79,4 +79,38 @@ class FedoraConnectorObjectTableTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+    /**
+     * createOrUpdate() should update an existing record when one exists.
+     *
+     * @return void.
+     */
+    public function testCreateOrUpdateWithExistingRecord()
+    {
+
+        // Create item and servers.
+        $item = $this->__item();
+        $server1 = $this->__server();
+        $server2 = $this->__server();
+
+        // Create object.
+        $object = $this->__object($item, $server1, 'pid:test', 'DC,content');
+
+        // Capture starting count.
+        $count = $this->objectsTable->count();
+
+        // Update record.
+        $object = $this->objectsTable->createOrUpdate(
+            $item, $server2->id, 'pid:new', array('DC', 'new'));
+
+        // Check for count.
+        $this->assertEquals($this->objectsTable->count(), $count);
+
+        // Check attributes.
+        $this->assertEquals($object->item_id, $item->id);
+        $this->assertEquals($object->server_id, $server2->id);
+        $this->assertEquals($object->pid, 'pid:new');
+        $this->assertEquals($object->dsids, 'DC,new');
+
+    }
+
 }
