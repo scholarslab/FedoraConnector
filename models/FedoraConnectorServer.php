@@ -40,7 +40,7 @@ class FedoraConnectorServer extends Omeka_record
             "//*[local-name() = 'repositoryVersion']");
 
         // Extract node value.
-        return $version->item(0)->nodeValue;
+        return $version ? $version->item(0)->nodeValue : false;
 
     }
 
@@ -69,7 +69,7 @@ class FedoraConnectorServer extends Omeka_record
      */
     public function isOnline()
     {
-        return ($this->getVersion() != '') ? true : false;
+        return !$this->getVersion() ? false : true;
     }
 
     /**
@@ -90,7 +90,7 @@ class FedoraConnectorServer extends Omeka_record
             "//*[local-name() = 'datastream']"
         );
 
-        return $nodes ? $nodes : false;
+        return $nodes;
 
     }
 
