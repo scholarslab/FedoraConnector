@@ -174,14 +174,14 @@ class FedoraConnectorPlugin
         if (!is_null($item->id)) {
 
             // Try to get a datastream.
-            $datastream = $this->_objects->findByItem($item);
+            $object = $this->_objects->findByItem($item);
 
             // Populate fields.
-            if ($datastream) {
+            if ($object) {
                 $form->populate(array(
-                    'server' => $datastream->server_id,
-                    'pid' => $datastream->pid,
-                    'saved-dsids' => $datastream->dsids
+                    'server' => $object->server_id,
+                    'pid' => $object->pid,
+                    'saved-dsids' => $object->dsids
                 ));
             }
         }

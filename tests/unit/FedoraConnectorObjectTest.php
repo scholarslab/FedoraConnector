@@ -12,7 +12,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-class FedoraConnectorTableTest extends FedoraConnector_Test_AppTestCase
+class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
 {
 
     /**
