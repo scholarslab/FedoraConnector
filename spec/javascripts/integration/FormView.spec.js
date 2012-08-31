@@ -11,10 +11,6 @@ describe('Form View', function() {
       loadFixtures('item-add.html');
     });
 
-    it('test', function() {
-      expect(1).toEqual(1);
-    });
-
   });
 
   describe('Item edit', function() {

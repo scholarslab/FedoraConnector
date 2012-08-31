@@ -69,4 +69,39 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
 
     }
 
+    /**
+     * Build datastreams json response.
+     *
+     * @return void.
+     */
+    public function testBuildDatastreamsJson()
+    {
+
+        // Mock Fedora response.
+        $this->__mockFedora(
+            'datastreams.xml',
+            "//*[local-name() = 'datastream']"
+        );
+
+        // Create server.
+        $server = $this->__server();
+
+        // Mock POST.
+        $this->request->setMethod('GET')
+            ->setParams(array(
+                'server' => $server->id,
+                'pid' => 'pid:test'
+            )
+        );
+
+        // Hit /query-datastreams.
+        $this->dispatch('fedora-connector/datastreams/query-datastreams');
+        $response = $this->getResponse()->getBody('default');
+
+        $fixture = fopen($this->_fixtures . 'datastreams-json.html', 'w');
+        fwrite($fixture, $response);
+        fclose($fixture);
+
+    }
+
 }
