@@ -36,11 +36,12 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
     public function testBuildItemAddMarkup()
     {
 
+        // Build form.
+        $form = new FedoraConnector_Form_Object();
+
         // Generate and write the fixture.
         $fixture = fopen($this->_fixtures . 'item-add.html', 'w');
-        $this->dispatch('items/add');
-        $response = $this->getResponse()->getBody('default');
-        fwrite($fixture, $response);
+        fwrite($fixture, $form);
         fclose($fixture);
 
     }
@@ -52,7 +53,6 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
      */
     public function testBuildItemEditMarkup()
     {
-
         // Create an item.
         $item = $this->__item();
         $server = $this->__server();
@@ -60,11 +60,17 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
         // Create an existing object.
         $object = $this->__object($item, $server);
 
+        // Build form.
+        $form = new FedoraConnector_Form_Object();
+        $form->populate(array(
+            'server' => $object->server_id,
+            'pid' => $object->pid,
+            'saved-dsids' => $object->dsids
+        ));
+
         // Generate and write the fixture.
         $fixture = fopen($this->_fixtures . 'item-edit.html', 'w');
-        $this->dispatch('items/edit/' . $item->id);
-        $response = $this->getResponse()->getBody('default');
-        fwrite($fixture, $response);
+        fwrite($fixture, $form);
         fclose($fixture);
 
     }
