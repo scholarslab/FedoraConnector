@@ -5,5 +5,6 @@
     <testsuite name="FedoraConnector Tests">
         <directory>integration</directory>
         <directory>unit</directory>
+        <directory>fixtures</directory>
     </testsuite>
 </phpunit>

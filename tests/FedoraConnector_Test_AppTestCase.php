@@ -149,7 +149,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // Generate response.
         $gateway = new FedoraGateway();
-        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/fixtures/' . $fixture;
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/xml/' . $fixture;
         $response = $gateway->query($url, $query);
 
         // Mock the gateway.
