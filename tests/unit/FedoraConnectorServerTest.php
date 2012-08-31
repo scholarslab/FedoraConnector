@@ -16,6 +16,23 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 {
 
     /**
+     * Test attribute access.
+     *
+     * @return void.
+     */
+    public function testAttributeAccess()
+    {
+
+        // Create object.
+        $server = $this->__server('Test Title', 'http://test.org/fedora');
+
+        // Check attributes.
+        $this->assertEquals($server->name, 'Test Title');
+        $this->assertEquals($server->url, 'http://test.org/fedora');
+
+    }
+
+    /**
      * getVersion() should return the server version.
      *
      * @return void.

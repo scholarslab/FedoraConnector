@@ -85,17 +85,4 @@ class FedoraConnectorObject extends Omeka_record
         return "{$baseUrl}/{$dsid}/content";
     }
 
-    /**
-     * Return the URL for the datastream content.
-     *
-     * @param Omeka_Record $datastream The datastream.
-     *
-     * @return string The URL for the datastream.
-     */
-    public function getContentUrl()
-    {
-        $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}/{$this->dsid}/content";
-    }
-
 }
