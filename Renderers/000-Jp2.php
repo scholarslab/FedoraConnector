@@ -78,7 +78,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
             . "/methods/djatoka:jp2SDef/getRegion?scale={$px},{$px}";
 
         // Construct HTML.
-        $html = "<img alt='image' src='{$url}' />";
+        $html = "<img class='fedora-renderer' alt='image' src='{$url}' />";
         return $html;
 
     }

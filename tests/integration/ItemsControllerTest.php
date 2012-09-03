@@ -397,4 +397,32 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
     }
 
+    /**
+     * When an item has a Fedora object with a dsid activated that has
+     * a renderer, the dsid should be rendered at the bottom of the admin
+     * item show page.
+     *
+     * @return void.
+     */
+    public function testRenderOnItemAdminShow()
+    {
+
+        // Create item and object.
+        $item = $this->__item();
+        $this->__object($item);
+
+        // Mock getMimeType().
+        $this->__mockFedora(
+            'datastreams.xml',
+            "//*[local-name() = 'datastream'][@dsid='content']"
+        );
+
+        // Hit item show.
+        $this->dispatch('items/show/' . $item->id);
+
+        // Check for image.
+        $this->assertXpath('//img[@class="fedora-renderer"]');
+
+    }
+
 }

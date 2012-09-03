@@ -236,16 +236,7 @@ class FedoraConnectorPlugin
      */
     public function adminAppendToItemsShowPrimary()
     {
-
-        // Get the item and object.
-        $item = get_current_item();
-        $object = $this->_objects->findByItem($item);
-
-        if ($object) {
-            $renderer = new FedoraConnector_Render();
-            echo $renderer->display($object);
-        }
-
+        $this->publicAppendToItemsShow();
     }
 
     /**
