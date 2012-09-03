@@ -17,6 +17,7 @@ class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
 
     public function setUp()
     {
+        parent::setup();
         $this->renderer = new Jp2_Renderer();
     }
 

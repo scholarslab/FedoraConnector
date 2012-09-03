@@ -17,6 +17,7 @@ class DCImporterTest extends FedoraConnector_Test_AppTestCase
 
     public function setUp()
     {
+        parent::setup();
         $this->importer = new DC_Importer();
     }
 
