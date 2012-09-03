@@ -34,7 +34,7 @@ FedoraDatastreams.Views.Form = Backbone.View.extend({
     this.savedDsids = this.$el.find('input[name="saveddsids"]').val();
 
     // If the pid is populated, get datastreams.
-    if (!_.isEmpty(this.pid)) this.getDatastreams();
+    if (this.pid.val() !== '') this.getDatastreams();
 
   },
 
