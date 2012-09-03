@@ -14,6 +14,10 @@
 
 require_once dirname(__FILE__) . '/../FedoraConnectorPlugin.php';
 require_once dirname(__FILE__) . '/../libraries/FedoraConnector/AbstractRenderer.php';
+require_once dirname(__FILE__) . '/../libraries/FedoraConnector/AbstractImporter.php';
+require_once dirname(__FILE__) . '/../Importers/DC.php';
+require_once dirname(__FILE__) . '/../Renderers/000-Jp2.php';
+
 
 /**
  * Set up the system for testing this plugin.
