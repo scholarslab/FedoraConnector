@@ -17,9 +17,23 @@ class FedoraGateway
 {
 
     /**
+     * Load DOMDocument for a URL.
+     *
+     * @param string $url The url of the document.
+     *
+     * @return DOMDocument The document.
+     */
+    public function load($url)
+    {
+        $xml = new DOMDocument();
+        $xml->load($url);
+        return $xml;
+    }
+
+    /**
      * Return nodes by url and xpath query.
      *
-     * @param string $uri The uri of the document.
+     * @param string $url The url of the document.
      * @param string $xpath The XPath query.
      *
      * @return object The matching nodes.
@@ -27,11 +41,9 @@ class FedoraGateway
     public function query($url, $xpath)
     {
 
-        $xml = new DOMDocument();
-
         try {
 
-            $xml->load($url);
+            $xml = $this->load($url);
             $query = new DOMXPath($xml);
             $result = $query->query($xpath);
 

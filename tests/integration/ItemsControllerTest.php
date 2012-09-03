@@ -155,6 +155,17 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     }
 
     /**
+     * When an item is added and the "Import now?" checkbox is checked,
+     * the datastreams should be imported.
+     *
+     * @return void.
+     */
+    public function testImportOnItemAdd()
+    {
+
+    }
+
+    /**
      * When an item is edited and Fedora data is entered, the service should
      * be created.
      *
@@ -240,6 +251,17 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test2');
         $this->assertEquals($object->dsids, 'DC2,content2');
+
+    }
+
+    /**
+     * When an item is edited and the "Import now?" checkbox is checked,
+     * the datastreams should be imported.
+     *
+     * @return void.
+     */
+    public function testImportOnItemEdit()
+    {
 
     }
 
