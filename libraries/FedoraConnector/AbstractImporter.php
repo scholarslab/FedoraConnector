@@ -120,9 +120,7 @@ abstract class FedoraConnector_AbstractImporter
      */
     public function getMetadataXml($object, $dsid) {
         $url = $object->getMetadataUrl($dsid);
-        $xml = new DomDocument();
-        $xml->load($url);
-        return $xml;
+        return Zend_Registry::get('gateway')->load($url);
     }
 
 }

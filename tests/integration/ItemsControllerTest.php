@@ -163,6 +163,73 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     public function testImportOnItemAdd()
     {
 
+        // Create server.
+        $this->__server();
+
+        // Mock post.
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'public' => 1,
+                'featured' => 0,
+                'Elements' => array(),
+                'order' => array(),
+                'server' => 1,
+                'pid' => 'pid:test',
+                'dsids' => array('DC'),
+                'import' => 1
+            )
+        );
+
+        // Mock Fedora.
+        $this->__mockImport('describe-v3x.xml', 'dc.xml');
+
+        // Hit item edit.
+        $this->dispatch('items/add');
+
+        // Get the new item.
+        $item = $this->itemsTable->find(2);
+
+        // Title.
+        $title = $item->getElementTextsByElementNameAndSetName('Title', 'Dublin Core');
+        $this->assertEquals($title[0]->text, 'Dr. J.S. Grasty');
+
+        // Contributor
+        $contributor = $item->getElementTextsByElementNameAndSetName('Contributor', 'Dublin Core');
+        $this->assertEquals($contributor[0]->text, 'Holsinger, Rufus W., 1866-1930');
+
+        // Types.
+        $types = $item->getElementTextsByElementNameAndSetName('Type', 'Dublin Core');
+        $this->assertEquals($types[0]->text, 'Collection');
+        $this->assertEquals($types[1]->text, 'StillImage');
+        $this->assertEquals($types[2]->text, 'Photographs');
+
+        // Formats.
+        $formats = $item->getElementTextsByElementNameAndSetName('Format', 'Dublin Core');
+        $this->assertEquals($formats[0]->text, 'Glass negatives');
+        $this->assertEquals($formats[1]->text, 'image/jpeg');
+
+        // Description.
+        $description = $item->getElementTextsByElementNameAndSetName('Description', 'Dublin Core');
+        $this->assertEquals($description[0]->text, 'With Child, Two Poses');
+
+        // Subjects.
+        $subjects = $item->getElementTextsByElementNameAndSetName('Subject', 'Dublin Core');
+        $this->assertEquals($subjects[0]->text, 'Photography');
+        $this->assertEquals($subjects[1]->text, 'Portraits, Group');
+        $this->assertEquals($subjects[2]->text, 'Children');
+        $this->assertEquals($subjects[3]->text, 'Holsinger Studio (Charlottesville, Va.)');
+
+        // Identifiers.
+        $identifiers = $item->getElementTextsByElementNameAndSetName('Identifier', 'Dublin Core');
+        $this->assertEquals($identifiers[0]->text, 'H03424B');
+        $this->assertEquals($identifiers[1]->text, 'uva-lib:1038848');
+        $this->assertEquals($identifiers[2]->text, '39667');
+        $this->assertEquals($identifiers[3]->text, 'uri: uva-lib:1038848');
+        $this->assertEquals($identifiers[4]->text, '7688');
+        $this->assertEquals($identifiers[5]->text, '365106');
+        $this->assertEquals($identifiers[6]->text, '000007688_0004.tif');
+        $this->assertEquals($identifiers[7]->text, 'MSS 9862');
+
     }
 
     /**
@@ -262,6 +329,71 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
      */
     public function testImportOnItemEdit()
     {
+
+        // Create item and object.
+        $item = $this->__item();
+        $this->__object($item);
+
+        // Mock post.
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'public' => 1,
+                'featured' => 0,
+                'Elements' => array(),
+                'order' => array(),
+                'server' => 1,
+                'pid' => 'pid:test',
+                'dsids' => array('DC'),
+                'import' => 1
+            )
+        );
+
+        // Mock Fedora.
+        $this->__mockImport('describe-v3x.xml', 'dc.xml');
+
+        // Hit item edit.
+        $this->dispatch('items/edit/' . $item->id);
+
+        // Title.
+        $title = $item->getElementTextsByElementNameAndSetName('Title', 'Dublin Core');
+        $this->assertEquals($title[0]->text, 'Dr. J.S. Grasty');
+
+        // Contributor
+        $contributor = $item->getElementTextsByElementNameAndSetName('Contributor', 'Dublin Core');
+        $this->assertEquals($contributor[0]->text, 'Holsinger, Rufus W., 1866-1930');
+
+        // Types.
+        $types = $item->getElementTextsByElementNameAndSetName('Type', 'Dublin Core');
+        $this->assertEquals($types[0]->text, 'Collection');
+        $this->assertEquals($types[1]->text, 'StillImage');
+        $this->assertEquals($types[2]->text, 'Photographs');
+
+        // Formats.
+        $formats = $item->getElementTextsByElementNameAndSetName('Format', 'Dublin Core');
+        $this->assertEquals($formats[0]->text, 'Glass negatives');
+        $this->assertEquals($formats[1]->text, 'image/jpeg');
+
+        // Description.
+        $description = $item->getElementTextsByElementNameAndSetName('Description', 'Dublin Core');
+        $this->assertEquals($description[0]->text, 'With Child, Two Poses');
+
+        // Subjects.
+        $subjects = $item->getElementTextsByElementNameAndSetName('Subject', 'Dublin Core');
+        $this->assertEquals($subjects[0]->text, 'Photography');
+        $this->assertEquals($subjects[1]->text, 'Portraits, Group');
+        $this->assertEquals($subjects[2]->text, 'Children');
+        $this->assertEquals($subjects[3]->text, 'Holsinger Studio (Charlottesville, Va.)');
+
+        // Identifiers.
+        $identifiers = $item->getElementTextsByElementNameAndSetName('Identifier', 'Dublin Core');
+        $this->assertEquals($identifiers[0]->text, 'H03424B');
+        $this->assertEquals($identifiers[1]->text, 'uva-lib:1038848');
+        $this->assertEquals($identifiers[2]->text, '39667');
+        $this->assertEquals($identifiers[3]->text, 'uri: uva-lib:1038848');
+        $this->assertEquals($identifiers[4]->text, '7688');
+        $this->assertEquals($identifiers[5]->text, '365106');
+        $this->assertEquals($identifiers[6]->text, '000007688_0004.tif');
+        $this->assertEquals($identifiers[7]->text, 'MSS 9862');
 
     }
 

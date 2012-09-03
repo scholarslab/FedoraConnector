@@ -48,6 +48,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         // Get tables.
         $this->serversTable = $this->db->getTable('FedoraConnectorServer');
         $this->objectsTable = $this->db->getTable('FedoraConnectorObject');
+        $this->itemsTable = $this->db->getTable('Item');
 
     }
 
@@ -159,6 +160,34 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         // Mock the gateway.
         $mock = $this->getMock('FedoraGateway');
         $mock->expects($this->any())->method('query')->will($this->returnValue($response));
+        Zend_Registry::set('gateway', $mock);
+
+    }
+
+    /**
+     * Prepare mock FedoraGateway class for import integration tests.
+     *
+     * @param string $versionFixture The name of the version fixture xml.
+     * @param string $metadataFixture The name of the metadata xml.
+     *
+     * @return void.
+     */
+    public function __mockImport($versionFixture, $metadataFixture)
+    {
+
+        // Generate response for getVersion() call.
+        $gateway = new FedoraGateway();
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/xml/' . $versionFixture;
+        $getVersionResponse = $gateway->query($url, "//*[local-name() = 'repositoryVersion']");
+
+        // Generate response for getMetadataXml() call.
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/xml/' . $metadataFixture;
+        $getMetadataXmlResponse = $gateway->load($url);
+
+        // Mock the gateway.
+        $mock = $this->getMock('FedoraGateway');
+        $mock->expects($this->any())->method('query')->will($this->returnValue($getVersionResponse));
+        $mock->expects($this->any())->method('load')->will($this->returnValue($getMetadataXmlResponse));
         Zend_Registry::set('gateway', $mock);
 
     }
