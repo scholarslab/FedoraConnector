@@ -9,7 +9,11 @@ env:
   - OMEKA_BRANCH=stable-1.5
   #- OMEKA_BRANCH=master
 
-before_script: ./.travis.setup.sh
+before_script:
+  - bundle install
+  - ./.travis.setup.sh
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
 
 script: ./.travis.tests.sh
 
