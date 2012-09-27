@@ -1,4 +1,3 @@
-require 'peach'
 require 'fileutils'
 require 'rake/packagetask'
 require 'tempfile'
