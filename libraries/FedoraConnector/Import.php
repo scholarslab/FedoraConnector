@@ -2,43 +2,16 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * FedoraConnector Omeka plugin allows users to reuse content managed in
- * institutional repositories in their Omeka repositories.
- *
- * The FedoraConnector plugin provides methods to generate calls against Fedora-
- * based content disemminators. Unlike traditional ingestion techniques, this
- * plugin provides a facade to Fedora-Commons repositories and records pointers
- * to the "real" objects rather than creating new physical copies. This will
- * help ensure longer-term durability of the content streams, as well as allow
- * you to pull from multiple institutions with open Fedora-Commons
- * respositories.
- *
- * PHP version 5
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Top-level import executor.
  *
  * @package     omeka
  * @subpackage  fedoraconnector
  * @author      Scholars' Lab <>
- * @author      Ethan Gruber <ewg4x@virginia.edu>
- * @author      Adam Soroka <ajs6f@virginia.edu>
- * @author      Wayne Graham <wayne.graham@virginia.edu>
- * @author      Eric Rochester <err8n@virginia.edu>
  * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2010 The Board and Visitors of the University of Virginia
+ * @copyright   2012 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
- * @version     $Id$
- * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
- * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-define('FEDORA_CONNECTOR_PLUGIN_DIR', BASE_DIR . '/plugins/FedoraConnector');
 
 class FedoraConnector_Import
 {
@@ -68,19 +41,26 @@ class FedoraConnector_Import
     }
 
     /**
-     * Import the datastream.
+     * Import an object.
      *
-     * @param Omeka_Record $datastream The datastream record.
+     * @param Omeka_Record $object The object record.
      *
-     * @return bool True if an importer can handle this. Otherwise, false.
+     * @return array $results Array of dsid => boolean (true if the
+     * datastream was handled).
      */
-    public function import($datastream) {
+    public function import($object) {
 
-        $importer = $this->getImporter($datastream);
+        // Walk datastreams.
+        foreach (explode(',', $object->dsids) as $dsid) {
 
-        if ($importer != null) {
-            $importer->import($datastream);
-            return true;
+            // Try to get an importer.
+            $importer = $this->getImporter($dsid);
+
+            // If importer, do import.
+            if (!is_null($importer)) {
+                $importer->import($object, $dsid);
+            }
+
         }
 
     }
@@ -88,15 +68,13 @@ class FedoraConnector_Import
     /**
      * Try to find an importer for the datastream.
      *
-     * @param Omeka_Record $datastream The datastream record.
+     * @param Omeka_Record $dsid The datastream dsid.
      *
-     * @return FedoraConnector_BaseImporter|null If an importer can be found, 
+     * @return FedoraConnector_BaseImporter|null If an importer can be found,
      * it's returned; otherwise, null.
      */
-    public function getImporter($datastream) {
-
-        return $this->plugins->getPlugin($datastream);
-
+    public function getImporter($dsid) {
+        return $this->plugins->getPlugin($dsid);
     }
 
     /**
@@ -105,9 +83,7 @@ class FedoraConnector_Import
      * @return array The list of importer plugin objects.
      */
     public function getImporters() {
-
         return $this->plugins->getPlugins();
-
     }
 
     /**
@@ -119,19 +95,7 @@ class FedoraConnector_Import
      * datastream.
      */
     public function canImport($datastream) {
-
         return ($this->getImporter($datastream) !== null);
-
     }
 
 }
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
-?>

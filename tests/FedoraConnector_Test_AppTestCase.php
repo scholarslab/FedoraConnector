@@ -2,52 +2,34 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * FedoraConnector Omeka plugin allows users to reuse content managed in
- * institutional repositories in their Omeka repositories.
- *
- * The FedoraConnector plugin provides methods to generate calls against Fedora-
- * based content disemminators. Unlike traditional ingestion techniques, this
- * plugin provides a facade to Fedora-Commons repositories and records pointers
- * to the "real" objects rather than creating new physical copies. This will
- * help ensure longer-term durability of the content streams, as well as allow
- * you to pull from multiple institutions with open Fedora-Commons
- * respositories.
- *
- * PHP version 5
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Test runner class.
  *
  * @package     omeka
  * @subpackage  fedoraconnector
  * @author      Scholars' Lab <>
- * @author      Ethan Gruber <ewg4x@virginia.edu>
- * @author      Adam Soroka <ajs6f@virginia.edu>
- * @author      Wayne Graham <wayne.graham@virginia.edu>
- * @author      Eric Rochester <err8n@virginia.edu>
- * @copyright   2010 The Board and Visitors of the University of Virginia
+ * @author      David McClure <david.mcclure@virginia.edu>
+ * @copyright   2012 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
- * @version     $Id$
- * @link        http://omeka.org/add-ons/plugins/FedoraConnector/
- * @tutorial    tutorials/omeka/FedoraConnector.pkg
  */
 
-require_once '../FedoraConnectorPlugin.php';
+require_once dirname(__FILE__) . '/../FedoraConnectorPlugin.php';
+require_once dirname(__FILE__) . '/../libraries/FedoraConnector/AbstractRenderer.php';
+require_once dirname(__FILE__) . '/../libraries/FedoraConnector/AbstractImporter.php';
+require_once dirname(__FILE__) . '/../Importers/DC.php';
+require_once dirname(__FILE__) . '/../Renderers/000-Jp2.php';
+
 
 /**
- * This class sets up the system for testing this plugin.
- *
- * This borrows from the SimplePages plugin rather extensively.
+ * Set up the system for testing this plugin.
  */
 class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 {
+
     const PLUGIN_NAME = 'FedoraConnector';
 
+    /**
+     * Set up the system for testing this plugin.
+     */
     public function setUp() {
 
         parent::setUp();
@@ -63,43 +45,150 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $pluginHelper = new Omeka_Test_Helper_Plugin();
         $pluginHelper->setUp(self::PLUGIN_NAME);
 
+        // Get tables.
+        $this->serversTable = $this->db->getTable('FedoraConnectorServer');
+        $this->objectsTable = $this->db->getTable('FedoraConnectorObject');
+        $this->itemsTable = $this->db->getTable('Item');
+
     }
 
+    /**
+     * Run the plugin.
+     *
+     * @return void.
+     */
     public function _addPluginHooksAndFilters($pluginBroker, $pluginName) {
-
-        // Set the current plugin so the add_plugin_hook function works.
         $pluginBroker->setCurrentPluginDirName($pluginName);
-
         new FedoraConnectorPlugin;
-
     }
 
-    public function _createItem($name)
-    {
 
+    /**
+     * Test helpers.
+     */
+
+
+    /**
+     * Create an item.
+     *
+     * @return Omeka_record $item The item.
+     */
+    public function __item()
+    {
         $item = new Item;
-        $item->featured = 0;
-        $item->public = 1;
         $item->save();
-
-        $element_text = new ElementText;
-        $element_text->record_id = $item->id;
-        $element_text->record_type_id = 2;
-        $element_text->element_id = 50;
-        $element_text->html = 0;
-        $element_text->text = $name;
-        $element_text->save();
-
         return $item;
+    }
+
+    /**
+     * Create a server.
+     *
+     * @param string $name The server name.
+     * @param string $url The server url.
+     *
+     * @return Omeka_Record $server The server.
+     */
+    public function __server(
+        $name='Test Server',
+        $url='http://www.test.org/fedora')
+    {
+
+        $server = new FedoraConnectorServer;
+        $server->name = $name;
+        $server->url = $url;
+        $server->save();
+
+        return $server;
 
     }
 
-    public function _createItems($count)
+    /**
+     * Create a service.
+     *
+     * @param OmekaItem $item Parent item.
+     * @param OmekaItem $server Parent server.
+     * @param string $pid The object pid.
+     * @param string $dsids Comma-deliimited dsids.
+     *
+     * @return Omeka_Record $object The object.
+     */
+    public function __object(
+        $item=null,
+        $server=null,
+        $pid='pid:test',
+        $dsids='DC,content'
+    )
     {
 
-        for ($i=0; $i<$count; $i++) {
-            $this->_createItem('TestingItem' . $i);
+        // If no item, create one.
+        if (is_null($item)) {
+            $item = $this->__item();
         }
+
+        // If no server, create one.
+        if (is_null($server)) {
+            $server = $this->__server();
+        }
+
+        $object = new FedoraConnectorObject();
+        $object->item_id = $item->id;
+        $object->server_id = $server->id;
+        $object->pid = $pid;
+        $object->dsids = $dsids;
+        $object->save();
+
+        return $object;
+
+    }
+
+    /**
+     * Set a mock FedoraGateway class.
+     *
+     * @param string $fixture The name of the fixture xml.
+     * @param string $query The xpath query to run on the fixture.
+     *
+     * @return void.
+     */
+    public function __mockFedora($fixture, $query)
+    {
+
+        // Generate response.
+        $gateway = new FedoraGateway();
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/xml/' . $fixture;
+        $response = $gateway->query($url, $query);
+
+        // Mock the gateway.
+        $mock = $this->getMock('FedoraGateway');
+        $mock->expects($this->any())->method('query')->will($this->returnValue($response));
+        Zend_Registry::set('gateway', $mock);
+
+    }
+
+    /**
+     * Prepare mock FedoraGateway class for import integration tests.
+     *
+     * @param string $versionFixture The name of the version fixture xml.
+     * @param string $metadataFixture The name of the metadata xml.
+     *
+     * @return void.
+     */
+    public function __mockImport($versionFixture, $metadataFixture)
+    {
+
+        // Generate response for getVersion() call.
+        $gateway = new FedoraGateway();
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/xml/' . $versionFixture;
+        $getVersionResponse = $gateway->query($url, "//*[local-name() = 'repositoryVersion']");
+
+        // Generate response for getMetadataXml() call.
+        $url = FEDORA_CONNECTOR_PLUGIN_DIR . '/tests/xml/' . $metadataFixture;
+        $getMetadataXmlResponse = $gateway->load($url);
+
+        // Mock the gateway.
+        $mock = $this->getMock('FedoraGateway');
+        $mock->expects($this->any())->method('query')->will($this->returnValue($getVersionResponse));
+        $mock->expects($this->any())->method('load')->will($this->returnValue($getMetadataXmlResponse));
+        Zend_Registry::set('gateway', $mock);
 
     }
 

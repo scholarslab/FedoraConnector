@@ -1,0 +1,27 @@
+<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+  <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">Dr. J.S. Grasty</dc:title>
+  <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Holsinger, Rufus W., 1866-1930</dc:contributor>
+  <dc:type xmlns:dc="http://purl.org/dc/elements/1.1/">Collection</dc:type>
+  <dc:type xmlns:dc="http://purl.org/dc/elements/1.1/">StillImage</dc:type>
+  <dc:type xmlns:dc="http://purl.org/dc/elements/1.1/">Photographs</dc:type>
+  <dc:format xmlns:dc="http://purl.org/dc/elements/1.1/">Glass negatives</dc:format>
+  <dc:format xmlns:dc="http://purl.org/dc/elements/1.1/">image/jpeg</dc:format>
+  <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">With Child, Two Poses</dc:description>
+  <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">Photography</dc:subject>
+  <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">Portraits, Group</dc:subject>
+  <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">Children</dc:subject>
+  <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">Holsinger Studio (Charlottesville, Va.)</dc:subject>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">H03424B</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">uva-lib:1038848</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">39667</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">uri: uva-lib:1038848</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">7688</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">365106</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">000007688_0004.tif</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">MSS 9862</dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema"></dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema"></dc:identifier>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema"></dc:identifier>
+  <dc:rights xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema"></dc:rights>
+  <dc:rights xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema">This image may be reproduced without additional permission but must be credited Â© Rector and Visitors of the University of Virginia</dc:rights>
+</oai_dc:dc>

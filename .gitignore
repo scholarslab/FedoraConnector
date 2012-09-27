@@ -7,3 +7,4 @@ TAGS
 .buildpath
 .project
 .DS_Store
+pkg/*

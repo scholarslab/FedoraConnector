@@ -1,0 +1,25 @@
+<form id="datastream-form" enctype="application/x-www-form-urlencoded" method="post" action="">
+<div class="field"><label for="server" class="optional">Server</label>
+<div class="inputs">
+<select name="server" id="server">
+    <option value="1" label="Test Server" selected="selected">Test Server</option>
+</select></div>
+<p class="explanation">Select a Fedora server.</p></div>
+<div class="field"><label for="pid" class="optional">PID</label>
+<div class="inputs">
+<input type="text" name="pid" id="pid" value="pid:test" size="40" class=" textinput"></div>
+<p class="explanation">Enter the object PID of the Fedora resource.</p></div>
+<div class="field"><label for="dsids" class="optional">Datastreams</label>
+<div class="inputs">
+<select name="dsids[]" id="dsids" multiple="multiple" size="20">
+    
+</select></div>
+<p class="explanation">Choose one or more datastreams.</p></div>
+<div class="field"><label for="import" class="optional">Import now?</label>
+<div class="inputs">
+<input type="hidden" name="import" value="0"><input type="checkbox" name="import" id="import" value="1"></div>
+<p class="explanation">Import Fedora data when the Item form is saved.</p></div>
+
+<input type="hidden" name="datastreamsuri" value="/fedora-connector/datastreams/query-datastreams" id="datastreamsuri">
+
+<input type="hidden" name="saveddsids" value="DC,content" id="saveddsids"></form>

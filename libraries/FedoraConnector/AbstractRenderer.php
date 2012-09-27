@@ -50,15 +50,6 @@ abstract class FedoraConnector_AbstractRenderer
     abstract function canDisplay($datastream);
 
     /**
-     * This tests whether this renderer can preview a datastream.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return boolean True if this can display the datastream.
-     */
-    abstract function canPreview($datastream);
-
-    /**
      * This displays a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
@@ -66,15 +57,6 @@ abstract class FedoraConnector_AbstractRenderer
      * @return string The display HTML for the datastream.
      */
     abstract function display($datastream);
-
-    /**
-     * This displays a datastream's preview.
-     *
-     * @param Omeka_Record $datastream The data stream.
-     *
-     * @return string The preview HTML for the datastream.
-     */
-    abstract function preview($datastream);
 
 }
 
