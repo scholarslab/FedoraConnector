@@ -31,7 +31,9 @@ class FedoraConnectorPlugin
     // Filters.
     private static $_filters = array(
         'admin_items_form_tabs',
-        'admin_navigation_main'
+        'admin_navigation_main',
+        'exhibit_builder_exhibit_display_item',
+        'exhibit_builder_display_exhibit_thumbnail_gallery'
     );
 
     /**
@@ -236,7 +238,7 @@ class FedoraConnectorPlugin
      */
     public function adminAppendToItemsShowPrimary()
     {
-        $this->publicAppendToItemsShow();
+        echo fedora_connector_display_object(get_current_item());
     }
 
     /**
@@ -246,16 +248,44 @@ class FedoraConnectorPlugin
      */
     public function publicAppendToItemsShow()
     {
+        echo fedora_connector_display_object(get_current_item());
+    }
 
-        // Get the item and object.
-        $item = get_current_item();
-        $object = $this->_objects->findByItem($item);
+    public function exhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
+    {
+      $fedoraObject = fedora_connector_display_object($item, array('scale' => settings('fullsize_constraint')));
+      $html = $fedoraObject ? $fedoraObject : $html;
+      return $html;
+    }
 
-        if ($object) {
-            $renderer = new FedoraConnector_Render();
-            echo $renderer->display($object);
+    public function exhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
+
+      $params = array();
+
+      switch($thumbnailType) {
+        case 'thumbnail':
+          $params['scale'] = settings('thumbnail_constraint');
+          break;
+        case 'square_thumbnail':
+          $params['region'] = '0.5,0.5,'.settings('square_thumbnail_constraint').','.settings('square_thumbnail_constraint');
+          $params['level'] = 1;
+          break;
+      }
+
+      $html = '';
+
+      for ($i=(int)$start; $i <= (int)$end; $i++) {
+        if (exhibit_builder_use_exhibit_page_item($i)) {
+          $thumbnail = fedora_connector_display_object($item, $params) ? fedora_connector_display_object($item, $params) : item_image($thumbnailType, $props);
+          $html .= "\n" . '<div class="exhibit-item">';
+          $html .= exhibit_builder_link_to_exhibit_item($thumbnail);
+          $html .= exhibit_builder_exhibit_display_caption($i);
+          $html .= '</div>' . "\n";
+
         }
+      }
 
+      return $html;
     }
 
 }

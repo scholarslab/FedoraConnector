@@ -17,18 +17,6 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
 {
 
     /**
-     * This constructs an instance.
-     */
-    function __construct()
-    {
-        $this->sizes = array(
-            'thumb'  => 80,
-            'screen' => 600,
-            '*'      => 400
-        );
-    }
-
-    /**
      * Check of the renderer can handle a given mime type.
      *
      * @param string $mimeType The mimeType.
@@ -47,9 +35,9 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The display HTML for the datastream.
      */
-    function display($object)
+    function display($object, $params = array())
     {
-        return $this->_display($object, '*');
+        return $this->_display($object, $params);
     }
 
     /**
@@ -60,14 +48,13 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The HTML for the image.
      */
-    private function _display($object, $size='*') 
+    private function _display($object, $params = array())
     {
 
-        // Get size.
-        if (array_key_exists($size, $this->sizes)) {
-            $px = $this->sizes[$size];
-        } else {
-            $px = $this->sizes['*'];
+        if (empty($params)) {
+          $params = array(
+            'scale' => '400,0'
+          );
         }
 
         // Get server.
@@ -75,11 +62,10 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
 
         // Construct image URL.
         $url = "{$server->url}/{$server->getService()}/{$object->pid}"
-            . "/methods/djatoka:jp2SDef/getRegion?scale={$px},{$px}";
+          . "/methods/djatoka:jp2SDef/getRegion?". http_build_query($params);
 
         // Construct HTML.
-        $html = "<img class='fedora-renderer' alt='image' src='{$url}' />";
-        return $html;
+        return "<img class='fedora-renderer' alt='image' src='{$url}' />";
 
     }
 

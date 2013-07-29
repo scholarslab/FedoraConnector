@@ -56,7 +56,7 @@ abstract class FedoraConnector_AbstractRenderer
      *
      * @return string The display HTML for the datastream.
      */
-    abstract function display($datastream);
+    abstract function display($datastream, $params = null);
 
 }
 

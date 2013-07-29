@@ -39,3 +39,14 @@ function __fedoraNodes($uri, $xpath)
   return $result;
 
 }
+
+function fedora_connector_display_object($item = null, $params = array()) {
+  $item = $item ? $item : get_current_item();
+
+  if ($item && $object = get_db()->getTable('FedoraConnectorObject')->findByItem($item)) {
+    $renderer = new FedoraConnector_Render();
+    return $renderer->display($object, $params);
+  }
+
+  return false;
+}

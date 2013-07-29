@@ -47,7 +47,7 @@ class FedoraConnector_Render
      *
      * @return string|null The output of the renderer.
      */
-    public function display($object) {
+    public function display($object, $params = null) {
 
         // Walk dsids.
         foreach (explode(',', $object->dsids) as $dsid) {
@@ -61,7 +61,7 @@ class FedoraConnector_Render
 
             // Render.
             if (!is_null($renderer)) {
-                return $renderer->display($object);
+                return $renderer->display($object, $params);
             }
 
         }
