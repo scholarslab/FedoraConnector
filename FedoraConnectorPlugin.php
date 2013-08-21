@@ -254,7 +254,7 @@ class FedoraConnectorPlugin
     public function exhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
     {
       $fedoraObject = fedora_connector_display_object($item, array('scale' => settings('fullsize_constraint')));
-      $html = $fedoraObject ? $fedoraObject : $html;
+      $html = $fedoraObject ? exhibit_builder_link_to_exhibit_item($fedoraObject, $linkProperties, $item) : $html;
       return $html;
     }
 
