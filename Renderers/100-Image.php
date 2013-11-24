@@ -39,7 +39,7 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      *
      * @return string The display HTML for the datastream.
      */
-    function display($object, $params = array()) {
+    function display($object) {
         $url = "{$object->getServer()->url}/objects/{$object->pid}/datastreams/SCREEN/content";
         return "<img class='fedora-renderer' alt='image' src='{$url}' />";
     }
