@@ -42,7 +42,7 @@ require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ObjectForm.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ServerForm.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/Validate/isUrl.php';
 
-$gateway = new FedoraGateway;
-Zend_Registry::set('gateway', $gateway);
+Zend_Registry::set('gateway', new FedoraGateway);
 
-new FedoraConnectorPlugin;
+$fedora = new FedoraConnectorPlugin();
+$fedora->setUp();
