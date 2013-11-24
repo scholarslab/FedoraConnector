@@ -12,9 +12,6 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-/**
- * Table class for servers.
- */
 class FedoraConnectorServerTable extends Omeka_Db_Table
 {
 

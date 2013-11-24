@@ -13,11 +13,10 @@
  */
 
 
-class FedoraConnectorPlugin
+class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 {
 
-    // Hooks.
-    private static $_hooks = array(
+    protected $_hooks = array(
         'install',
         'uninstall',
         'before_delete_item',
@@ -28,8 +27,7 @@ class FedoraConnectorPlugin
         'public_append_to_items_show'
     );
 
-    // Filters.
-    private static $_filters = array(
+    protected $_filters = array(
         'admin_items_form_tabs',
         'admin_navigation_main',
         'exhibit_builder_exhibit_display_item',
@@ -37,43 +35,11 @@ class FedoraConnectorPlugin
     );
 
     /**
-     * Add hooks and filers, get tables.
+     * Insert tables.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->_db = get_db();
-        $this->_objects = $this->_db->getTable('FedoraConnectorObject');
-        self::addHooksAndFilters();
-    }
-
-    /**
-     * Connect hooks and filters with callbacks.
-     *
-     * @return void
-     */
-    public function addHooksAndFilters()
-    {
-
-        foreach (self::$_hooks as $hookName) {
-            $functionName = Inflector::variablize($hookName);
-            add_plugin_hook($hookName, array($this, $functionName));
-        }
-
-        foreach (self::$_filters as $filterName) {
-            $functionName = Inflector::variablize($filterName);
-            add_filter($filterName, array($this, $functionName));
-        }
-
-    }
-
-    /**
-     * Install.
-     *
-     * @return void
-     */
-    public function install()
+    public function hookInstall()
     {
 
         // Servers.
@@ -101,11 +67,11 @@ class FedoraConnectorPlugin
     }
 
     /**
-     * Uninstall.
+     * Drop tables.
      *
      * @return void
      */
-    public function uninstall()
+    public function hookUninstall()
     {
 
         // Drop the servers table.
@@ -124,7 +90,7 @@ class FedoraConnectorPlugin
      *
      * @return void
      */
-    public function adminThemeHeader($request)
+    public function hookAdminThemeHeader($request)
     {
 
         if (in_array($request->getModuleName(), array(
@@ -148,7 +114,7 @@ class FedoraConnectorPlugin
      *
      * @return void
      */
-    public function defineRoutes($router)
+    public function hookDefineRoutes($router)
     {
         $router->addConfig(new Zend_Config_Ini(
             FEDORA_CONNECTOR_PLUGIN_DIR . '/routes.ini', 'routes'
@@ -162,7 +128,7 @@ class FedoraConnectorPlugin
      *
      * @return array Updated $tabs array.
      */
-    public function adminItemsFormTabs($tabs)
+    public function hookAdminItemsFormTabs($tabs)
     {
 
         // Construct the form, strip the <form> tag.
@@ -176,7 +142,8 @@ class FedoraConnectorPlugin
         if (!is_null($item->id)) {
 
             // Try to get a datastream.
-            $object = $this->_objects->findByItem($item);
+            $objectsTable->_db->getTable('FedoraConnectorObject');
+            $object = $objectsTable->findByItem($item);
 
             // Populate fields.
             if ($object) {
@@ -202,7 +169,7 @@ class FedoraConnectorPlugin
      *
      * @return void.
      */
-    public function afterSaveFormItem($item, $post)
+    public function hookAfterSaveFormItem($item, $post)
     {
 
         // Create or update the datastream.
@@ -225,7 +192,7 @@ class FedoraConnectorPlugin
      *
      * @return array The modified tabs array.
      */
-    public function adminNavigationMain($tabs)
+    public function filterAdminNavigationMain($tabs)
     {
         $tabs['Fedora Connector'] = uri('fedora-connector');
         return $tabs;
@@ -236,7 +203,7 @@ class FedoraConnectorPlugin
      *
      * @return void.
      */
-    public function adminAppendToItemsShowPrimary()
+    public function filterAdminAppendToItemsShowPrimary()
     {
         echo fedora_connector_display_object(get_current_item());
     }
@@ -246,19 +213,19 @@ class FedoraConnectorPlugin
      *
      * @return void.
      */
-    public function publicAppendToItemsShow()
+    public function filterPublicAppendToItemsShow()
     {
         echo fedora_connector_display_object(get_current_item());
     }
 
-    public function exhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
+    public function filterExhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
     {
       $fedoraObject = fedora_connector_display_object($item, array('scale' => settings('fullsize_constraint')));
       $html = $fedoraObject ? exhibit_builder_link_to_exhibit_item($fedoraObject, $linkProperties, $item) : $html;
       return $html;
     }
 
-    public function exhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
+    public function filterExhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
 
       $params = array();
 
@@ -281,7 +248,6 @@ class FedoraConnectorPlugin
           $html .= exhibit_builder_link_to_exhibit_item($thumbnail);
           $html .= exhibit_builder_exhibit_display_caption($i);
           $html .= '</div>' . "\n";
-
         }
       }
 

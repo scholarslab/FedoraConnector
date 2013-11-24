@@ -12,7 +12,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
+class FedoraConnector_DatastreamsController extends Omeka_Controller_AbstractActionController
 {
 
     /**

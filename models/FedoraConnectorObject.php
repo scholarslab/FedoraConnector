@@ -12,11 +12,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-
-/**
- * Record class for datastreams.
- */
-class FedoraConnectorObject extends Omeka_record
+class FedoraConnectorObject extends Omeka_Record_AbstractRecord
 {
 
 

@@ -12,8 +12,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-
-class FedoraConnectorServer extends Omeka_record
+class FedoraConnectorServer extends Omeka_Record_AbstractRecord
 {
 
     /**
