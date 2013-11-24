@@ -107,4 +107,3 @@ end
 ## task :minify do
 ##   sh %{cake build}
 ## end
-

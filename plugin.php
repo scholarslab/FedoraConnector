@@ -22,7 +22,6 @@
  */
 
 
-// {{{ constants
 if (!defined('FEDORA_CONNECTOR_PLUGIN_VERSION')) {
     define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
 }
@@ -30,9 +29,7 @@ if (!defined('FEDORA_CONNECTOR_PLUGIN_VERSION')) {
 if (!defined('FEDORA_CONNECTOR_PLUGIN_DIR')) {
     define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
 }
-// }}}
 
-// {{{ requires
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/FedoraConnectorPlugin.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraGateway.php';
@@ -44,7 +41,6 @@ require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractR
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ObjectForm.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ServerForm.php';
 require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/Validate/isUrl.php';
-// }}}
 
 $gateway = new FedoraGateway;
 Zend_Registry::set('gateway', $gateway);
