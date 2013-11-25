@@ -2,12 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
 
 /**
- * Fixture generators.
- *
  * @package     omeka
  * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
+ * @author      Scholars' Lab
  * @copyright   2012 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
@@ -25,7 +22,7 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
     public function setUp()
     {
         parent::setUp();
-        $this->_fixtures = FEDORA_CONNECTOR_PLUGIN_DIR . '/spec/javascripts/fixtures/';
+        $this->_fixtures = FEDORA_PLUGIN_DIR . '/spec/javascripts/fixtures/';
     }
 
     /**
