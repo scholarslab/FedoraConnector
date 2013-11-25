@@ -19,10 +19,8 @@
 class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 {
 
-    const PLUGIN_NAME = 'FedoraConnector';
-
     /**
-     * Set up the system for testing this plugin.
+     * Install the plugin.
      */
     public function setUp() {
 
@@ -39,7 +37,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         // Get tables.
         $this->serversTable = $this->db->getTable('FedoraConnectorServer');
         $this->objectsTable = $this->db->getTable('FedoraConnectorObject');
-        $this->itemsTable = $this->db->getTable('Item');
+        $this->itemsTable   = $this->db->getTable('Item');
 
     }
 
@@ -165,6 +163,19 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $mock->expects($this->any())->method('load')->will($this->returnValue($getMetadataXmlResponse));
         Zend_Registry::set('gateway', $mock);
 
+    }
+
+
+    /**
+     * Get the last record in a table.
+     *
+     * @param Omeka_Db_Table $table A table.
+     * @return Neatline_AbstractRecord The last record.
+     */
+    protected function __getLastRow($table)
+    {
+        $records = $table->findAll();
+        return array_pop($records);
     }
 
 }

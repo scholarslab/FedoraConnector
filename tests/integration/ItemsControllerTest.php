@@ -62,7 +62,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     public function testItemEditTab()
     {
 
-        // Create servers.
         $server1 = $this->__server('Test Title 1', 'http://test1.org/fedora');
         $server2 = $this->__server('Test Title 2', 'http://test2.org/fedora');
 
@@ -166,7 +165,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
-        $object = $this->objectsTable->findAll()[0];
+        $object = $this->__getLastRow($this->objectsTable);
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test');
         $this->assertEquals($object->dsids, 'DC,content');
@@ -207,48 +206,48 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->dispatch('items/add');
 
         // Get the new item.
-        $item = $this->itemsTable->find(2);
+        $item = $this->__getLastRow($this->itemsTable);
 
         // Title.
         $title = metadata($item, array('Dublin Core', 'Title'));
-        $this->assertEquals($title[0]->text, 'Dr. J.S. Grasty');
+        $this->assertEquals($title, 'Dr. J.S. Grasty');
 
         // Contributor
         $contributor = metadata($item, array('Dublin Core', 'Contributor'));
-        $this->assertEquals($contributor[0]->text, 'Holsinger, Rufus W., 1866-1930');
+        $this->assertEquals($contributor, 'Holsinger, Rufus W., 1866-1930');
 
         // Types.
-        $types = metadata($item, array('Dublin Core', 'Type'));
-        $this->assertEquals($types[0]->text, 'Collection');
-        $this->assertEquals($types[1]->text, 'StillImage');
-        $this->assertEquals($types[2]->text, 'Photographs');
+        $types = metadata($item, array('Dublin Core', 'Type'), array('all' => true));
+        $this->assertEquals($types[0], 'Collection');
+        $this->assertEquals($types[1], 'StillImage');
+        $this->assertEquals($types[2], 'Photographs');
 
         // Formats.
-        $formats = metadata($item, array('Dublin Core', 'Format'));
-        $this->assertEquals($formats[0]->text, 'Glass negatives');
-        $this->assertEquals($formats[1]->text, 'image/jpeg');
+        $formats = metadata($item, array('Dublin Core', 'Format'), array('all' => true));
+        $this->assertEquals($formats[0], 'Glass negatives');
+        $this->assertEquals($formats[1], 'image/jpeg');
 
         // Description.
         $description = metadata($item, array('Dublin Core', 'Description'));
-        $this->assertEquals($description[0]->text, 'With Child, Two Poses');
+        $this->assertEquals($description, 'With Child, Two Poses');
 
         // Subjects.
-        $subjects = metadata($item, array('Dublin Core', 'Subject'));
-        $this->assertEquals($subjects[0]->text, 'Photography');
-        $this->assertEquals($subjects[1]->text, 'Portraits, Group');
-        $this->assertEquals($subjects[2]->text, 'Children');
-        $this->assertEquals($subjects[3]->text, 'Holsinger Studio (Charlottesville, Va.)');
+        $subjects = metadata($item, array('Dublin Core', 'Subject'), array('all' => true));
+        $this->assertEquals($subjects[0], 'Photography');
+        $this->assertEquals($subjects[1], 'Portraits, Group');
+        $this->assertEquals($subjects[2], 'Children');
+        $this->assertEquals($subjects[3], 'Holsinger Studio (Charlottesville, Va.)');
 
         // Identifiers.
-        $identifiers = metadata($item, array('Dublin Core', 'Identifier'));
-        $this->assertEquals($identifiers[0]->text, 'H03424B');
-        $this->assertEquals($identifiers[1]->text, 'uva-lib:1038848');
-        $this->assertEquals($identifiers[2]->text, '39667');
-        $this->assertEquals($identifiers[3]->text, 'uri: uva-lib:1038848');
-        $this->assertEquals($identifiers[4]->text, '7688');
-        $this->assertEquals($identifiers[5]->text, '365106');
-        $this->assertEquals($identifiers[6]->text, '000007688_0004.tif');
-        $this->assertEquals($identifiers[7]->text, 'MSS 9862');
+        $identifiers = metadata($item, array('Dublin Core', 'Identifier'), array('all' => true));
+        $this->assertEquals($identifiers[0], 'H03424B');
+        $this->assertEquals($identifiers[1], 'uva-lib:1038848');
+        $this->assertEquals($identifiers[2], '39667');
+        $this->assertEquals($identifiers[3], 'uri: uva-lib:1038848');
+        $this->assertEquals($identifiers[4], '7688');
+        $this->assertEquals($identifiers[5], '365106');
+        $this->assertEquals($identifiers[6], '000007688_0004.tif');
+        $this->assertEquals($identifiers[7], 'MSS 9862');
 
     }
 
@@ -289,7 +288,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
-        $object = $this->objectsTable->findAll()[0];
+        $object = $this->__getLastRow($this->objectsTable);
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test');
         $this->assertEquals($object->dsids, 'DC,content');
@@ -336,7 +335,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($this->objectsTable->count(), $count);
 
         // Get out service and check.
-        $object = $this->objectsTable->findAll()[0];
+        $object = $this->__getLastRow($this->objectsTable);
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test2');
         $this->assertEquals($object->dsids, 'DC2,content2');
