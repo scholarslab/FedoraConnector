@@ -17,7 +17,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         'install',
         'uninstall',
         'after_save_form_item',
-        'admin_theme_header',
+        'admin_head',
         'define_routes',
         'admin_append_to_items_show_primary',
         'public_append_to_items_show'
@@ -86,21 +86,11 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @return void
      */
-    public function hookAdminThemeHeader($request)
+    public function hookAdminHead($request)
     {
-
-        if (in_array($request->getModuleName(), array(
-          'fedora-connector', 'default'))) {
-
-            // Admin css.
-            queue_css('fedora_connector_main');
-
-            // Datastreams dependencies.
-            queue_js('vendor/load/load');
-            queue_js('load-datastreams');
-
-        }
-
+        queue_css_file('fedora_connector_main');
+        queue_js_file('vendor/load/load');
+        queue_js_file('load-datastreams');
     }
 
     /**

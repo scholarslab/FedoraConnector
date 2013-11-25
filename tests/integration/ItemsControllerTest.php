@@ -151,7 +151,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'featured' => 0,
                 'Elements' => array(),
                 'order' => array(),
-                'tags' => array(),
+                'tags' => '',
                 'server' => 1,
                 'pid' => 'pid:test',
                 'dsids' => array('DC', 'content'),
