@@ -13,5 +13,5 @@
  */
 ?>
 
-<a href="<?php echo uri($uriSlug . '/servers/edit/' . $server->id); ?>" class="edit"><?php echo __('Edit'); ?></a>
-<a href="<?php echo uri($uriSlug . '/servers/delete-confirm/' . $server->id); ?>" class="delete-confirm delete"><?php echo __('Delete'); ?></a>
+<a href="<?php echo url($uriSlug . '/servers/edit/' . $server->id); ?>" class="edit"><?php echo __('Edit'); ?></a>
+<a href="<?php echo url($uriSlug . '/servers/delete-confirm/' . $server->id); ?>" class="delete-confirm delete"><?php echo __('Delete'); ?></a>

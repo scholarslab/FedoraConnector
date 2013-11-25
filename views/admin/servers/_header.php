@@ -13,10 +13,6 @@
  */
 ?>
 
-<h1><?php echo $title; ?></h1>
-
-<p class="add-button">
-    <a class="add" href="<?php echo html_escape(uri($add_button_uri)); ?>">
-        <?php echo $add_button_text; ?>
-    </a>
-</p>
+<a class="add big green button" href="<?php echo url('fedora-connector/servers/add'); ?>">
+  <?php echo __('Create a Server'); ?>
+</a>

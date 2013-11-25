@@ -19,7 +19,6 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'install',
         'uninstall',
-        'before_delete_item',
         'after_save_form_item',
         'admin_theme_header',
         'define_routes',
@@ -110,14 +109,12 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * Register routes.
      *
-     * @param object $router Front controller router.
-     *
-     * @return void
+     * @param array $args Contains: `router` (Zend_Config).
      */
-    public function hookDefineRoutes($router)
+    public function hookDefineRoutes($args)
     {
-        $router->addConfig(new Zend_Config_Ini(
-            FEDORA_CONNECTOR_PLUGIN_DIR . '/routes.ini', 'routes'
+        $args['router']->addConfig(new Zend_Config_Ini(
+            FEDORA_CONNECTOR_PLUGIN_DIR . '/routes.ini'
         ));
     }
 
@@ -128,7 +125,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @return array Updated $tabs array.
      */
-    public function hookAdminItemsFormTabs($tabs)
+    public function filterAdminItemsFormTabs($tabs)
     {
 
         // Construct the form, strip the <form> tag.
@@ -142,7 +139,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         if (!is_null($item->id)) {
 
             // Try to get a datastream.
-            $objectsTable->_db->getTable('FedoraConnectorObject');
+            $objectsTable = $this->_db->getTable('FedoraConnectorObject');
             $object = $objectsTable->findByItem($item);
 
             // Populate fields.
@@ -194,7 +191,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function filterAdminNavigationMain($tabs)
     {
-        $tabs['Fedora Connector'] = uri('fedora-connector');
+        $tabs['Fedora Connector'] = url('fedora-connector');
         return $tabs;
     }
 
@@ -203,7 +200,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @return void.
      */
-    public function filterAdminAppendToItemsShowPrimary()
+    public function hookAdminAppendToItemsShowPrimary()
     {
         echo fedora_connector_display_object(get_current_item());
     }
@@ -213,7 +210,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @return void.
      */
-    public function filterPublicAppendToItemsShow()
+    public function hookPublicAppendToItemsShow()
     {
         echo fedora_connector_display_object(get_current_item());
     }

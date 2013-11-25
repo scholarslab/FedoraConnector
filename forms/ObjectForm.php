@@ -71,7 +71,7 @@ class FedoraConnector_Form_Object extends Omeka_Form
 
         // Query datastreams uri.
         $this->addElement('hidden', 'datastreams-uri', array(
-            'value'   => uri('fedora-connector/datastreams/query-datastreams')
+            'value'   => url('fedora-connector/datastreams/query-datastreams')
         ));
 
         // Saved dsid.

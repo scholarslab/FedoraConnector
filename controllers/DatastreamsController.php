@@ -22,7 +22,7 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_AbstractAct
      */
     public function init()
     {
-        $this->_servers = $this->getTable('FedoraConnectorServer');
+        $this->_servers = $this->_helper->db->getTable('FedoraConnectorServer');
     }
 
     /**

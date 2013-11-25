@@ -1,46 +1,32 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Main portal view for Neatline.
- *
- * PHP version 5
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Add server.
  *
  * @package     omeka
- * @subpackage  neatline
+ * @subpackage  fedoraconnector
  * @author      Scholars' Lab <>
- * @author      Bethany Nowviskie <bethany@virginia.edu>
- * @author      Adam Soroka <ajs6f@virginia.edu>
  * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2011 The Board and Visitors of the University of Virginia
+ * @copyright   2012 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
 
 <?php
 $title = __('Fedora Connector | Browse Servers');
-head(array('content_class' => 'fedora', 'title' => $title));
+echo head(array('content_class' => 'fedora', 'title' => $title));
 ?>
-
-<?php echo $this->partial('servers/_header.php', array(
-    'title' => $title,
-    'add_button_uri' => 'fedora-connector/servers/add',
-    'add_button_text' => __('Add a Server')
-)); ?>
 
 <div id="primary">
 
     <?php echo flash(); ?>
 
     <?php if ($servers): ?>
+
+        <a class="add small green button" href="<?php echo url('fedora-connector/servers/add'); ?>">
+            <?php echo __('Register a Server'); ?>
+        </a>
 
         <table>
             <thead>
@@ -57,7 +43,7 @@ head(array('content_class' => 'fedora', 'title' => $title));
             <tbody>
                 <?php foreach ($servers as $server): ?>
                     <tr>
-                        <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
+                        <td><a href="<?php echo url('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
                         <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
                         <td>
                             <?php if ($server->isOnline()): ?><span class="online status">Online</span>
@@ -81,12 +67,16 @@ head(array('content_class' => 'fedora', 'title' => $title));
 
     <?php else: ?>
 
-        <p class="neatline-alert"><?php echo __('There are no Fedora servers yet.'); ?>
-        <a href="<?php echo uri('fedora-connector/servers/add'); ?>"><?php echo __('Create one!'); ?></a>
-        </p>
+        <h2><?php echo __('No Fedora servers have been registered.'); ?></h2>
+        <p><?php echo __('Get started by adding a new one!'); ?></p>
+
+        <a class="add big green button"
+            href="<?php echo url('fedora-connector/servers/add'); ?>">
+            <?php echo __('Register a Server'); ?>
+        </a>
 
     <?php endif; ?>
 
 </div>
 
-<?php foot(); ?>
+<?php echo foot(); ?>

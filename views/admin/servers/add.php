@@ -15,17 +15,11 @@
 
 <?php
 $title = __('Fedora Connector | Create Server');
-head(array('content_class' => 'fedora', 'title' => $title));
+echo head(array('content_class' => 'fedora', 'title' => $title));
 ?>
-
-<?php echo $this->partial('servers/_header.php', array(
-    'title' => $title,
-    'add_button_uri' => 'fedora-connector/servers/add',
-    'add_button_text' => __('Add a Server')
-)); ?>
 
 <div id="primary">
     <?php echo $form; ?>
 </div>
 
-<?php foot(); ?>
+<?php echo foot(); ?>

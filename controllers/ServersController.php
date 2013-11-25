@@ -22,7 +22,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
      */
     public function init()
     {
-        $this->_table = $this->getTable('FedoraConnectorServer');
+        $this->_table = $this->_helper->db->getTable('FedoraConnectorServer');
     }
 
     /**
