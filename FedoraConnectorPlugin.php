@@ -19,7 +19,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         'after_save_item',
         'admin_head',
         'define_routes',
-        'admin_append_to_items_show_primary',
+        'admin_items_show',
         'public_append_to_items_show'
     );
 
@@ -197,7 +197,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @return void.
      */
-    public function hookAdminAppendToItemsShowPrimary()
+    public function hookAdminItemsShow()
     {
         echo fedora_connector_display_object(get_current_record('item'));
     }
