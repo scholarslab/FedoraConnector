@@ -60,7 +60,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
                 $this->_table->updateServer($server, $post);
 
                 // Redirect to browse.
-                $this->redirect->goto('browse');
+                $this->_helper->redirector('browse');
 
             }
 
@@ -111,7 +111,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
                 $this->_table->updateServer($server, $post);
 
                 // Redirect to browse.
-                $this->redirect->goto('browse');
+                $this->_helper->redirector('browse');
 
             }
 

@@ -31,13 +31,13 @@ echo head(array('content_class' => 'fedora', 'title' => $title));
         <table>
             <thead>
                 <tr>
-                    <?php browse_headings(array(
+                    <?php echo browse_sort_links(array(
                         'Name' => 'name',
                         'URL' => 'url',
                         'Status' => null,
                         'Version' => null,
                         'Actions' => null
-                    )); ?>
+                    ), array('link_tag' => 'th scope="col"')); ?>
                 </tr>
             </thead>
             <tbody>

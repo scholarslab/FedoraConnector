@@ -18,10 +18,6 @@ $title = __('Fedora Connector | Edit Server');
 echo head(array('content_class' => 'fedora', 'title' => $title));
 ?>
 
-<?php echo $this->partial('servers/_header.php', array(
-    'title' => $title
-)); ?>
-
 <div id="primary">
     <?php echo $form; ?>
 </div>

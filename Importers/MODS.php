@@ -88,8 +88,8 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
             case 'Contributor':
 
-                // Mapping from name/namePart to Contributor specifically is 
-                // difficult.  There are likely institutional differences in 
+                // Mapping from name/namePart to Contributor specifically is
+                // difficult. There are likely institutional differences in
                 // mapping.
                 $queries = array();
 

@@ -29,8 +29,8 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
         'admin_items_form_tabs',
         'admin_navigation_main',
-        //'exhibit_builder_exhibit_display_item',
-        //'exhibit_builder_display_exhibit_thumbnail_gallery'
+        'exhibit_builder_exhibit_display_item',
+        'exhibit_builder_display_exhibit_thumbnail_gallery'
     );
 
     /**
