@@ -44,9 +44,9 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/add');
-        $this->assertQueryCount('ul.errors', 2);
-        $this->assertQueryContentContains('ul.errors li', 'Enter a name.');
-        $this->assertQueryContentContains('ul.errors li', 'Enter a URL.');
+        $this->assertQueryCount('ul.error', 2);
+        $this->assertQueryContentContains('ul.error li', 'Enter a name.');
+        $this->assertQueryContentContains('ul.error li', 'Enter a URL.');
 
     }
 
@@ -67,8 +67,8 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/add');
-        $this->assertQueryCount('ul.errors', 1);
-        $this->assertQueryContentContains('ul.errors li', 'Enter a valid URL.');
+        $this->assertQueryCount('ul.error', 1);
+        $this->assertQueryContentContains('ul.error li', 'Enter a valid URL.');
 
     }
 
@@ -89,7 +89,7 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/add');
-        $this->assertNotQueryContentContains('ul.errors li', 'Enter a valid URL.');
+        $this->assertNotQueryContentContains('ul.error li', 'Enter a valid URL.');
 
     }
 
@@ -165,9 +165,9 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertQueryCount('ul.errors', 2);
-        $this->assertQueryContentContains('ul.errors li', 'Enter a name.');
-        $this->assertQueryContentContains('ul.errors li', 'Enter a URL.');
+        $this->assertQueryCount('ul.error', 2);
+        $this->assertQueryContentContains('ul.error li', 'Enter a name.');
+        $this->assertQueryContentContains('ul.error li', 'Enter a URL.');
 
     }
 
@@ -191,8 +191,8 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertQueryCount('ul.errors', 1);
-        $this->assertQueryContentContains('ul.errors li', 'Enter a valid URL.');
+        $this->assertQueryCount('ul.error', 1);
+        $this->assertQueryContentContains('ul.error li', 'Enter a valid URL.');
 
     }
 
@@ -216,7 +216,7 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertNotQueryContentContains('ul.errors li', 'Enter a valid URL.');
+        $this->assertNotQueryContentContains('ul.error li', 'Enter a valid URL.');
 
     }
 

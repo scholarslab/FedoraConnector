@@ -16,7 +16,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 {
 
     /**
-     * There should be a 'Fedora' tab in the item add form.
+     * The 'Fedora' tab should display the datastreams form.
      *
      * @return void.
      */
@@ -30,26 +30,32 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Hit item add.
         $this->dispatch('items/add');
 
-        // Check for tab.
+        // Tab:
         $this->assertXpathContentContains(
-            '//ul[@id="section-nav"]/li/a[@href="#fedora-metadata"]',
-            'Fedora'
+            '//ul[@id="section-nav"]/li/a[@href="#fedora-metadata"]', 'Fedora'
         );
 
-        // Check markup.
-        $this->assertXpath('//select[@id="server"][@name="server"]');
-        $this->assertXpath('//select[@name="server"]/option[@value="'.$server1->id.'"]
-          [@label="Test Title 1"]');
-        $this->assertXpath('//select[@name="server"]/option[@value="'.$server2->id.'"]
-          [@label="Test Title 2"]');
+        // Server:
+        $this->assertXpathContentContains(
+            '//select[@name="server"]/option[@value="'.$server1->id.'"]', 'Test Title 1'
+        );
+        $this->assertXpathContentContains(
+            '//select[@name="server"]/option[@value="'.$server2->id.'"]', 'Test Title 2'
+        );
+
+        // PID:
         $this->assertXpath('//input[@id="pid"][@name="pid"]');
+
+        // Datastreams:
         $this->assertXpath('//select[@id="dsids"][@name="dsids[]"]');
+
+        // Import:
         $this->assertXpath('//input[@id="import"][@name="import"]');
 
     }
 
     /**
-     * There should be a 'Fedora' tab in the item edit form.
+     * The 'Fedora' tab should display the datastreams form.
      *
      * @return void.
      */
@@ -66,18 +72,26 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
 
-        // Check for tab.
+        // Tab:
         $this->assertXpathContentContains(
-            '//ul[@id="section-nav"]/li/a[@href="#fedora-metadata"]',
-            'Fedora'
+            '//ul[@id="section-nav"]/li/a[@href="#fedora-metadata"]', 'Fedora'
         );
 
-        // Check markup.
-        $this->assertXpath('//select[@id="server"][@name="server"]');
-        $this->assertXpath('//select[@name="server"]/option[@value="'.$server1->id.'"][@label="Test Title 1"]');
-        $this->assertXpath('//select[@name="server"]/option[@value="'.$server2->id.'"][@label="Test Title 2"]');
+        // Server:
+        $this->assertXpathContentContains(
+            '//select[@name="server"]/option[@value="'.$server1->id.'"]', 'Test Title 1'
+        );
+        $this->assertXpathContentContains(
+            '//select[@name="server"]/option[@value="'.$server2->id.'"]', 'Test Title 2'
+        );
+
+        // PID:
         $this->assertXpath('//input[@id="pid"][@name="pid"]');
+
+        // Datastreams:
         $this->assertXpath('//select[@id="dsids"][@name="dsids[]"]');
+
+        // Import:
         $this->assertXpath('//input[@id="import"][@name="import"]');
 
     }
@@ -104,13 +118,17 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
 
-        // Check server select and PID input.
-        $this->assertXpath('//select[@id="server"][@name="server"]/option[@value="'.$server2->id.'"][@label="Test Title 2"][@selected="selected"]');
+        // Server:
+        $this->assertXpath('//select[@name="server"]/option[@value="'.$server2->id.'"]
+            [@selected="selected"]'
+        );
+
+        // PID:
         $this->assertXpath('//input[@id="pid"][@name="pid"][@value="pid:test"]');
 
-        // Check hidden fields.
-        $this->assertXpath('//input[@type="hidden"][@name="datastreamsuri"]');
+        // Hidden fields:
         $this->assertXpath('//input[@type="hidden"][@name="saveddsids"][@value="DC,content"]');
+        $this->assertXpath('//input[@type="hidden"][@name="datastreamsuri"]');
 
     }
 
@@ -133,6 +151,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'featured' => 0,
                 'Elements' => array(),
                 'order' => array(),
+                'tags' => array(),
                 'server' => 1,
                 'pid' => 'pid:test',
                 'dsids' => array('DC', 'content'),
@@ -173,6 +192,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'featured' => 0,
                 'Elements' => array(),
                 'order' => array(),
+                'tags' => '',
                 'server' => 1,
                 'pid' => 'pid:test',
                 'dsids' => array('DC'),
@@ -190,37 +210,37 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $item = $this->itemsTable->find(2);
 
         // Title.
-        $title = $item->getElementTextsByElementNameAndSetName('Title', 'Dublin Core');
+        $title = metadata($item, array('Dublin Core', 'Title'));
         $this->assertEquals($title[0]->text, 'Dr. J.S. Grasty');
 
         // Contributor
-        $contributor = $item->getElementTextsByElementNameAndSetName('Contributor', 'Dublin Core');
+        $contributor = metadata($item, array('Dublin Core', 'Contributor'));
         $this->assertEquals($contributor[0]->text, 'Holsinger, Rufus W., 1866-1930');
 
         // Types.
-        $types = $item->getElementTextsByElementNameAndSetName('Type', 'Dublin Core');
+        $types = metadata($item, array('Dublin Core', 'Type'));
         $this->assertEquals($types[0]->text, 'Collection');
         $this->assertEquals($types[1]->text, 'StillImage');
         $this->assertEquals($types[2]->text, 'Photographs');
 
         // Formats.
-        $formats = $item->getElementTextsByElementNameAndSetName('Format', 'Dublin Core');
+        $formats = metadata($item, array('Dublin Core', 'Format'));
         $this->assertEquals($formats[0]->text, 'Glass negatives');
         $this->assertEquals($formats[1]->text, 'image/jpeg');
 
         // Description.
-        $description = $item->getElementTextsByElementNameAndSetName('Description', 'Dublin Core');
+        $description = metadata($item, array('Dublin Core', 'Description'));
         $this->assertEquals($description[0]->text, 'With Child, Two Poses');
 
         // Subjects.
-        $subjects = $item->getElementTextsByElementNameAndSetName('Subject', 'Dublin Core');
+        $subjects = metadata($item, array('Dublin Core', 'Subject'));
         $this->assertEquals($subjects[0]->text, 'Photography');
         $this->assertEquals($subjects[1]->text, 'Portraits, Group');
         $this->assertEquals($subjects[2]->text, 'Children');
         $this->assertEquals($subjects[3]->text, 'Holsinger Studio (Charlottesville, Va.)');
 
         // Identifiers.
-        $identifiers = $item->getElementTextsByElementNameAndSetName('Identifier', 'Dublin Core');
+        $identifiers = metadata($item, array('Dublin Core', 'Identifier'));
         $this->assertEquals($identifiers[0]->text, 'H03424B');
         $this->assertEquals($identifiers[1]->text, 'uva-lib:1038848');
         $this->assertEquals($identifiers[2]->text, '39667');
@@ -254,6 +274,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'featured' => 0,
                 'Elements' => array(),
                 'order' => array(),
+                'tags' => '',
                 'server' => 1,
                 'pid' => 'pid:test',
                 'dsids' => array('DC', 'content'),
@@ -264,7 +285,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
 
-        // +1 editions.
+        // +1 objects.
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
@@ -300,6 +321,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'featured' => 0,
                 'Elements' => array(),
                 'order' => array(),
+                'tags' => '',
                 'server' => 1,
                 'pid' => 'pid:test2',
                 'dsids' => array('DC2', 'content2'),
@@ -341,6 +363,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'featured' => 0,
                 'Elements' => array(),
                 'order' => array(),
+                'tags' => '',
                 'server' => 1,
                 'pid' => 'pid:test',
                 'dsids' => array('DC'),
@@ -412,8 +435,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->__object($item);
 
         // Mock getMimeType().
-        $this->__mockFedora(
-            'datastreams.xml',
+        $this->__mockFedora('datastreams.xml',
             "//*[local-name() = 'datastream'][@dsid='content']"
         );
 
