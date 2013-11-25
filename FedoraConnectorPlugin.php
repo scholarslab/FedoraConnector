@@ -29,8 +29,8 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
         'admin_items_form_tabs',
         'admin_navigation_main',
-        'exhibit_builder_exhibit_display_item',
-        'exhibit_builder_display_exhibit_thumbnail_gallery'
+        //'exhibit_builder_exhibit_display_item',
+        //'exhibit_builder_display_exhibit_thumbnail_gallery'
     );
 
     /**
@@ -133,7 +133,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         $form->removeDecorator('form');
 
         // Get the item.
-        $item = get_current_item();
+        $item = get_current_record('item');
 
         // If the item is saved.
         if (!is_null($item->id)) {
@@ -183,15 +183,14 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     /**
-     * Add Fedora tab to admin menu bar.
+     * Add link to admin menu bar.
      *
-     * @param array $tabs Array of label => URI.
-     *
-     * @return array The modified tabs array.
+     * @param array $tabs Tabs, <LABEL> => <URI> pairs.
+     * @return array The tab array with the "Fedora Connector" tab.
      */
     public function filterAdminNavigationMain($tabs)
     {
-        $tabs['Fedora Connector'] = url('fedora-connector');
+        $tabs[] = array('label' => 'Fedora Connector', 'uri' => url('fedora-connector'));
         return $tabs;
     }
 
@@ -202,7 +201,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookAdminAppendToItemsShowPrimary()
     {
-        echo fedora_connector_display_object(get_current_item());
+        echo fedora_connector_display_object(get_current_record('item'));
     }
 
     /**
@@ -212,7 +211,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookPublicAppendToItemsShow()
     {
-        echo fedora_connector_display_object(get_current_item());
+        echo fedora_connector_display_object(get_current_record('item'));
     }
 
     public function filterExhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
