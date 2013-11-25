@@ -166,7 +166,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
-        $object = $this->objectsTable->find(1);
+        $object = $this->objectsTable->findAll()[0];
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test');
         $this->assertEquals($object->dsids, 'DC,content');
@@ -183,7 +183,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     {
 
         // Create server.
-        $this->__server();
+        $server = $this->__server();
 
         // Mock post.
         $this->request->setMethod('POST')
@@ -193,7 +193,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
                 'Elements' => array(),
                 'order' => array(),
                 'tags' => '',
-                'server' => 1,
+                'server' => $server->id,
                 'pid' => 'pid:test',
                 'dsids' => array('DC'),
                 'import' => 1
@@ -289,7 +289,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
-        $object = $this->objectsTable->find(1);
+        $object = $this->objectsTable->findAll()[0];
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test');
         $this->assertEquals($object->dsids, 'DC,content');
@@ -336,7 +336,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->assertEquals($this->objectsTable->count(), $count);
 
         // Get out service and check.
-        $object = $this->objectsTable->find(1);
+        $object = $this->objectsTable->findAll()[0];
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test2');
         $this->assertEquals($object->dsids, 'DC2,content2');

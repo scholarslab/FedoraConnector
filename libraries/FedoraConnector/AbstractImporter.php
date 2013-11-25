@@ -75,7 +75,7 @@ abstract class FedoraConnector_AbstractImporter
             foreach ($nodes as $node) {
                 $text = new ElementText;
                 $text->record_id = $item->id;
-                $text->record_type_id = 2;
+                $text->record_type = 'Item';
                 $text->element_id = $element->id;
                 $text->html = 0;
                 $text->text = $node->nodeValue;

@@ -16,7 +16,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'install',
         'uninstall',
-        'after_save_form_item',
+        'after_save_item',
         'admin_head',
         'define_routes',
         'admin_append_to_items_show_primary',
@@ -29,6 +29,15 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         'exhibit_builder_exhibit_display_item',
         'exhibit_builder_display_exhibit_thumbnail_gallery'
     );
+
+    /**
+     * Load the objects table.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_objects = $this->_db->getTable('FedoraConnectorObject');
+    }
 
     /**
      * Insert tables.
@@ -126,8 +135,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         if (!is_null($item->id)) {
 
             // Try to get a datastream.
-            $objectsTable = $this->_db->getTable('FedoraConnectorObject');
-            $object = $objectsTable->findByItem($item);
+            $object = $this->_objects->findByItem($item);
 
             // Populate fields.
             if ($object) {
@@ -148,20 +156,23 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * Save/update datastream, do import.
      *
-     * @param Item  $item The item.
-     * @param array $post The complete $_POST.
-     *
-     * @return void.
+     * @param array $args
      */
-    public function hookAfterSaveFormItem($item, $post)
+    public function hookAfterSaveItem($args)
     {
+
+        $item = $args['record'];
+        $post = $args['post'];
+
+        // TODO|dev
+        if (!$post) return;
 
         // Create or update the datastream.
         $object = $this->_objects->createOrUpdate(
             $item, (int) $post['server'], $post['pid'], $post['dsids']
         );
 
-        // Import.
+        // Perform the import.
         if ((bool) $post['import']) {
             $importer = new FedoraConnector_Import();
             $importer->import($object);

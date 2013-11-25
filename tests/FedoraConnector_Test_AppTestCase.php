@@ -12,12 +12,6 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-require_once dirname(__FILE__) . '/../FedoraConnectorPlugin.php';
-require_once dirname(__FILE__) . '/../libraries/FedoraConnector/AbstractRenderer.php';
-require_once dirname(__FILE__) . '/../libraries/FedoraConnector/AbstractImporter.php';
-require_once dirname(__FILE__) . '/../Importers/DC.php';
-require_once dirname(__FILE__) . '/../Renderers/000-Jp2.php';
-
 
 /**
  * Set up the system for testing this plugin.
@@ -38,12 +32,9 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $this->user = $this->db->getTable('User')->find(1);
         $this->_authenticateUser($this->user);
 
-        // Add the plugin hooks and filters (including the install hook).
-        $pluginBroker = get_plugin_broker();
-        $this->_addPluginHooksAndFilters($pluginBroker, self::PLUGIN_NAME);
-
-        $pluginHelper = new Omeka_Test_Helper_Plugin();
-        $pluginHelper->setUp(self::PLUGIN_NAME);
+        // Install the plugin.
+        $this->helper = new Omeka_Test_Helper_Plugin;
+        $this->helper->setUp('FedoraConnector');
 
         // Get tables.
         $this->serversTable = $this->db->getTable('FedoraConnectorServer');
@@ -51,22 +42,6 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         $this->itemsTable = $this->db->getTable('Item');
 
     }
-
-    /**
-     * Run the plugin.
-     *
-     * @return void.
-     */
-    public function _addPluginHooksAndFilters($pluginBroker, $pluginName) {
-        $pluginBroker->setCurrentPluginDirName($pluginName);
-        new FedoraConnectorPlugin;
-    }
-
-
-    /**
-     * Test helpers.
-     */
-
 
     /**
      * Create an item.
