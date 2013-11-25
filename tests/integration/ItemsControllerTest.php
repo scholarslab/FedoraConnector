@@ -146,15 +146,15 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Set exhibit id.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public' => 1,
-                'featured' => 0,
-                'Elements' => array(),
-                'order' => array(),
-                'tags' => '',
-                'server' => 1,
-                'pid' => 'pid:test',
-                'dsids' => array('DC', 'content'),
-                'import' => 0
+                'public'    => 1,
+                'featured'  => 0,
+                'Elements'  => array(),
+                'order'     => array(),
+                'tags'      => '',
+                'server'    => 1,
+                'pid'       => 'pid:test',
+                'dsids'     => array('DC', 'content'),
+                'import'    => 0
             )
         );
 
@@ -187,15 +187,15 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Mock post.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public' => 1,
-                'featured' => 0,
-                'Elements' => array(),
-                'order' => array(),
-                'tags' => '',
-                'server' => $server->id,
-                'pid' => 'pid:test',
-                'dsids' => array('DC'),
-                'import' => 1
+                'public'    => 1,
+                'featured'  => 0,
+                'Elements'  => array(),
+                'order'     => array(),
+                'tags'      => '',
+                'server'    => $server->id,
+                'pid'       => 'pid:test',
+                'dsids'     => array('DC'),
+                'import'    => 1
             )
         );
 
@@ -269,15 +269,15 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Set exhibit id.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public' => 1,
-                'featured' => 0,
-                'Elements' => array(),
-                'order' => array(),
-                'tags' => '',
-                'server' => 1,
-                'pid' => 'pid:test',
-                'dsids' => array('DC', 'content'),
-                'import' => 0
+                'public'    => 1,
+                'featured'  => 0,
+                'Elements'  => array(),
+                'order'     => array(),
+                'tags'      => '',
+                'server'    => 1,
+                'pid'       => 'pid:test',
+                'dsids'     => array('DC', 'content'),
+                'import'    => 0
             )
         );
 
@@ -316,15 +316,15 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         // Set exhibit id.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public' => 1,
-                'featured' => 0,
-                'Elements' => array(),
-                'order' => array(),
-                'tags' => '',
-                'server' => 1,
-                'pid' => 'pid:test2',
-                'dsids' => array('DC2', 'content2'),
-                'import' => 0
+                'public'    => 1,
+                'featured'  => 0,
+                'Elements'  => array(),
+                'order'     => array(),
+                'tags'      => '',
+                'server'    => 1,
+                'pid'       => 'pid:test2',
+                'dsids'     => array('DC2', 'content2'),
+                'import'    => 0
             )
         );
 
@@ -351,71 +351,72 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     public function testImportOnItemEdit()
     {
 
-        // Create item and object.
-        $item = $this->__item();
-        $this->__object($item);
+        $server = $this->__server();
+        $item   = $this->__item();
+        $object = $this->__object($item);
 
         // Mock post.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public' => 1,
-                'featured' => 0,
-                'Elements' => array(),
-                'order' => array(),
-                'tags' => '',
-                'server' => 1,
-                'pid' => 'pid:test',
-                'dsids' => array('DC'),
-                'import' => 1
+                'public'    => 1,
+                'featured'  => 0,
+                'Elements'  => array(),
+                'order'     => array(),
+                'tags'      => '',
+                'server'    => $server->id,
+                'pid'       => 'pid:test',
+                'dsids'     => array('DC'),
+                'import'    => 1
             )
         );
 
         // Mock Fedora.
         $this->__mockImport('describe-v3x.xml', 'dc.xml');
 
-        // Hit item edit.
+        // Apply the edit, reload the item.
         $this->dispatch('items/edit/' . $item->id);
+        $item = $this->__reload($item);
 
         // Title.
-        $title = $item->getElementTextsByElementNameAndSetName('Title', 'Dublin Core');
-        $this->assertEquals($title[0]->text, 'Dr. J.S. Grasty');
+        $title = metadata($item, array('Dublin Core', 'Title'));
+        $this->assertEquals($title, 'Dr. J.S. Grasty');
 
         // Contributor
-        $contributor = $item->getElementTextsByElementNameAndSetName('Contributor', 'Dublin Core');
-        $this->assertEquals($contributor[0]->text, 'Holsinger, Rufus W., 1866-1930');
+        $contributor = metadata($item, array('Dublin Core', 'Contributor'));
+        $this->assertEquals($contributor, 'Holsinger, Rufus W., 1866-1930');
 
         // Types.
-        $types = $item->getElementTextsByElementNameAndSetName('Type', 'Dublin Core');
-        $this->assertEquals($types[0]->text, 'Collection');
-        $this->assertEquals($types[1]->text, 'StillImage');
-        $this->assertEquals($types[2]->text, 'Photographs');
+        $types = metadata($item, array('Dublin Core', 'Type'), array('all' => true));
+        $this->assertEquals($types[0], 'Collection');
+        $this->assertEquals($types[1], 'StillImage');
+        $this->assertEquals($types[2], 'Photographs');
 
         // Formats.
-        $formats = $item->getElementTextsByElementNameAndSetName('Format', 'Dublin Core');
-        $this->assertEquals($formats[0]->text, 'Glass negatives');
-        $this->assertEquals($formats[1]->text, 'image/jpeg');
+        $formats = metadata($item, array('Dublin Core', 'Format'), array('all' => true));
+        $this->assertEquals($formats[0], 'Glass negatives');
+        $this->assertEquals($formats[1], 'image/jpeg');
 
         // Description.
-        $description = $item->getElementTextsByElementNameAndSetName('Description', 'Dublin Core');
-        $this->assertEquals($description[0]->text, 'With Child, Two Poses');
+        $description = metadata($item, array('Dublin Core', 'Description'));
+        $this->assertEquals($description, 'With Child, Two Poses');
 
         // Subjects.
-        $subjects = $item->getElementTextsByElementNameAndSetName('Subject', 'Dublin Core');
-        $this->assertEquals($subjects[0]->text, 'Photography');
-        $this->assertEquals($subjects[1]->text, 'Portraits, Group');
-        $this->assertEquals($subjects[2]->text, 'Children');
-        $this->assertEquals($subjects[3]->text, 'Holsinger Studio (Charlottesville, Va.)');
+        $subjects = metadata($item, array('Dublin Core', 'Subject'), array('all' => true));
+        $this->assertEquals($subjects[0], 'Photography');
+        $this->assertEquals($subjects[1], 'Portraits, Group');
+        $this->assertEquals($subjects[2], 'Children');
+        $this->assertEquals($subjects[3], 'Holsinger Studio (Charlottesville, Va.)');
 
         // Identifiers.
-        $identifiers = $item->getElementTextsByElementNameAndSetName('Identifier', 'Dublin Core');
-        $this->assertEquals($identifiers[0]->text, 'H03424B');
-        $this->assertEquals($identifiers[1]->text, 'uva-lib:1038848');
-        $this->assertEquals($identifiers[2]->text, '39667');
-        $this->assertEquals($identifiers[3]->text, 'uri: uva-lib:1038848');
-        $this->assertEquals($identifiers[4]->text, '7688');
-        $this->assertEquals($identifiers[5]->text, '365106');
-        $this->assertEquals($identifiers[6]->text, '000007688_0004.tif');
-        $this->assertEquals($identifiers[7]->text, 'MSS 9862');
+        $identifiers = metadata($item, array('Dublin Core', 'Identifier'), array('all' => true));
+        $this->assertEquals($identifiers[0], 'H03424B');
+        $this->assertEquals($identifiers[1], 'uva-lib:1038848');
+        $this->assertEquals($identifiers[2], '39667');
+        $this->assertEquals($identifiers[3], 'uri: uva-lib:1038848');
+        $this->assertEquals($identifiers[4], '7688');
+        $this->assertEquals($identifiers[5], '365106');
+        $this->assertEquals($identifiers[6], '000007688_0004.tif');
+        $this->assertEquals($identifiers[7], 'MSS 9862');
 
     }
 

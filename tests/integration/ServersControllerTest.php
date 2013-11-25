@@ -119,7 +119,7 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         $this->assertEquals($this->serversTable->count(), $count+1);
 
         // Get new server, check params.
-        $server = $this->serversTable->find(1);
+        $server = $this->__getLastRow($this->serversTable);
         $this->assertEquals($server->name, 'Test Title');
         $this->assertEquals($server->url, 'http://localhost:8080/fedora');
 
@@ -246,7 +246,7 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
 
         // Get new server, check params.
-        $server = $this->serversTable->find(1);
+        $server = $this->serversTable->find($server->id);
         $this->assertEquals($server->name, 'New Title');
         $this->assertEquals($server->url, 'http://test.org/fedora');
 

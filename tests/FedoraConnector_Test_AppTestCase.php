@@ -167,6 +167,18 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
 
     /**
+     * Reload a record.
+     *
+     * @param Omeka_Record_AbstractRecord $record A record to reload.
+     * @return Omeka_Record_AbstractRecord The reloaded record.
+     */
+    protected function __reload($record)
+    {
+        return $record->getTable()->find($record->id);
+    }
+
+
+    /**
      * Get the last record in a table.
      *
      * @param Omeka_Db_Table $table A table.
