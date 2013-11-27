@@ -17,8 +17,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
     /**
      * The 'Fedora' tab should display the datastreams form.
-     *
-     * @return void.
      */
     public function testItemAddTab()
     {
@@ -56,8 +54,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
     /**
      * The 'Fedora' tab should display the datastreams form.
-     *
-     * @return void.
      */
     public function testItemEditTab()
     {
@@ -98,8 +94,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     /**
      * If there is an existing Fedora object for the item, the data should be
      * populated in the textareas.
-     *
-     * @return void.
      */
     public function testItemEditData()
     {
@@ -134,8 +128,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     /**
      * When an item is added and Fedora data is entered, the service should
      * be created.
-     *
-     * @return void.
      */
     public function testFedoraObjectCreationOnItemAdd()
     {
@@ -175,8 +167,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     /**
      * When an item is added and the "Import now?" checkbox is checked,
      * the datastreams should be imported.
-     *
-     * @return void.
      */
     public function testImportOnItemAdd()
     {
@@ -254,8 +244,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     /**
      * When an item is edited and Fedora data is entered, the service should
      * be created.
-     *
-     * @return void.
      */
     public function testFedoraObjectCreationOnItemEdit()
     {
@@ -298,8 +286,6 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     /**
      * When an item is edited and Fedora data is entered, the service should
      * be created.
-     *
-     * @return void.
      */
     public function testFedoraObjectUpdateOnItemEdit()
     {
@@ -343,10 +329,8 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     }
 
     /**
-     * When an item is edited and the "Import now?" checkbox is checked,
-     * the datastreams should be imported.
-     *
-     * @return void.
+     * When an item is edited and the "Import now?" checkbox is checked, the
+     * datastreams should be imported.
      */
     public function testImportOnItemEdit()
     {
@@ -421,11 +405,7 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
     }
 
     /**
-     * When an item has a Fedora object with a dsid activated that has
-     * a renderer, the dsid should be rendered at the bottom of the admin
-     * item show page.
-     *
-     * @return void.
+     * Fedora objects should be rendered on admin item show pages.
      */
     public function testRenderOnItemAdminShow()
     {

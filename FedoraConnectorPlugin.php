@@ -28,8 +28,8 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
         'admin_items_form_tabs',
         'admin_navigation_main',
-        'exhibit_builder_exhibit_display_item',
-        'exhibit_builder_display_exhibit_thumbnail_gallery'
+        //'exhibit_builder_exhibit_display_item',
+        //'exhibit_builder_display_exhibit_thumbnail_gallery'
     );
 
 
@@ -235,42 +235,50 @@ SQL
     }
 
 
-    public function filterExhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
-    {
-      $fedoraObject = fedora_connector_display_object($item, array('scale' => settings('fullsize_constraint')));
-      $html = $fedoraObject ? exhibit_builder_link_to_exhibit_item($fedoraObject, $linkProperties, $item) : $html;
-      return $html;
-    }
+    // TODO: Migrate to ExhibitBuilder 2.x, shorten lines to 80 chars.
 
 
-    public function filterExhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
+    //public function filterExhibitBuilderExhibitDisplayItem(
+        //$html, $displayFileOptions, $linkProperties, $item) {
 
-      $params = array();
+        //$object = fedora_connector_display_object(
+            //$item, array('scale' => settings('fullsize_constraint'))
+        //);
 
-      switch($thumbnailType) {
-        case 'thumbnail':
-          $params['scale'] = settings('thumbnail_constraint');
-          break;
-        case 'square_thumbnail':
-          $params['region'] = '0.5,0.5,'.settings('square_thumbnail_constraint').','.settings('square_thumbnail_constraint');
-          $params['level'] = 1;
-          break;
-      }
+        //$html = $fedoraObject ? exhibit_builder_link_to_exhibit_item($fedoraObject, $linkProperties, $item) : $html;
+        //return $html;
 
-      $html = '';
+    //}
 
-      for ($i=(int)$start; $i <= (int)$end; $i++) {
-        if (exhibit_builder_use_exhibit_page_item($i)) {
-          $thumbnail = fedora_connector_display_object($item, $params) ? fedora_connector_display_object($item, $params) : item_image($thumbnailType, $props);
-          $html .= "\n" . '<div class="exhibit-item">';
-          $html .= exhibit_builder_link_to_exhibit_item($thumbnail);
-          $html .= exhibit_builder_exhibit_display_caption($i);
-          $html .= '</div>' . "\n";
-        }
-      }
 
-      return $html;
-    }
+    //public function filterExhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
+
+      //$params = array();
+
+      //switch($thumbnailType) {
+        //case 'thumbnail':
+          //$params['scale'] = settings('thumbnail_constraint');
+          //break;
+        //case 'square_thumbnail':
+          //$params['region'] = '0.5,0.5,'.settings('square_thumbnail_constraint').','.settings('square_thumbnail_constraint');
+          //$params['level'] = 1;
+          //break;
+      //}
+
+      //$html = '';
+
+      //for ($i=(int)$start; $i <= (int)$end; $i++) {
+        //if (exhibit_builder_use_exhibit_page_item($i)) {
+          //$thumbnail = fedora_connector_display_object($item, $params) ? fedora_connector_display_object($item, $params) : item_image($thumbnailType, $props);
+          //$html .= "\n" . '<div class="exhibit-item">';
+          //$html .= exhibit_builder_link_to_exhibit_item($thumbnail);
+          //$html .= exhibit_builder_exhibit_display_caption($i);
+          //$html .= '</div>' . "\n";
+        //}
+      //}
+
+      //return $html;
+    //}
 
 
 }
