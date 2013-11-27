@@ -40,6 +40,7 @@ function __fedoraNodes($uri, $xpath)
 
 }
 
+
 function fedora_connector_display_object($item = null, $params = array()) {
   $item = $item ? $item : get_current_item();
 
