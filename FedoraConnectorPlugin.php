@@ -1,27 +1,29 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
 class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 {
 
+
     protected $_hooks = array(
         'install',
         'uninstall',
+        'define_routes',
         'after_save_item',
         'admin_head',
-        'define_routes',
         'admin_items_show',
         'public_append_to_items_show'
     );
+
 
     protected $_filters = array(
         'admin_items_form_tabs',
@@ -29,6 +31,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         'exhibit_builder_exhibit_display_item',
         'exhibit_builder_display_exhibit_thumbnail_gallery'
     );
+
 
     /**
      * Load the objects table.
@@ -39,37 +42,47 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         $this->_objects = $this->_db->getTable('FedoraConnectorObject');
     }
 
+
     /**
-     * Insert tables.
+     * Create servers and objects tables.
      *
      * @return void
      */
     public function hookInstall()
     {
 
-        // Servers.
-        $this->_db->query(
-            "CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}fedora_connector_servers` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `url` tinytext collate utf8_unicode_ci,
-                `name` tinytext collate utf8_unicode_ci,
-                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"
-        );
+        $this->_db->query(<<<SQL
+        CREATE TABLE IF NOT EXISTS
+            {$this->_db->prefix}fedora_connector_servers (
 
-        // Objects.
-        $this->_db->query(
-            "CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}fedora_connector_objects` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `item_id` int(10) unsigned,
-                `server_id` int(10) unsigned,
-                `pid` tinytext collate utf8_unicode_ci,
-                `dsids` tinytext collate utf8_unicode_ci,
-                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"
-        );
+            id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            name        TINYTEXT NOT NULL,
+            url         TINYTEXT NOT NULL,
+
+            PRIMARY KEY (id)
+
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SQL
+);
+
+        $this->_db->query(<<<SQL
+        CREATE TABLE IF NOT EXISTS
+            {$this->_db->prefix}fedora_connector_objects (
+
+            id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            item_id     INT(10) UNSIGNED NOT NULL,
+            server_id   INT(10) UNSIGNED NOT NULL,
+            pid         TINYTEXT NOT NULL,
+            dsids       TINYTEXT NOT NULL,
+
+            PRIMARY KEY (id)
+
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SQL
+);
 
     }
+
 
     /**
      * Drop tables.
@@ -86,7 +99,22 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         // Drop the objects table.
         $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_objects`";
         $this->_db->query($sql);
+
     }
+
+
+    /**
+     * Register routes.
+     *
+     * @param array $args Contains: `router` (Zend_Config).
+     */
+    public function hookDefineRoutes($args)
+    {
+        $args['router']->addConfig(new Zend_Config_Ini(
+            FEDORA_DIR . '/routes.ini'
+        ));
+    }
+
 
     /**
      * Add plugin static assets.
@@ -102,17 +130,6 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         queue_js_file('load-datastreams');
     }
 
-    /**
-     * Register routes.
-     *
-     * @param array $args Contains: `router` (Zend_Config).
-     */
-    public function hookDefineRoutes($args)
-    {
-        $args['router']->addConfig(new Zend_Config_Ini(
-            FEDORA_DIR . '/routes.ini'
-        ));
-    }
 
     /**
      * Add Fedora tab to the Items interface.
@@ -153,8 +170,9 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 
     }
 
+
     /**
-     * Save/update datastream, do import.
+     * Save / update datastream, import from Fedora.
      *
      * @param array $args
      */
@@ -180,6 +198,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 
     }
 
+
     /**
      * Add link to admin menu bar.
      *
@@ -192,6 +211,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         return $tabs;
     }
 
+
     /**
      * Render the datastream on admin show page.
      *
@@ -201,6 +221,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     {
         echo fedora_connector_display_object(get_current_record('item'));
     }
+
 
     /**
      * Render the datastream on public show page.
@@ -212,12 +233,14 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         echo fedora_connector_display_object(get_current_record('item'));
     }
 
+
     public function filterExhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
     {
       $fedoraObject = fedora_connector_display_object($item, array('scale' => settings('fullsize_constraint')));
       $html = $fedoraObject ? exhibit_builder_link_to_exhibit_item($fedoraObject, $linkProperties, $item) : $html;
       return $html;
     }
+
 
     public function filterExhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
 
@@ -247,5 +270,6 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 
       return $html;
     }
+
 
 }
