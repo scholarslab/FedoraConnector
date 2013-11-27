@@ -21,7 +21,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
         'after_save_item',
         'admin_head',
         'admin_items_show',
-        'public_append_to_items_show'
+        'public_items_show'
     );
 
 
@@ -91,15 +91,14 @@ SQL
      */
     public function hookUninstall()
     {
-
-        // Drop the servers table.
-        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_servers`";
-        $this->_db->query($sql);
-
-        // Drop the objects table.
-        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_objects`";
-        $this->_db->query($sql);
-
+        $this->_db->query(<<<SQL
+        DROP TABLE {$this->_db->prefix}fedora_connector_servers
+SQL
+);
+        $this->_db->query(<<<SQL
+        DROP TABLE {$this->_db->prefix}fedora_connector_objects
+SQL
+);
     }
 
 
@@ -130,7 +129,6 @@ SQL
         queue_js_file('load-datastreams');
     }
 
-
     /**
      * Add Fedora tab to the Items interface.
      *
@@ -141,15 +139,14 @@ SQL
     public function filterAdminItemsFormTabs($tabs)
     {
 
-        // Construct the form, strip the <form> tag.
+        // Get the form markup.
         $form = new FedoraConnector_Form_Object();
         $form->removeDecorator('form');
 
         // Get the item.
         $item = get_current_record('item');
 
-        // If the item is saved.
-        if (!is_null($item->id)) {
+        if ($item->exists()) {
 
             // Try to get a datastream.
             $object = $this->_objects->findByItem($item);
@@ -157,9 +154,9 @@ SQL
             // Populate fields.
             if ($object) {
                 $form->populate(array(
-                    'server' => $object->server_id,
-                    'pid' => $object->pid,
-                    'saved-dsids' => $object->dsids
+                    'server'        => $object->server_id,
+                    'pid'           => $object->pid,
+                    'saved-dsids'   => $object->dsids
                 ));
             }
         }
@@ -182,7 +179,9 @@ SQL
         $item = $args['record'];
         $post = $args['post'];
 
-        // TODO|dev
+        // TODO|refactor
+        // Only try to run the import if the Item form is being saved, and a
+        // POST array is defined. Is there no clearer way to do this?
         if (!$post) return;
 
         // Create or update the datastream.
@@ -207,7 +206,9 @@ SQL
      */
     public function filterAdminNavigationMain($tabs)
     {
-        $tabs[] = array('label' => 'Fedora Connector', 'uri' => url('fedora-connector'));
+        $tabs[] = array(
+            'label' => 'Fedora Connector', 'uri' => url('fedora-connector')
+        );
         return $tabs;
     }
 
@@ -228,7 +229,7 @@ SQL
      *
      * @return void.
      */
-    public function hookPublicAppendToItemsShow()
+    public function hookPublicItemsShow()
     {
         echo fedora_connector_display_object(get_current_record('item'));
     }
