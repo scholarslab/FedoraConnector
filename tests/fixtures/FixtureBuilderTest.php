@@ -22,7 +22,7 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
     public function setUp()
     {
         parent::setUp();
-        $this->_fixtures = FEDORA_PLUGIN_DIR . '/spec/javascripts/fixtures/';
+        $this->_fixtures = FEDORA_DIR . '/spec/javascripts/fixtures/';
     }
 
     /**

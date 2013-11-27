@@ -110,7 +110,7 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookDefineRoutes($args)
     {
         $args['router']->addConfig(new Zend_Config_Ini(
-            FEDORA_PLUGIN_DIR . '/routes.ini'
+            FEDORA_DIR . '/routes.ini'
         ));
     }
 
