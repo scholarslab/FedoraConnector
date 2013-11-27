@@ -102,8 +102,3 @@ PackageTask.new('FedoraConnector') do |p|
   p.package_files.include('views/**/*.php')
   p.package_files.include('views/**/*.png')
 end
-
-## desc 'This calls the Cakefile to minify the JS.'
-## task :minify do
-##   sh %{cake build}
-## end

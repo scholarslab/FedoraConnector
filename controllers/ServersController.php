@@ -1,44 +1,42 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Servers controller.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
-class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionController
+
+class FedoraConnector_ServersController
+    extends Omeka_Controller_AbstractActionController
 {
 
+
     /**
-     * Initialize.
-     *
-     * @return void
+     * Cache the servers table.
      */
     public function init()
     {
-        $this->_table = $this->_helper->db->getTable('FedoraConnectorServer');
+        $this->_servers = $this->_helper->db->getTable(
+            'FedoraConnectorServer'
+        );
     }
+
 
     /**
      * Show servers.
-     *
-     * @return void
      */
     public function browseAction()
     {
-        $this->view->servers = $this->_table->findAll();
+        $this->view->servers = $this->_servers->findAll();
     }
+
 
     /**
      * Add server.
-     *
-     * @return void
      */
     public function addAction()
     {
@@ -57,7 +55,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
             if ($form->isValid($post)) {
 
                 // Create server.
-                $this->_table->updateServer($server, $post);
+                $this->_servers->updateServer($server, $post);
 
                 // Redirect to browse.
                 $this->_helper->redirector('browse');
@@ -76,16 +74,15 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
 
     }
 
+
     /**
      * Edit server.
-     *
-     * @return void
      */
     public function editAction()
     {
 
         // Get server.
-        $server = $this->_table->find(
+        $server = $this->_servers->find(
             $this->_request->id
         );
 
@@ -108,7 +105,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
             if ($form->isValid($post)) {
 
                 // Create server.
-                $this->_table->updateServer($server, $post);
+                $this->_servers->updateServer($server, $post);
 
                 // Redirect to browse.
                 $this->_helper->redirector('browse');
@@ -127,6 +124,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
 
     }
 
+
     /**
      * Sets the add success message.
      *
@@ -138,6 +136,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
     {
         return __('The server "%s" was successfully added!', $server->name);
     }
+
 
     /**
      * Sets the edit success message.
@@ -151,6 +150,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
         return __('The server "%s" was successfully changed!', $server->name);
     }
 
+
     /**
      * Sets the delete success message.
      *
@@ -162,6 +162,7 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
     {
         return __('The server "%s" was successfully deleted!', $server->name);
     }
+
 
     /**
      * Sets the delete confirm message.
@@ -175,13 +176,5 @@ class FedoraConnector_ServersController extends Omeka_Controller_AbstractActionC
         return __('This will delete the server "%s".', $server->name);
     }
 
+
 }
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
