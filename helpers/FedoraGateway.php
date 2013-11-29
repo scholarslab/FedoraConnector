@@ -18,7 +18,6 @@ class FedoraGateway
      * Load DOMDocument for a URL.
      *
      * @param string $url The url of the document.
-     *
      * @return DOMDocument The document.
      */
     public function load($url)
@@ -34,7 +33,6 @@ class FedoraGateway
      *
      * @param string $url The url of the document.
      * @param string $xpath The XPath query.
-     *
      * @return object The matching nodes.
      */
     public function query($url, $xpath)

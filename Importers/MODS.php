@@ -1,38 +1,35 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * DC importer.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
 class MODS_Importer extends FedoraConnector_AbstractImporter
 {
 
+
     /**
-     * Checks to see if the datastream is MODS format.
+     * Check to see if the datastream is MODS.
      *
      * @param object $dsid The dsid.
-     *
      * @return boolean True if format is MODS.
      */
     public function canImport($dsid)
     {
-        return ($dsid == 'descMetadata');
+        return $dsid == 'descMetadata';
     }
 
+
     /**
-     * Get xpath queries to extract node for a given DC element.
+     * Get XPath queries to extract node for a given DC element.
      *
      * @param string $name The DC name of the element.
-     *
      * @return array The array of xpath queries.
      */
     public function getQueries($name)
@@ -43,8 +40,7 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
             case 'Title':
 
                 $queries = array(
-                    '//*[local-name()="mods"]/*[local-name()="titleInfo"]'
-                    . '/*[local-name()="title"]'
+                    '//*[local-name()="mods"]/*[local-name()="titleInfo"]/*[local-name()="title"]'
                 );
 
                 break;
@@ -52,8 +48,7 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
             case 'Creator':
 
                 $queries = array(
-                    '//*[local-name()="mods"]'
-                    . '/*[local-name()="name"][*[local-name()="role"] = "creator"]'
+                    '//*[local-name()="mods"]/*[local-name()="name"][*[local-name()="role"] = "creator"]'
                 );
 
                 break;
@@ -61,8 +56,7 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
             case 'Subject':
 
                 $queries = array(
-                    '//*[local-name()="mods"]/*[local-name()="subject"]'
-                    . '/*[local-name()="topic"]'
+                    '//*[local-name()="mods"]/*[local-name()="subject"]/*[local-name()="topic"]'
                 );
 
                 break;
@@ -80,17 +74,16 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
             case 'Publisher':
 
                 $queries = array(
-                    '//*[local-name()="mods"]/*[local-name()="originInfo"]'
-                    . '/*[local-name()="publisher"]'
+                    '//*[local-name()="mods"]/*[local-name()="originInfo"]/*[local-name()="publisher"]'
                 );
 
                 break;
 
             case 'Contributor':
 
+                // TODO: What to do with this? - DWM
                 // Mapping from name/namePart to Contributor specifically is
-                // difficult. There are likely institutional differences in
-                // mapping.
+                // difficult. There are likely institutional differences.
                 $queries = array();
 
                 break;
@@ -98,6 +91,7 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
             case 'Date':
 
                 $prefix = '//*[local-name()="mods"]/*[local-name()="originInfo"]';
+
                 $queries = array(
                     $prefix . '/*[local-name()="dateIssued"]',
                     $prefix . '/*[local-name()="dateCreated"]',
@@ -109,9 +103,9 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
             case 'Type':
 
+                // TODO: What to do with this? - DWM
                 // XXX: Originally, this set $queries to something sane and
-                // immediately set it again to an empty array.  I need to test to
-                // make sure I'm using the right one.
+                // immediately set it again to an empty array. Need to test.
                 $queries = array(
                     '//*[local-name()="mods"]/*[local-name()="typeOfResource"]',
                     '//*[local-name()="mods"]/*[local-name()="genre"]'
@@ -121,12 +115,11 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
             case 'Format':
 
+                // TODO: What to do with this? - DWM
                 // XXX: Originally, this set $queries to something sane and
-                // immediately set it again to an empty array.  I need to test to
-                // make sure I'm using the right one.
-                $prefix
-                    = '//*[local-name()="mods"]'
-                    . '/*[local-name()="physicalDescription"]';
+                // immediately set it again to an empty array. Need to test.
+                $prefix = '//*[local-name()="mods"]/*[local-name()="physicalDescription"]';
+
                 $queries = array(
                     $prefix . '/*[local-name()="internetMediaType"]',
                     $prefix . '/*[local-name()="extent"]',
@@ -139,20 +132,18 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
                 $queries = array(
                     '//*[local-name()="mods"]/*[local-name()="identifier"]',
-                    '//*[local-name()="mods"]/*[local-name()="location"]'
-                    . '/*[local-name()="uri"]'
+                    '//*[local-name()="mods"]/*[local-name()="location"]/*[local-name()="uri"]'
                 );
 
                 break;
 
             case 'Source':
 
-                $prefix
-                    = '//*[local-name()="mods"]/*[local-name()="relatedItem"]'
-                    . '[@type="original"]/*';
+                $prefix = '//*[local-name()="mods"]/*[local-name()="relatedItem"][@type="original"]/*';
+
                 $queries = array(
-                    $prefix .  '[local-name()="titleInfo"]/*[local-name()="title"]',
-                    $prefix .  '[local-name()="location"]/*[local-name()="url"]'
+                    $prefix . '[local-name()="titleInfo"]/*[local-name()="title"]',
+                    $prefix . '[local-name()="location"]/*[local-name()="url"]'
                 );
 
                 break;
@@ -167,11 +158,11 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
             case 'Relation':
 
-                $prefix
-                    = '//*[local-name()="mods"]/*[local-name()="relatedItem"]/*';
+                $prefix = '//*[local-name()="mods"]/*[local-name()="relatedItem"]/*';
+
                 $queries = array(
-                    $prefix .  '[local-name()="titleInfo"]/*[local-name()="title"]',
-                    $prefix .  '[local-name()="location"]/*[local-name()="url"]'
+                    $prefix . '[local-name()="titleInfo"]/*[local-name()="title"]',
+                    $prefix . '[local-name()="location"]/*[local-name()="url"]'
                 );
 
                 break;
@@ -190,7 +181,7 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
 
             case 'Rights':
 
-                $queries == array(
+                $queries = array(
                     '//*[local-name()="mods"]/*[local-name()="accessCondition"]'
                 );
 
@@ -201,5 +192,6 @@ class MODS_Importer extends FedoraConnector_AbstractImporter
         return $queries;
 
     }
+
 
 }

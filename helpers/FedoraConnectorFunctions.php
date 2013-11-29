@@ -15,7 +15,6 @@
  *
  * @param string $uri The uri of the document.
  * @param string $xpath The XPath query.
- *
  * @return object The matching nodes.
  */
 function __fedoraNodes($uri, $xpath)
@@ -43,7 +42,6 @@ function __fedoraNodes($uri, $xpath)
  *
  * @param Item $item The item.
  * @param array $params Options for the renderer.
- *
  * @return string|null The Fedora object markup.
  */
 function fedora_connector_display_object($item=null, $params=array()) {
