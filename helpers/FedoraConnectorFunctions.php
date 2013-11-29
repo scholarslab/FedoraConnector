@@ -1,15 +1,12 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Helper methods.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
@@ -24,30 +21,41 @@
 function __fedoraNodes($uri, $xpath)
 {
 
-  $xml = new DomDocument();
+    $xml = new DomDocument();
 
-  try {
+    try {
 
-    $xml->load($uri);
-    $query = new DOMXPath($xml);
-    $result = $query->query($xpath);
+        $xml->load($uri);
+        $query = new DOMXPath($xml);
+        $result = $query->query($xpath);
 
-  } catch (Exception $e) {
-    $result = false;
-  }
+    } catch (Exception $e) {
+        $result = false;
+    }
 
-  return $result;
+    return $result;
 
 }
 
 
-function fedora_connector_display_object($item = null, $params = array()) {
-  $item = $item ? $item : get_current_item();
+/**
+ * Generate markup for an item's Fedora object.
+ *
+ * @param Item $item The item.
+ * @param array $params Options for the renderer.
+ *
+ * @return string|null The Fedora object markup.
+ */
+function fedora_connector_display_object($item=null, $params=array()) {
 
-  if ($item && $object = get_db()->getTable('FedoraConnectorObject')->findByItem($item)) {
-    $renderer = new FedoraConnector_Render();
-    return $renderer->display($object, $params);
-  }
+    // Get the item and the objects table.
+    $item = $item ? $item : get_current_record('item');
+    $objectsTable = get_db()->getTable('FedoraConnectorObject');
 
-  return false;
+    // Render the Fedora object.
+    if ($item && $object = $objectsTable->findByItem($item)) {
+        $renderer = new FedoraConnector_Render();
+        return $renderer->display($object, $params);
+    }
+
 }
