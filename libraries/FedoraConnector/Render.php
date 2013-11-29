@@ -29,7 +29,7 @@ class FedoraConnector_Render
 
         $this->rendererDir = isset($rendererDir) ?
             $rendererDir :
-            FEDORA_DIR . '/Renderers';
+            FEDORA_DIR . '/renderers';
 
         $this->displayPlugins = new FedoraConnector_Plugins(
             $this->rendererDir,

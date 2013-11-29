@@ -23,7 +23,6 @@ class FedoraConnector_Form_Server extends Omeka_Form
         parent::init();
 
         $this->setMethod('post');
-        $this->setAttrib('id', 'server-form');
         $this->addElementPrefixPath('FedoraConnector', dirname(__FILE__));
 
         // Title.
@@ -69,7 +68,7 @@ class FedoraConnector_Form_Server extends Omeka_Form
 
         // Submit.
         $this->addElement('submit', 'submit', array(
-            'label' => __('Save')
+            'label' => __('Save Server')
         ));
 
         // Group the data fields.

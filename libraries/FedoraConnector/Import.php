@@ -29,7 +29,7 @@ class FedoraConnector_Import
 
         $this->importerDir = isset($importerDir) ?
             $importerDir :
-            FEDORA_DIR . '/Importers';
+            FEDORA_DIR . '/importers';
 
         $this->plugins = new FedoraConnector_Plugins(
             $this->importerDir,

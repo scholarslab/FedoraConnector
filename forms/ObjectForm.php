@@ -27,7 +27,6 @@ class FedoraConnector_Form_Object extends Omeka_Form
 
         $this->setMethod('post');
         $this->setAttrib('id', 'datastream-form');
-        $this->addElementPrefixPath('FedoraConnector', dirname(__FILE__));
 
         // Server.
         $this->addElement('select', 'server', array(
