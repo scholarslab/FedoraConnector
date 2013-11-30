@@ -1,16 +1,14 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Object row manager.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnectorObject extends Omeka_Record_AbstractRecord
 {
@@ -44,8 +42,9 @@ class FedoraConnectorObject extends Omeka_Record_AbstractRecord
      */
     public function getServer()
     {
-        return $this->getTable('FedoraConnectorServer')->find($this->server_id);
+        return get_record_by_id('FedoraConnectorServer', $this->server_id);
     }
+
 
     /**
      * Get parent item.
@@ -54,8 +53,9 @@ class FedoraConnectorObject extends Omeka_Record_AbstractRecord
      */
     public function getItem()
     {
-        return $this->getTable('Item')->find($this->item_id);
+        return get_record_by_id('Item', $this->item_id);
     }
+
 
     /**
      * Construct the object base URL.
@@ -64,21 +64,21 @@ class FedoraConnectorObject extends Omeka_Record_AbstractRecord
      */
     public function getBaseUrl()
     {
-        $server = $this->getServer();
-        return "{$server->url}/{$server->getService()}/{$this->pid}/datastreams";
+        $s = $this->getServer();
+        return "{$s->url}/{$s->getService()}/{$this->pid}/datastreams";
     }
+
 
     /**
      * Build the URL for the XML output for a given dsid.
      *
      * @param string $dsid The dsid to load.
-     *
      * @return string The URL for the datastream.
      */
     public function getMetadataUrl($dsid)
     {
-        $baseUrl = $this->getBaseUrl();
-        return "{$baseUrl}/{$dsid}/content";
+        return "{$this->getBaseUrl()}/{$dsid}/content";
     }
+
 
 }

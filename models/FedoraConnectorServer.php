@@ -1,19 +1,18 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Row class for servers.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnectorServer extends Omeka_Record_AbstractRecord
 {
+
 
     /**
      * The name of the server [string].
@@ -24,6 +23,7 @@ class FedoraConnectorServer extends Omeka_Record_AbstractRecord
      * The server URL [string].
      */
     public $url;
+
 
     /**
      * Retrieve the server version.
@@ -36,12 +36,14 @@ class FedoraConnectorServer extends Omeka_Record_AbstractRecord
         // Query for version.
         $version = Zend_Registry::get('gateway')->query(
             "{$this->url}/describe?xml=true",
-            "//*[local-name() = 'repositoryVersion']");
+            "//*[local-name() = 'repositoryVersion']"
+        );
 
         // Extract node value.
         return $version ? $version->item(0)->nodeValue : false;
 
     }
+
 
     /**
      * Retrieve the server service (get or objects) for url construction.
@@ -61,6 +63,7 @@ class FedoraConnectorServer extends Omeka_Record_AbstractRecord
 
     }
 
+
     /**
      * Test to see if server is online.
      *
@@ -71,11 +74,11 @@ class FedoraConnectorServer extends Omeka_Record_AbstractRecord
         return !$this->getVersion() ? false : true;
     }
 
+
     /**
      * Retrieve datastream nodes.
      *
      * @param $pid The pid to hit.
-     *
      * @return array The nodes.
      */
     public function getDatastreamNodes($pid)
@@ -93,12 +96,12 @@ class FedoraConnectorServer extends Omeka_Record_AbstractRecord
 
     }
 
+
     /**
      * Retrieve the mimeType for a given pid and dsid.
      *
      * @param string $pid The pid.
      * @param string $dsid The dsid.
-     *
      * @return string The mimeType.
      */
     public function getMimeType($pid, $dsid)
@@ -113,5 +116,6 @@ class FedoraConnectorServer extends Omeka_Record_AbstractRecord
         return $stream->item(0)->getAttribute('mimeType');
 
     }
+
 
 }

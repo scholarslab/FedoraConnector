@@ -1,26 +1,24 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Table class for servers.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnectorServerTable extends Omeka_Db_Table
 {
+
 
     /**
      * Create a new server.
      *
      * @param Omeka_Reocrd $server The server.
      * @param array $post The field data posted from the form.
-     *
      * @return boolean True if insert succeeds.
      */
     public function updateServer($server, $post)
@@ -40,5 +38,6 @@ class FedoraConnectorServerTable extends Omeka_Db_Table
         return $server;
 
     }
+
 
 }
