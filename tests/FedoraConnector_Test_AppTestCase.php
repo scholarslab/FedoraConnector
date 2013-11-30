@@ -1,23 +1,18 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Test runner class.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
-/**
- * Set up the system for testing this plugin.
- */
 class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 {
+
 
     /**
      * Install the plugin.
@@ -41,6 +36,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     }
 
+
     /**
      * Create an item.
      *
@@ -53,27 +49,24 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         return $item;
     }
 
+
     /**
      * Create a server.
      *
      * @param string $name The server name.
      * @param string $url The server url.
-     *
      * @return Omeka_Record $server The server.
      */
     public function __server(
-        $name='Test Server',
-        $url='http://www.test.org/fedora')
-    {
-
+        $name='Test Server', $url='http://www.test.org/fedora'
+    ) {
         $server = new FedoraConnectorServer;
         $server->name = $name;
         $server->url = $url;
         $server->save();
-
         return $server;
-
     }
+
 
     /**
      * Create a service.
@@ -82,27 +75,17 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param OmekaItem $server Parent server.
      * @param string $pid The object pid.
      * @param string $dsids Comma-deliimited dsids.
-     *
      * @return Omeka_Record $object The object.
      */
     public function __object(
-        $item=null,
-        $server=null,
-        $pid='pid:test',
-        $dsids='DC,content'
-    )
-    {
+        $item=null, $server=null, $pid='pid:test', $dsids='DC,content'
+    ) {
 
-        // If no item, create one.
-        if (is_null($item)) {
-            $item = $this->__item();
-        }
+        // Create item/server if none passed.
+        if (is_null($item)) $item = $this->__item();
+        if (is_null($server)) $server = $this->__server();
 
-        // If no server, create one.
-        if (is_null($server)) {
-            $server = $this->__server();
-        }
-
+        // Create the object.
         $object = new FedoraConnectorObject();
         $object->item_id = $item->id;
         $object->server_id = $server->id;
@@ -114,13 +97,12 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     }
 
+
     /**
      * Set a mock FedoraGateway class.
      *
      * @param string $fixture The name of the fixture xml.
      * @param string $query The xpath query to run on the fixture.
-     *
-     * @return void.
      */
     public function __mockFedora($fixture, $query)
     {
@@ -132,18 +114,20 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // Mock the gateway.
         $mock = $this->getMock('FedoraGateway');
-        $mock->expects($this->any())->method('query')->will($this->returnValue($response));
+        $mock->expects($this->any())->method('query')->will(
+            $this->returnValue($response));
+
+        // Inject the mock gateway.
         Zend_Registry::set('gateway', $mock);
 
     }
+
 
     /**
      * Prepare mock FedoraGateway class for import integration tests.
      *
      * @param string $versionFixture The name of the version fixture xml.
      * @param string $metadataFixture The name of the metadata xml.
-     *
-     * @return void.
      */
     public function __mockImport($versionFixture, $metadataFixture)
     {
@@ -151,7 +135,9 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         // Generate response for getVersion() call.
         $gateway = new FedoraGateway();
         $url = FEDORA_DIR . '/tests/xml/' . $versionFixture;
-        $getVersionResponse = $gateway->query($url, "//*[local-name() = 'repositoryVersion']");
+        $getVersionResponse = $gateway->query(
+            $url, "//*[local-name()='repositoryVersion']"
+        );
 
         // Generate response for getMetadataXml() call.
         $url = FEDORA_DIR . '/tests/xml/' . $metadataFixture;
@@ -159,8 +145,12 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // Mock the gateway.
         $mock = $this->getMock('FedoraGateway');
-        $mock->expects($this->any())->method('query')->will($this->returnValue($getVersionResponse));
-        $mock->expects($this->any())->method('load')->will($this->returnValue($getMetadataXmlResponse));
+        $mock->expects($this->any())->method('query')->will(
+            $this->returnValue($getVersionResponse));
+        $mock->expects($this->any())->method('load')->will(
+            $this->returnValue($getMetadataXmlResponse));
+
+        // Inject the mock gateway.
         Zend_Registry::set('gateway', $mock);
 
     }
@@ -190,15 +180,5 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
         return array_pop($records);
     }
 
+
 }
-
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
-?>

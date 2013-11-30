@@ -56,8 +56,8 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
         $server = $object->getServer();
 
         // Construct image URL.
-        $url = "{$server->url}/{$server->getService()}/{$object->pid}"
-          . "/methods/djatoka:jp2SDef/getRegion?". http_build_query($params);
+        $url = "{$server->url}/{$server->getService()}/{$object->pid}" .
+            "/methods/djatoka:jp2SDef/getRegion?". http_build_query($params);
 
         // Return the image tag.
         return "<img class='fedora-renderer' alt='image' src='{$url}' />";

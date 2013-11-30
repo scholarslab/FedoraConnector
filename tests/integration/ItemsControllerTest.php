@@ -1,18 +1,17 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Items controller integration tests.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
-class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCase
+
+class FedoraConnector_ItemsControllerTest
+    extends FedoraConnector_Test_AppTestCase
 {
 
     /**
@@ -35,10 +34,12 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
         // Server:
         $this->assertXpathContentContains(
-            '//select[@name="server"]/option[@value="'.$server1->id.'"]', 'Test Title 1'
+            '//select[@name="server"]/option[@value="'.$server1->id.'"]',
+            'Test Title 1'
         );
         $this->assertXpathContentContains(
-            '//select[@name="server"]/option[@value="'.$server2->id.'"]', 'Test Title 2'
+            '//select[@name="server"]/option[@value="'.$server2->id.'"]',
+            'Test Title 2'
         );
 
         // PID:
@@ -74,10 +75,12 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
 
         // Server:
         $this->assertXpathContentContains(
-            '//select[@name="server"]/option[@value="'.$server1->id.'"]', 'Test Title 1'
+            '//select[@name="server"]/option[@value="'.$server1->id.'"]',
+            'Test Title 1'
         );
         $this->assertXpathContentContains(
-            '//select[@name="server"]/option[@value="'.$server2->id.'"]', 'Test Title 2'
+            '//select[@name="server"]/option[@value="'.$server2->id.'"]',
+            'Test Title 2'
         );
 
         // PID:
@@ -112,16 +115,23 @@ class FedoraConnector_ItemsControllerTest extends FedoraConnector_Test_AppTestCa
         $this->dispatch('items/edit/' . $item->id);
 
         // Server:
-        $this->assertXpath('//select[@name="server"]/option[@value="'.$server2->id.'"]
-            [@selected="selected"]'
+        $this->assertXpath(
+            '//select[@name="server"]/option[@value="'.$server2->id.'"]' .
+            '[@selected="selected"]'
         );
 
         // PID:
-        $this->assertXpath('//input[@id="pid"][@name="pid"][@value="pid:test"]');
+        $this->assertXpath(
+            '//input[@id="pid"][@name="pid"][@value="pid:test"]'
+        );
 
         // Hidden fields:
-        $this->assertXpath('//input[@type="hidden"][@name="saveddsids"][@value="DC,content"]');
-        $this->assertXpath('//input[@type="hidden"][@name="datastreamsuri"]');
+        $this->assertXpath(
+            '//input[@type="hidden"][@name="saveddsids"][@value="DC,content"]'
+        );
+        $this->assertXpath(
+            '//input[@type="hidden"][@name="datastreamsuri"]'
+        );
 
     }
 
