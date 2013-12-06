@@ -1,19 +1,18 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Jp2 renderer unit tests.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
 {
+
 
     public function setUp()
     {
@@ -21,10 +20,9 @@ class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
         $this->renderer = new Jp2_Renderer();
     }
 
+
     /**
-     * __construct() should initialize sizes array.
-     *
-     * @return void.
+     * `__construct` should initialize sizes array.
      */
     public function testConstruct()
     {
@@ -33,10 +31,9 @@ class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
         $this->assertArrayHasKey('*', $this->renderer->sizes);
     }
 
+
     /**
-     * canDisplay() should accept the image/jp2 mimetype.
-     *
-     * @return void.
+     * `canDisplay` should accept the image/jp2 mimetype.
      */
     public function testCanDisplay()
     {
@@ -44,10 +41,9 @@ class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
         $this->assertFalse($this->renderer->canDisplay('invalid'));
     }
 
+
     /**
-     * display() should form the correct image tag.
-     *
-     * @return void.
+     * `display` should form the correct image tag.
      */
     public function testDisplay()
     {
@@ -71,5 +67,6 @@ class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
         );
 
     }
+
 
 }

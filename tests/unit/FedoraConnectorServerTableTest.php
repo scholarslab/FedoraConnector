@@ -1,24 +1,21 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Server table tests.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
 {
 
+
     /**
-     * updateServer() should update a server record.
-     *
-     * @return void.
+     * `updateServer` should update a server record.
      */
     public function testUpdateServer()
     {
@@ -42,10 +39,9 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * updateServer() should remove a trailing slash off the URL.
-     *
-     * @return void.
+     * `updateServer` should remove a trailing slash off the URL.
      */
     public function testUpdateServerTrailingSlashRemoval()
     {
@@ -67,5 +63,6 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
         $this->assertEquals($newServer->url, 'http://www.test.org/fedora');
 
     }
+
 
 }

@@ -1,24 +1,21 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Server table tests.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 {
 
+
     /**
      * Test attribute access.
-     *
-     * @return void.
      */
     public function testAttributeAccess()
     {
@@ -32,10 +29,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getVersion() should return the server version.
-     *
-     * @return void.
+     * `getVersion` should return the server version.
      */
     public function testGetVersion()
     {
@@ -54,10 +50,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getVersion() should return false when the server is offline.
-     *
-     * @return void.
+     * `getVersion` should return false when the server is offline.
      */
     public function testGetVersionWhenOffline()
     {
@@ -76,10 +71,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getService() should return the correct url part for 2.x versions.
-     *
-     * @return void.
+     * `getService` should return the correct url part for 2.x versions.
      */
     public function testGetService2x()
     {
@@ -98,10 +92,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getService() should return the correct url part for 3.x versions.
-     *
-     * @return void.
+     * `getService` should return the correct url part for 3.x versions.
      */
     public function testGetService3x()
     {
@@ -120,10 +113,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * isOnline() should return false when the server does not respond.
-     *
-     * @return void.
+     * `isOnline` should return false when the server does not respond.
      */
     public function testIsOnlineWhenOffline()
     {
@@ -142,10 +134,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * isOnline() should return true when the server responds.
-     *
-     * @return void.
+     * `isOnline` should return true when the server responds.
      */
     public function testIsOnlineWhenOnline()
     {
@@ -164,10 +155,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getDatastreamNodes() should return the datastream nodes.
-     *
-     * @return void.
+     * `getDatastreamNodes` should return the datastream nodes.
      */
     public function testGetDatastreamNodes()
     {
@@ -195,10 +185,9 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getMimeType() should return the mime type.
-     *
-     * @return void.
+     * `getMimeType` should return the mime type.
      */
     public function testGetMimeType()
     {
@@ -218,5 +207,6 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
         );
 
     }
+
 
 }

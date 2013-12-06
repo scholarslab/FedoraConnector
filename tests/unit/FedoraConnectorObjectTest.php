@@ -1,24 +1,21 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Object table tests.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
 {
 
+
     /**
      * Test attribute access.
-     *
-     * @return void.
      */
     public function testAttributeAccess()
     {
@@ -36,10 +33,9 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getServer() should return the parent server record.
-     *
-     * @return void.
+     * `getServer` should return the parent server record.
      */
     public function testGetServer()
     {
@@ -55,10 +51,9 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getItem() should return the parent item record.
-     *
-     * @return void.
+     * `getItem` should return the parent item record.
      */
     public function testGetItem()
     {
@@ -74,11 +69,9 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
 
     }
 
+
     /**
-     * getMetadataUrl() should construct the URL the metadata stream
-     * for the pid/dsid.
-     *
-     * @return void.
+     * `getMetadataUrl` should construct the URL the metadata stream.
      */
     public function testGetMetatadaUrl()
     {
@@ -94,10 +87,11 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
 
         // Get the url.
         $this->assertEquals(
-            $object->getMetadataUrl('DC'),
-            'http://www.test.org/fedora/objects/pid:test/datastreams/DC/content'
+            'http://www.test.org/fedora/objects/pid:test/datastreams/DC/content',
+            $object->getMetadataUrl('DC')
         );
 
     }
+
 
 }
