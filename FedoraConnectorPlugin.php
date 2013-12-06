@@ -130,9 +130,8 @@ SQL
         }
 
         // Item edit JS:
-        if ($module == 'default' && $action == 'edit') {
-            queue_js_file('vendor/load/load');
-            queue_js_file('load-datastreams');
+        if ($module == 'default' && ($action == 'add' || $action == 'edit')) {
+            queue_js_file('payloads/datastreams');
         }
 
     }

@@ -20,7 +20,55 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower-task');
 
   grunt.initConfig({
-    // TODO
+
+    bower: {
+      install: {
+        options: {
+          copy: false
+        }
+      }
+    },
+
+    clean: {
+      pkg: 'pkg'
+    },
+
+    concat: {
+      datastreams: {
+        src: [
+          'bower_components/underscore/underscore.js',
+          'bower_components/backbone/backbone.js',
+          'views/admin/javascripts/datastreams.js'
+        ],
+        dest: 'views/admin/javascripts/payloads/datastreams.js'
+      }
+    },
+
+    uglify: {
+      datastreams: {
+        src: '<%= concat.datastreams.dest %>',
+        dest: '<%= concat.datastreams.dest %>'
+      }
+    },
+
+    watch: {
+      datastreams: {
+        files: 'views/admin/javascripts/*.js',
+        tasks: 'concat'
+      }
+    }
+
   });
+
+  grunt.registerTask('build', [
+    'bower',
+    'concat'
+  ]);
+
+  grunt.registerTask('package', [
+    'uglify',
+    'clean:pkg',
+    'compress'
+  ]);
 
 };

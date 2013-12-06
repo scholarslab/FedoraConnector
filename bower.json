@@ -4,6 +4,5 @@
   , "dependencies": {
       "underscore": ">= 1.4.4"
     , "backbone":   ">= 0.9.10"
-    , "marionette": ">= 1.0.0-rc6"
   }
 }
