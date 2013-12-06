@@ -15,16 +15,13 @@ class FedoraConnector_FixtureBuilderTest
 {
 
 
-    private $_fixtures = null;
-
-
     /**
      * Instantiate the helper class, install the plugins, get the database.
      */
     public function setUp()
     {
         parent::setUp();
-        $this->_fixtures = FEDORA_DIR . '/spec/javascripts/fixtures/';
+        $this->_fixtures = FEDORA_DIR . '/tests/jasmine/fixtures/';
     }
 
 
@@ -100,7 +97,7 @@ class FedoraConnector_FixtureBuilderTest
         $this->dispatch('fedora-connector/datastreams/query-datastreams');
         $response = $this->getResponse()->getBody('default');
 
-        $fixture = fopen($this->_fixtures . 'datastreams-json.html', 'w');
+        $fixture = fopen($this->_fixtures . 'datastreams.json', 'w');
         fwrite($fixture, $response);
         fclose($fixture);
 
