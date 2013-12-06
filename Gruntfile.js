@@ -18,6 +18,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-shell');
 
   grunt.initConfig({
 
@@ -27,6 +28,23 @@ module.exports = function(grunt) {
           copy: false
         }
       }
+    },
+
+    shell: {
+
+      options: {
+        stdout: true
+      },
+
+      phpunit: {
+        command: '../../vendor/bin/phpunit',
+        options: {
+          execOptions: {
+            cwd: 'tests/phpunit'
+          }
+        }
+      },
+
     },
 
     clean: {
@@ -60,15 +78,30 @@ module.exports = function(grunt) {
 
   });
 
+  // Run application tests.
+  grunt.registerTask('default', 'test');
+
+  // Build the application.
   grunt.registerTask('build', [
     'bower',
     'concat'
   ]);
 
+  // Spawn a release package.
   grunt.registerTask('package', [
     'uglify',
     'clean:pkg',
     'compress'
+  ]);
+
+  // Run the PHPUnit suite.
+  grunt.registerTask('phpunit', [
+    'shell:phpunit'
+  ]);
+
+  // Run all test suites.
+  grunt.registerTask('test', [
+    'phpunit'
   ]);
 
 };

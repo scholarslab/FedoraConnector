@@ -10,7 +10,7 @@
  */
 
 
-class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
+class Jp2RendererTest extends FedoraConnector_Case_Default
 {
 
 

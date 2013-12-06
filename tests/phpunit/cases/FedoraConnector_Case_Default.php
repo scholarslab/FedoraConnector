@@ -10,7 +10,7 @@
  */
 
 
-class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
+class FedoraConnector_Case_Default extends Omeka_Test_AppTestCase
 {
 
 
@@ -109,7 +109,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // Generate response.
         $gateway = new FedoraGateway();
-        $url = FEDORA_DIR . '/tests/xml/' . $fixture;
+        $url = FEDORA_TEST_DIR . '/xml/' . $fixture;
         $response = $gateway->query($url, $query);
 
         // Mock the gateway.
@@ -134,13 +134,13 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
 
         // Generate response for getVersion() call.
         $gateway = new FedoraGateway();
-        $url = FEDORA_DIR . '/tests/xml/' . $versionFixture;
+        $url = FEDORA_TEST_DIR . '/xml/' . $versionFixture;
         $getVersionResponse = $gateway->query(
             $url, "//*[local-name()='repositoryVersion']"
         );
 
         // Generate response for getMetadataXml() call.
-        $url = FEDORA_DIR . '/tests/xml/' . $metadataFixture;
+        $url = FEDORA_TEST_DIR . '/xml/' . $metadataFixture;
         $getMetadataXmlResponse = $gateway->load($url);
 
         // Mock the gateway.

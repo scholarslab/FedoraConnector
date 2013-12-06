@@ -10,7 +10,7 @@
  */
 
 
-class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
+class FedoraConnectorServerTableTest extends FedoraConnector_Case_Default
 {
 
 

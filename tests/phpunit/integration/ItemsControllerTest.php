@@ -11,7 +11,7 @@
 
 
 class FedoraConnector_ItemsControllerTest
-    extends FedoraConnector_Test_AppTestCase
+    extends FedoraConnector_Case_Default
 {
 
 

@@ -10,7 +10,7 @@
  */
 
 
-class DCImporterTest extends FedoraConnector_Test_AppTestCase
+class DCImporterTest extends FedoraConnector_Case_Default
 {
 
 
