@@ -12,15 +12,17 @@
 ?>
 
 <?php
+
   echo head(array(
     'title' => __('Fedora Connector | Browse Servers'),
     'bodyclass' => 'browse'
   ));
+
+  echo flash();
+
 ?>
 
 <div id="primary">
-
-  <?php echo flash(); ?>
 
   <?php if ($servers): ?>
 
@@ -45,26 +47,28 @@
 
       <tbody>
 
-        <?php foreach ($servers as $s): ?>
+        <?php foreach ($servers as $server): ?>
           <tr>
 
             <!-- Title. -->
             <td>
-              <a href="<?php echo url('fedora-connector/servers/edit/'.$s->id); ?>">
-                <strong><?php echo $s->name; ?></strong>
+              <a href="<?php echo url(
+                'fedora-connector/servers/edit/'.$server->id
+              ); ?>">
+                <strong><?php echo $server->name; ?></strong>
               </a>
             </td>
 
             <!-- URL. -->
             <td>
-              <a href="<?php echo $s->url; ?>" target="_blank">
-                <?php echo $s->url; ?>
+              <a href="<?php echo $server->url; ?>" target="_blank">
+                <?php echo $server->url; ?>
               </a>
             </td>
 
             <!-- Status. -->
             <td>
-              <?php if ($s->isOnline()): ?>
+              <?php if ($server->isOnline()): ?>
                 <span class="status online">Online</span>
               <?php else: ?>
                 <span class="status offline">Offline</span>
@@ -73,8 +77,8 @@
 
             <!-- Version. -->
             <td>
-              <?php if ($s->isOnline()): ?>
-                <span><?php echo $s->getVersion(); ?></span>
+              <?php if ($server->isOnline()): ?>
+                <span><?php echo $server->getVersion(); ?></span>
               <?php else: ?>
                 <span class="status unavailable">[not available]</span>
               <?php endif; ?>
@@ -83,7 +87,7 @@
             <!-- Actions. -->
             <td>
               <?php echo $this->partial('servers/_action_buttons.php', array(
-                'uriSlug' => 'fedora-connector', 'server'  => $s
+                'uriSlug' => 'fedora-connector', 'server'  => $server
               )); ?>
             </td>
 

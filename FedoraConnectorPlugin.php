@@ -215,7 +215,7 @@ SQL
     public function filterAdminNavigationMain($tabs)
     {
         $tabs[] = array(
-            'label' => 'Fedora Connector', 'uri' => url('fedora-connector')
+            'label' => 'Fedora', 'uri' => url('fedora-connector')
         );
         return $tabs;
     }
