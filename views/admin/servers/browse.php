@@ -45,29 +45,45 @@
 
       <tbody>
 
-        <?php foreach ($servers as $server): ?>
+        <?php foreach ($servers as $s): ?>
           <tr>
 
-            <td><a href="<?php echo url('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
-            <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
+            <!-- Title. -->
             <td>
-              <?php if ($server->isOnline()): ?>
+              <a href="<?php echo url('fedora-connector/servers/edit/'.$s->id); ?>">
+                <strong><?php echo $s->name; ?></strong>
+              </a>
+            </td>
+
+            <!-- URL. -->
+            <td>
+              <a href="<?php echo $s->url; ?>" target="_blank">
+                <?php echo $s->url; ?>
+              </a>
+            </td>
+
+            <!-- Status. -->
+            <td>
+              <?php if ($s->isOnline()): ?>
                 <span class="status online">Online</span>
               <?php else: ?>
                 <span class="status offline">Offline</span>
               <?php endif; ?>
             </td>
+
+            <!-- Version. -->
             <td>
-              <?php if ($server->isOnline()): ?>
-                <span><?php echo $server->getVersion(); ?></span>
+              <?php if ($s->isOnline()): ?>
+                <span><?php echo $s->getVersion(); ?></span>
               <?php else: ?>
                 <span class="status unavailable">[not available]</span>
               <?php endif; ?>
             </td>
+
+            <!-- Actions. -->
             <td>
               <?php echo $this->partial('servers/_action_buttons.php', array(
-                'uriSlug' => 'fedora-connector',
-                'server'  => $server
+                'uriSlug' => 'fedora-connector', 'server'  => $s
               )); ?>
             </td>
 
