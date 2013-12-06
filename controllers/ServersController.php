@@ -20,9 +20,15 @@ class FedoraConnector_ServersController
      */
     public function init()
     {
+
+        // Register the default model.
+        $this->_helper->db->setDefaultModelName('FedoraConnectorServer');
+
+        // Alias the servers tables.
         $this->_servers = $this->_helper->db->getTable(
             'FedoraConnectorServer'
         );
+
     }
 
 
