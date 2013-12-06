@@ -126,7 +126,7 @@ SQL
 
         // Server browse CSS:
         if ($module == 'fedora-connector' && $action == 'browse') {
-            queue_css_file('fedora_connector_main');
+            queue_css_file('browse');
         }
 
         // Item edit JS:
