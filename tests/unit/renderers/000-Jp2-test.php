@@ -49,10 +49,10 @@ class Jp2RendererTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Mock Fedora.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'describe-v3x.xml',
             "//*[local-name() = 'repositoryVersion']"
         );

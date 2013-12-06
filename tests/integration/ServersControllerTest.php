@@ -127,7 +127,7 @@ class FedoraConnector_ServersControllerTest
         $this->assertEquals($this->serversTable->count(), $count+1);
 
         // Get new server, check params.
-        $server = $this->__getLastRow($this->serversTable);
+        $server = $this->_getLastRow($this->serversTable);
         $this->assertEquals($server->name, 'Test Title');
         $this->assertEquals($server->url, 'http://localhost:8080/fedora');
 
@@ -141,7 +141,7 @@ class FedoraConnector_ServersControllerTest
     {
 
         // Create server.
-        $server = $this->__server('title', 'url');
+        $server = $this->_server('title', 'url');
 
         // Should populate fields.
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
@@ -158,7 +158,7 @@ class FedoraConnector_ServersControllerTest
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Form post.
         $this->request->setMethod('POST')
@@ -190,7 +190,7 @@ class FedoraConnector_ServersControllerTest
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Form post.
         $this->request->setMethod('POST')
@@ -217,7 +217,7 @@ class FedoraConnector_ServersControllerTest
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Form post.
         $this->request->setMethod('POST')
@@ -244,7 +244,7 @@ class FedoraConnector_ServersControllerTest
     {
 
         // Create server.
-        $server = $this->__server(
+        $server = $this->_server(
             'Test Title',
             'http://localhost:8080/fedora'
         );

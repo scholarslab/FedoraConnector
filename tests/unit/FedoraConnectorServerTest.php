@@ -21,7 +21,7 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create object.
-        $server = $this->__server('Test Title', 'http://test.org/fedora');
+        $server = $this->_server('Test Title', 'http://test.org/fedora');
 
         // Check attributes.
         $this->assertEquals($server->name, 'Test Title');
@@ -37,13 +37,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock the Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'describe-v3x.xml',
             "//*[local-name() = 'repositoryVersion']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Get version.
         $this->assertEquals($server->getVersion(), '3.4.2');
@@ -58,13 +58,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock the Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'empty.xml',
             "//*[local-name() = 'repositoryVersion']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Get version.
         $this->assertFalse($server->getVersion());
@@ -79,13 +79,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock 2.x Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'describe-v2x.xml',
             "//*[local-name() = 'repositoryVersion']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Get service.
         $this->assertEquals($server->getService(), 'get');
@@ -100,13 +100,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock 3.x Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'describe-v3x.xml',
             "//*[local-name() = 'repositoryVersion']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Get service.
         $this->assertEquals($server->getService(), 'objects');
@@ -121,13 +121,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'empty.xml',
             "//*[local-name() = 'repositoryVersion']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Ping.
         $this->assertFalse($server->isOnline());
@@ -142,13 +142,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'describe-v3x.xml',
             "//*[local-name() = 'repositoryVersion']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Ping.
         $this->assertTrue($server->isOnline());
@@ -163,13 +163,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'datastreams.xml',
             "//*[local-name() = 'datastream']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Get nodes.
         $nodes = $server->getDatastreamNodes('pid:test');
@@ -193,13 +193,13 @@ class FedoraConnectorServerTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Mock Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'datastreams.xml',
             "//*[local-name() = 'datastream'][@dsid = 'DC']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Get nodes.
         $this->assertEquals(

@@ -21,8 +21,8 @@ class FedoraConnectorObjectTableTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create item and object.
-        $item = $this->__item();
-        $object = $this->__object($item);
+        $item = $this->_item();
+        $object = $this->_object($item);
 
         // Retrieve.
         $retrievedObject = $this->objectsTable->findByItem($item);
@@ -38,7 +38,7 @@ class FedoraConnectorObjectTableTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create item and object.
-        $item = $this->__item();
+        $item = $this->_item();
 
         // Try to get out an object.
         $this->assertFalse($this->objectsTable->findByItem($item));
@@ -53,8 +53,8 @@ class FedoraConnectorObjectTableTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create item and server.
-        $item = $this->__item();
-        $server = $this->__server();
+        $item = $this->_item();
+        $server = $this->_server();
 
         // Capture starting count.
         $count = $this->objectsTable->count();
@@ -82,12 +82,12 @@ class FedoraConnectorObjectTableTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create item and servers.
-        $item = $this->__item();
-        $server1 = $this->__server();
-        $server2 = $this->__server();
+        $item = $this->_item();
+        $server1 = $this->_server();
+        $server2 = $this->_server();
 
         // Create object.
-        $object = $this->__object($item, $server1, 'pid:test', 'DC,content');
+        $object = $this->_object($item, $server1, 'pid:test', 'DC,content');
 
         // Capture starting count.
         $count = $this->objectsTable->count();

@@ -21,12 +21,12 @@ class FedoraConnector_DatastreamsControllerTest
     public function testQueryDatastreams()
     {
 
-        $this->__mockFedora(
+        $this->_mockFedora(
             'datastreams.xml', "//*[local-name() = 'datastream']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Mock POST.
         $this->request->setMethod('GET') ->setParams(array(

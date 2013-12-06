@@ -51,11 +51,11 @@ class FedoraConnector_FixtureBuilderTest
     public function testBuildItemEditMarkup()
     {
         // Create an item.
-        $item = $this->__item();
-        $server = $this->__server();
+        $item = $this->_item();
+        $server = $this->_server();
 
         // Create an existing object.
-        $object = $this->__object($item, $server);
+        $object = $this->_object($item, $server);
 
         // Build form.
         $form = new FedoraConnector_Form_Object();
@@ -80,13 +80,13 @@ class FedoraConnector_FixtureBuilderTest
     {
 
         // Mock Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'datastreams.xml',
             "//*[local-name() = 'datastream']"
         );
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Mock POST.
         $this->request->setMethod('GET')

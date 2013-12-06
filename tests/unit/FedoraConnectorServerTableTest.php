@@ -21,7 +21,7 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Mock post.
         $post = array(
@@ -47,7 +47,7 @@ class FedoraConnectorServerTableTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Mock post.
         $post = array(

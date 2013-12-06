@@ -21,9 +21,9 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create object.
-        $item = $this->__item();
-        $server = $this->__server();
-        $object = $this->__object($item, $server);
+        $item = $this->_item();
+        $server = $this->_server();
+        $object = $this->_object($item, $server);
 
         // Check attributes.
         $this->assertEquals($object->item_id, $item->id);
@@ -41,9 +41,9 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create object.
-        $item = $this->__item();
-        $server = $this->__server();
-        $object = $this->__object($item, $server);
+        $item = $this->_item();
+        $server = $this->_server();
+        $object = $this->_object($item, $server);
 
         // Get parent server.
         $retrievedServer = $object->getServer();
@@ -59,9 +59,9 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create object.
-        $item = $this->__item();
-        $server = $this->__server();
-        $object = $this->__object($item, $server);
+        $item = $this->_item();
+        $server = $this->_server();
+        $object = $this->_object($item, $server);
 
         // Get parent item.
         $retrievedItem = $object->getItem();
@@ -77,10 +77,10 @@ class FedoraConnectorObjectTest extends FedoraConnector_Test_AppTestCase
     {
 
         // Create object.
-        $object = $this->__object();
+        $object = $this->_object();
 
         // Mock the Fedora response.
-        $this->__mockFedora(
+        $this->_mockFedora(
             'describe-v3x.xml',
             "//*[local-name() = 'repositoryVersion']"
         );

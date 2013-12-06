@@ -42,7 +42,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      *
      * @return Omeka_record $item The item.
      */
-    public function __item()
+    protected function _item()
     {
         $item = new Item;
         $item->save();
@@ -57,7 +57,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param string $url The server url.
      * @return Omeka_Record $server The server.
      */
-    public function __server(
+    protected function _server(
         $name='Test Server', $url='http://www.test.org/fedora'
     ) {
         $server = new FedoraConnectorServer;
@@ -77,13 +77,13 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param string $dsids Comma-deliimited dsids.
      * @return Omeka_Record $object The object.
      */
-    public function __object(
+    protected function _object(
         $item=null, $server=null, $pid='pid:test', $dsids='DC,content'
     ) {
 
         // Create item/server if none passed.
-        if (is_null($item)) $item = $this->__item();
-        if (is_null($server)) $server = $this->__server();
+        if (is_null($item)) $item = $this->_item();
+        if (is_null($server)) $server = $this->_server();
 
         // Create the object.
         $object = new FedoraConnectorObject();
@@ -104,7 +104,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param string $fixture The name of the fixture xml.
      * @param string $query The xpath query to run on the fixture.
      */
-    public function __mockFedora($fixture, $query)
+    protected function _mockFedora($fixture, $query)
     {
 
         // Generate response.
@@ -129,7 +129,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param string $versionFixture The name of the version fixture xml.
      * @param string $metadataFixture The name of the metadata xml.
      */
-    public function __mockImport($versionFixture, $metadataFixture)
+    protected function _mockImport($versionFixture, $metadataFixture)
     {
 
         // Generate response for getVersion() call.
@@ -162,7 +162,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param Omeka_Record_AbstractRecord $record A record to reload.
      * @return Omeka_Record_AbstractRecord The reloaded record.
      */
-    protected function __reload($record)
+    protected function _reload($record)
     {
         return $record->getTable()->find($record->id);
     }
@@ -174,7 +174,7 @@ class FedoraConnector_Test_AppTestCase extends Omeka_Test_AppTestCase
      * @param Omeka_Db_Table $table A table.
      * @return Neatline_AbstractRecord The last record.
      */
-    protected function __getLastRow($table)
+    protected function _getLastRow($table)
     {
         $records = $table->findAll();
         return array_pop($records);

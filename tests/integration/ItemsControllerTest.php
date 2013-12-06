@@ -22,8 +22,8 @@ class FedoraConnector_ItemsControllerTest
     {
 
         // Create servers.
-        $server1 = $this->__server('Test Title 1', 'http://test1.org/fedora');
-        $server2 = $this->__server('Test Title 2', 'http://test2.org/fedora');
+        $server1 = $this->_server('Test Title 1', 'http://test1.org/fedora');
+        $server2 = $this->_server('Test Title 2', 'http://test2.org/fedora');
 
         // Hit item add.
         $this->dispatch('items/add');
@@ -61,11 +61,11 @@ class FedoraConnector_ItemsControllerTest
     public function testItemEditTab()
     {
 
-        $server1 = $this->__server('Test Title 1', 'http://test1.org/fedora');
-        $server2 = $this->__server('Test Title 2', 'http://test2.org/fedora');
+        $server1 = $this->_server('Test Title 1', 'http://test1.org/fedora');
+        $server2 = $this->_server('Test Title 2', 'http://test2.org/fedora');
 
         // Create item.
-        $item = $this->__item();
+        $item = $this->_item();
 
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
@@ -105,14 +105,14 @@ class FedoraConnector_ItemsControllerTest
     {
 
         // Create item.
-        $item = $this->__item();
+        $item = $this->_item();
 
         // Create servers.
-        $server1 = $this->__server('Test Title 1', 'http://test1.org/fedora');
-        $server2 = $this->__server('Test Title 2', 'http://test2.org/fedora');
+        $server1 = $this->_server('Test Title 1', 'http://test1.org/fedora');
+        $server2 = $this->_server('Test Title 2', 'http://test2.org/fedora');
 
         // Create Fedora object.
-        $object = $this->__object($item, $server2);
+        $object = $this->_object($item, $server2);
 
         // Hit item edit.
         $this->dispatch('items/edit/' . $item->id);
@@ -171,7 +171,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
-        $object = $this->__getLastRow($this->objectsTable);
+        $object = $this->_getLastRow($this->objectsTable);
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test');
         $this->assertEquals($object->dsids, 'DC,content');
@@ -187,7 +187,7 @@ class FedoraConnector_ItemsControllerTest
     {
 
         // Create server.
-        $server = $this->__server();
+        $server = $this->_server();
 
         // Mock post.
         $this->request->setMethod('POST')
@@ -205,13 +205,13 @@ class FedoraConnector_ItemsControllerTest
         );
 
         // Mock Fedora.
-        $this->__mockImport('describe-v3x.xml', 'dc.xml');
+        $this->_mockImport('describe-v3x.xml', 'dc.xml');
 
         // Hit item edit.
         $this->dispatch('items/add');
 
         // Get the new item.
-        $item = $this->__getLastRow($this->itemsTable);
+        $item = $this->_getLastRow($this->itemsTable);
 
         // Title.
         $title = metadata($item, array('Dublin Core', 'Title'));
@@ -265,7 +265,7 @@ class FedoraConnector_ItemsControllerTest
     {
 
         // Create item.
-        $item = $this->__item();
+        $item = $this->_item();
 
         // Capture starting count.
         $count = $this->objectsTable->count();
@@ -292,7 +292,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertEquals($this->objectsTable->count(), $count+1);
 
         // Get out service and check.
-        $object = $this->__getLastRow($this->objectsTable);
+        $object = $this->_getLastRow($this->objectsTable);
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test');
         $this->assertEquals($object->dsids, 'DC,content');
@@ -308,10 +308,10 @@ class FedoraConnector_ItemsControllerTest
     {
 
         // Create item.
-        $item = $this->__item();
+        $item = $this->_item();
 
         // Create Fedora object.
-        $object = $this->__object($item);
+        $object = $this->_object($item);
 
         // Capture starting count.
         $count = $this->objectsTable->count();
@@ -338,7 +338,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertEquals($this->objectsTable->count(), $count);
 
         // Get out service and check.
-        $object = $this->__getLastRow($this->objectsTable);
+        $object = $this->_getLastRow($this->objectsTable);
         $this->assertEquals($object->server_id, 1);
         $this->assertEquals($object->pid, 'pid:test2');
         $this->assertEquals($object->dsids, 'DC2,content2');
@@ -353,9 +353,9 @@ class FedoraConnector_ItemsControllerTest
     public function testImportOnItemEdit()
     {
 
-        $server = $this->__server();
-        $item   = $this->__item();
-        $object = $this->__object($item);
+        $server = $this->_server();
+        $item   = $this->_item();
+        $object = $this->_object($item);
 
         // Mock post.
         $this->request->setMethod('POST')
@@ -373,11 +373,11 @@ class FedoraConnector_ItemsControllerTest
         );
 
         // Mock Fedora.
-        $this->__mockImport('describe-v3x.xml', 'dc.xml');
+        $this->_mockImport('describe-v3x.xml', 'dc.xml');
 
         // Apply the edit, reload the item.
         $this->dispatch('items/edit/' . $item->id);
-        $item = $this->__reload($item);
+        $item = $this->_reload($item);
 
         // Title.
         $title = metadata($item, array('Dublin Core', 'Title'));
@@ -430,11 +430,11 @@ class FedoraConnector_ItemsControllerTest
     {
 
         // Create item and object.
-        $item = $this->__item();
-        $this->__object($item);
+        $item = $this->_item();
+        $this->_object($item);
 
         // Mock getMimeType().
-        $this->__mockFedora('datastreams.xml',
+        $this->_mockFedora('datastreams.xml',
             "//*[local-name() = 'datastream'][@dsid='content']"
         );
 
