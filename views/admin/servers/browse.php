@@ -86,9 +86,21 @@
 
             <!-- Actions. -->
             <td>
-              <?php echo $this->partial('servers/_action_buttons.php', array(
-                'uriSlug' => 'fedora-connector', 'server'  => $server
-              )); ?>
+
+              <!-- Edit. -->
+              <a href="<?php echo url(
+                'fedora-connector/servers/edit/'.$server->id
+              ); ?>" class="edit">
+                <?php echo __('Edit'); ?>
+              </a>
+
+              <!-- Delete. -->
+              <a href="<?php echo url(
+                'fedora-connector/servers/delete-confirm/'.$server->id
+              ); ?>" class="delete-confirm delete">
+                <?php echo __('Delete'); ?>
+              </a>
+
             </td>
 
           </tr>
