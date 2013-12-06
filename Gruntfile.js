@@ -20,6 +20,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-shell');
 
+  var paths = grunt.file.readJSON('paths.json');
+
   grunt.initConfig({
 
     bower: {
@@ -28,6 +30,19 @@ module.exports = function(grunt) {
           copy: false
         }
       }
+    },
+
+    clean: {
+
+      fixtures: [
+        paths.jasmine+'/fixtures/*.json',
+        paths.jasmine+'/fixtures/*.html'
+      ],
+
+      payloads: paths.payloads,
+      bower: 'bower_components',
+      pkg: 'pkg'
+
     },
 
     shell: {
@@ -47,24 +62,20 @@ module.exports = function(grunt) {
 
     },
 
-    clean: {
-      pkg: 'pkg'
-    },
-
     concat: {
       datastreams: {
         src: [
-          'bower_components/underscore/underscore.js',
-          'bower_components/backbone/backbone.js',
-          'views/admin/javascripts/datastreams.js'
+          paths.vendor.underscore,
+          paths.vendor.backbone,
+          paths.src+'/datastreams.js'
         ],
-        dest: 'views/admin/javascripts/payloads/datastreams.js'
+        dest: paths.payloads+'/datastreams.js'
       }
     },
 
     uglify: {
       datastreams: {
-        src: '<%= concat.datastreams.dest %>',
+        src:  '<%= concat.datastreams.dest %>',
         dest: '<%= concat.datastreams.dest %>'
       }
     },
@@ -78,11 +89,12 @@ module.exports = function(grunt) {
 
   });
 
-  // Run application tests.
+  // Run tests by default.
   grunt.registerTask('default', 'test');
 
   // Build the application.
   grunt.registerTask('build', [
+    'clean',
     'bower',
     'concat'
   ]);

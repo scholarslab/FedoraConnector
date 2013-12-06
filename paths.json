@@ -1,0 +1,12 @@
+{
+
+  "src":          "views/admin/javascripts",
+  "payloads":     "views/admin/javascripts/payloads",
+  "jasmine":      "tests/jasmine",
+
+  "vendor": {
+    "underscore": "bower_components/underscore/underscore.js",
+    "backbone":   "bower_components/backbone/backbone.js"
+  }
+
+}
