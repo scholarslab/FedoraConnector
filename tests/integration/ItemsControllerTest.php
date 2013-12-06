@@ -14,6 +14,7 @@ class FedoraConnector_ItemsControllerTest
     extends FedoraConnector_Test_AppTestCase
 {
 
+
     /**
      * The 'Fedora' tab should display the datastreams form.
      */
@@ -52,6 +53,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertXpath('//input[@id="import"][@name="import"]');
 
     }
+
 
     /**
      * The 'Fedora' tab should display the datastreams form.
@@ -94,6 +96,7 @@ class FedoraConnector_ItemsControllerTest
 
     }
 
+
     /**
      * If there is an existing Fedora object for the item, the data should be
      * populated in the textareas.
@@ -135,6 +138,7 @@ class FedoraConnector_ItemsControllerTest
 
     }
 
+
     /**
      * When an item is added and Fedora data is entered, the service should
      * be created.
@@ -173,6 +177,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertEquals($object->dsids, 'DC,content');
 
     }
+
 
     /**
      * When an item is added and the "Import now?" checkbox is checked,
@@ -251,6 +256,7 @@ class FedoraConnector_ItemsControllerTest
 
     }
 
+
     /**
      * When an item is edited and Fedora data is entered, the service should
      * be created.
@@ -292,6 +298,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertEquals($object->dsids, 'DC,content');
 
     }
+
 
     /**
      * When an item is edited and Fedora data is entered, the service should
@@ -337,6 +344,7 @@ class FedoraConnector_ItemsControllerTest
         $this->assertEquals($object->dsids, 'DC2,content2');
 
     }
+
 
     /**
      * When an item is edited and the "Import now?" checkbox is checked, the
@@ -414,6 +422,7 @@ class FedoraConnector_ItemsControllerTest
 
     }
 
+
     /**
      * Fedora objects should be rendered on admin item show pages.
      */
@@ -436,5 +445,6 @@ class FedoraConnector_ItemsControllerTest
         $this->assertXpath('//img[@class="fedora-renderer"]');
 
     }
+
 
 }

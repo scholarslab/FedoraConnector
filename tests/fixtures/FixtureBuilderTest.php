@@ -1,23 +1,25 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
-class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCase
+
+class FedoraConnector_FixtureBuilderTest
+    extends FedoraConnector_Test_AppTestCase
 {
+
 
     private $_fixtures = null;
 
+
     /**
      * Instantiate the helper class, install the plugins, get the database.
-     *
-     * @return void.
      */
     public function setUp()
     {
@@ -25,10 +27,9 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
         $this->_fixtures = FEDORA_DIR . '/spec/javascripts/fixtures/';
     }
 
+
     /**
      * Build item add markup.
-     *
-     * @return void.
      */
     public function testBuildItemAddMarkup()
     {
@@ -43,10 +44,9 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
 
     }
 
+
     /**
      * Build item edit markup.
-     *
-     * @return void.
      */
     public function testBuildItemEditMarkup()
     {
@@ -72,10 +72,9 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
 
     }
 
+
     /**
      * Build datastreams json response.
-     *
-     * @return void.
      */
     public function testBuildDatastreamsJson()
     {
@@ -106,5 +105,6 @@ class FedoraConnector_FixtureBuilderTest extends FedoraConnector_Test_AppTestCas
         fclose($fixture);
 
     }
+
 
 }

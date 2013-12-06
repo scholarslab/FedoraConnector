@@ -1,24 +1,22 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Servers controller integration tests.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
-class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTestCase
+
+class FedoraConnector_ServersControllerTest
+    extends FedoraConnector_Test_AppTestCase
 {
+
 
     /**
      * Test for add form markup.
-     *
-     * @return void.
      */
     public function testAddServerFormMarkup()
     {
@@ -27,10 +25,9 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         $this->assertXpath('//input[@name="url"]');
     }
 
+
     /**
      * Test for form errors for empty fields.
-     *
-     * @return void.
      */
     public function testAddServerEmptyFieldErrors()
     {
@@ -44,16 +41,22 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/add');
-        $this->assertQueryCount('ul.error', 2);
-        $this->assertQueryContentContains('ul.error li', 'Enter a name.');
-        $this->assertQueryContentContains('ul.error li', 'Enter a URL.');
+
+        // Should flash name error.
+        $this->assertXpath('//input[@name="name"]/
+            following-sibling::ul[@class="error"]'
+        );
+
+        // Should flash URL error.
+        $this->assertXpath('//input[@name="url"]/
+            following-sibling::ul[@class="error"]'
+        );
 
     }
 
+
     /**
      * Test for form error for invalid URL.
-     *
-     * @return void.
      */
     public function testAddServerInvalidUrlError()
     {
@@ -67,15 +70,17 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/add');
-        $this->assertQueryCount('ul.error', 1);
-        $this->assertQueryContentContains('ul.error li', 'Enter a valid URL.');
+
+        // Should flash URL error.
+        $this->assertXpath('//input[@name="url"]/
+            following-sibling::ul[@class="error"]'
+        );
 
     }
 
+
     /**
      * Test for no form error for localhost URL.
-     *
-     * @return void.
      */
     public function testAddServerLocalUrl()
     {
@@ -89,14 +94,17 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/add');
-        $this->assertNotQueryContentContains('ul.error li', 'Enter a valid URL.');
+
+        // Should not flash URL error.
+        $this->assertNotXpath('//input[@name="url"]/
+            following-sibling::ul[@class="error"]'
+        );
 
     }
 
+
     /**
      * Valid form should create server.
-     *
-     * @return void.
      */
     public function testAddServerSuccess()
     {
@@ -115,7 +123,7 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         // Add.
         $this->dispatch('fedora-connector/servers/add');
 
-        // Check count+1.
+        // Should create a server.
         $this->assertEquals($this->serversTable->count(), $count+1);
 
         // Get new server, check params.
@@ -125,30 +133,26 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
 
     }
 
+
     /**
      * Test for edit form markup.
-     *
-     * @return void.
      */
     public function testEditServerFormMarkup()
     {
 
         // Create server.
-        $server = $this->__server(
-            'Test Title',
-            'http://localhost:8080/fedora'
-        );
+        $server = $this->__server('title', 'url');
 
+        // Should populate fields.
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertXpath('//input[@name="name"][@value="Test Title"]');
-        $this->assertXpath('//input[@name="url"][@value="http://localhost:8080/fedora"]');
+        $this->assertXpath('//input[@name="name"][@value="title"]');
+        $this->assertXpath('//input[@name="url"][@value="url"]');
 
     }
 
+
     /**
      * Test for form errors for empty fields.
-     *
-     * @return void.
      */
     public function testEditServerEmptyFieldErrors()
     {
@@ -159,22 +163,28 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         // Form post.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'name' => '',
-                'url' => ''
+                'name'  => '',
+                'url'   => ''
             )
         );
 
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertQueryCount('ul.error', 2);
-        $this->assertQueryContentContains('ul.error li', 'Enter a name.');
-        $this->assertQueryContentContains('ul.error li', 'Enter a URL.');
+
+        // Should flash name error.
+        $this->assertXpath('//input[@name="name"]/
+            following-sibling::ul[@class="error"]'
+        );
+
+        // Should flash URL error.
+        $this->assertXpath('//input[@name="url"]/
+            following-sibling::ul[@class="error"]'
+        );
 
     }
 
+
     /**
      * Test for form error for invalid URL.
-     *
-     * @return void.
      */
     public function testEditServerInvalidUrlError()
     {
@@ -191,15 +201,17 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertQueryCount('ul.error', 1);
-        $this->assertQueryContentContains('ul.error li', 'Enter a valid URL.');
+
+        // Should flash URL error.
+        $this->assertXpath('//input[@name="url"]/
+            following-sibling::ul[@class="error"]'
+        );
 
     }
 
+
     /**
      * Test for no form error for localhost URL.
-     *
-     * @return void.
      */
     public function testEditServerLocalUrl()
     {
@@ -216,14 +228,17 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         );
 
         $this->dispatch('fedora-connector/servers/edit/' . $server->id);
-        $this->assertNotQueryContentContains('ul.error li', 'Enter a valid URL.');
+
+        // Should flash not URL error.
+        $this->assertNotXpath('//input[@name="url"]/
+            following-sibling::ul[@class="error"]'
+        );
 
     }
 
+
     /**
      * Valid form should edit server.
-     *
-     * @return void.
      */
     public function testEditServerSuccess()
     {
@@ -251,5 +266,6 @@ class FedoraConnector_ServersControllerTest extends FedoraConnector_Test_AppTest
         $this->assertEquals($server->url, 'http://test.org/fedora');
 
     }
+
 
 }
