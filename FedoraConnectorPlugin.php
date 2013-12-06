@@ -45,8 +45,6 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 
     /**
      * Create servers and objects tables.
-     *
-     * @return void
      */
     public function hookInstall()
     {
@@ -86,8 +84,6 @@ SQL
 
     /**
      * Drop tables.
-     *
-     * @return void
      */
     public function hookUninstall()
     {
@@ -119,14 +115,26 @@ SQL
      * Add plugin static assets.
      *
      * @param Zend_Controller_Request_Http $request The request.
-     *
-     * @return void
      */
-    public function hookAdminHead($request)
+    public function hookAdminHead($args)
     {
-        queue_css_file('fedora_connector_main');
-        queue_js_file('vendor/load/load');
-        queue_js_file('load-datastreams');
+
+        // Get request module and action.
+        $controller = Zend_Controller_Front::getInstance();
+        $module = $controller->getRequest()->getModuleName();
+        $action = $controller->getRequest()->getActionName();
+
+        // Server browse CSS:
+        if ($module == 'fedora-connector' && $action == 'browse') {
+            queue_css_file('fedora_connector_main');
+        }
+
+        // Item edit JS:
+        if ($module == 'default' && $action == 'edit') {
+            queue_js_file('vendor/load/load');
+            queue_js_file('load-datastreams');
+        }
+
     }
 
     /**
@@ -215,8 +223,6 @@ SQL
 
     /**
      * Render the datastream on admin show page.
-     *
-     * @return void.
      */
     public function hookAdminItemsShow()
     {
@@ -226,8 +232,6 @@ SQL
 
     /**
      * Render the datastream on public show page.
-     *
-     * @return void.
      */
     public function hookPublicItemsShow()
     {
