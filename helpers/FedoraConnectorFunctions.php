@@ -11,40 +11,13 @@
 
 
 /**
- * Return nodes by file and xpath query.
- *
- * @param string $uri The uri of the document.
- * @param string $xpath The XPath query.
- * @return object The matching nodes.
- */
-function __fedoraNodes($uri, $xpath)
-{
-
-    $xml = new DomDocument();
-
-    try {
-
-        $xml->load($uri);
-        $query = new DOMXPath($xml);
-        $result = $query->query($xpath);
-
-    } catch (Exception $e) {
-        $result = false;
-    }
-
-    return $result;
-
-}
-
-
-/**
  * Generate markup for an item's Fedora object.
  *
  * @param Item $item The item.
  * @param array $params Options for the renderer.
  * @return string|null The Fedora object markup.
  */
-function fedora_connector_display_object($item=null, $params=array()) {
+function fc_displayObject($item=null, $params=array()) {
 
     // Get the item and the objects table.
     $item = $item ? $item : get_current_record('item');

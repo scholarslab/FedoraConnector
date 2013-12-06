@@ -226,7 +226,7 @@ SQL
      */
     public function hookAdminItemsShow()
     {
-        echo fedora_connector_display_object(get_current_record('item'));
+        echo fc_displayObject(get_current_record('item'));
     }
 
 
@@ -235,7 +235,7 @@ SQL
      */
     public function hookPublicItemsShow()
     {
-        echo fedora_connector_display_object(get_current_record('item'));
+        echo fc_displayObject(get_current_record('item'));
     }
 
 
@@ -245,7 +245,7 @@ SQL
     //public function filterExhibitBuilderExhibitDisplayItem(
         //$html, $displayFileOptions, $linkProperties, $item) {
 
-        //$object = fedora_connector_display_object(
+        //$object = fc_displayObject(
             //$item, array('scale' => settings('fullsize_constraint'))
         //);
 
@@ -273,7 +273,7 @@ SQL
 
       //for ($i=(int)$start; $i <= (int)$end; $i++) {
         //if (exhibit_builder_use_exhibit_page_item($i)) {
-          //$thumbnail = fedora_connector_display_object($item, $params) ? fedora_connector_display_object($item, $params) : item_image($thumbnailType, $props);
+          //$thumbnail = fc_displayObject($item, $params) ? fc_displayObject($item, $params) : item_image($thumbnailType, $props);
           //$html .= "\n" . '<div class="exhibit-item">';
           //$html .= exhibit_builder_link_to_exhibit_item($thumbnail);
           //$html .= exhibit_builder_exhibit_display_caption($i);
