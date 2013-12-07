@@ -129,9 +129,10 @@ SQL
             queue_css_file('browse');
         }
 
-        // Item edit JS:
+        // Datastreams form JS:
         if ($module == 'default' && ($action == 'add' || $action == 'edit')) {
             queue_js_file('payloads/datastreams');
+            queue_js_file('bootstrap');
         }
 
     }

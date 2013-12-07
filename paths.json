@@ -1,12 +1,13 @@
 {
 
-  "src":          "views/admin/javascripts",
+  "src":          "views/admin/javascripts/fedora",
   "payloads":     "views/admin/javascripts/payloads",
   "jasmine":      "tests/jasmine",
 
   "vendor": {
     "underscore": "bower_components/underscore/underscore.js",
-    "backbone":   "bower_components/backbone/backbone.js"
+    "backbone":   "bower_components/backbone/backbone.js",
+    "marionette": "bower_components/marionette/lib/backbone.marionette.js"
   }
 
 }

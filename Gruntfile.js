@@ -68,7 +68,9 @@ module.exports = function(grunt) {
         src: [
           paths.vendor.underscore,
           paths.vendor.backbone,
-          paths.src+'/datastreams.js'
+          paths.vendor.marionette,
+          paths.src+'/*.js',
+          paths.src+'/datastreams/*.js'
         ],
         dest: paths.payloads+'/datastreams.js'
       }
@@ -83,7 +85,7 @@ module.exports = function(grunt) {
 
     watch: {
       datastreams: {
-        files: 'views/admin/javascripts/*.js',
+        files: paths.src+'/**/*.js',
         tasks: 'concat'
       }
     },

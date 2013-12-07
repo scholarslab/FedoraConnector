@@ -8,11 +8,10 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
+Fedora.module('Datastreams', function(Datastreams) {
 
-jQuery(function($) {
 
-
-  var view = Backbone.View.extend({
+  Datastreams.View = Backbone.View.extend({
 
 
     events: {
@@ -50,14 +49,16 @@ jQuery(function($) {
         pid: this.pid.val()
       };
 
-      // Fetch datastreams.
       $.ajax({
+
         url: this.datastreamsUri,
         dataTyle: 'json',
         data: params,
+
         success: _.bind(function(data) {
           this.renderDatastreams(data);
         }, this)
+
       });
 
     },
@@ -88,10 +89,6 @@ jQuery(function($) {
 
 
   });
-
-
-  // Instantiate the view.
-  new view({ el: '#fedora-metadata' });
 
 
 });
