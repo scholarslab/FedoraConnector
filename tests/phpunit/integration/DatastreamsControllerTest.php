@@ -35,7 +35,7 @@ class FedoraConnector_DatastreamsControllerTest
         ));
 
         // Query for datastreams.
-        $this->dispatch('fedora-connector/datastreams/query-datastreams');
+        $this->dispatch('fedora-connector/datastreams');
         $json = Zend_Json::decode($this->getResponse()->getBody('default'));
 
         $this->assertEquals($json, array(

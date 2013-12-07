@@ -16,29 +16,12 @@ class FedoraConnector_FixtureBuilderTest
 
 
     /**
-     * Instantiate the helper class, install the plugins, get the database.
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->_fixtures = FEDORA_DIR . '/tests/jasmine/fixtures/';
-    }
-
-
-    /**
-     * Build item add markup.
+     * Item add markup.
      */
     public function testBuildItemAddMarkup()
     {
-
-        // Build form.
         $form = new FedoraConnector_Form_Object();
-
-        // Generate and write the fixture.
-        $fixture = fopen($this->_fixtures . 'item-add.html', 'w');
-        fwrite($fixture, $form);
-        fclose($fixture);
-
+        $this->_writeFixture($form, 'item-add.html');
     }
 
 
@@ -47,38 +30,33 @@ class FedoraConnector_FixtureBuilderTest
      */
     public function testBuildItemEditMarkup()
     {
-        // Create an item.
-        $item = $this->_item();
-        $server = $this->_server();
 
-        // Create an existing object.
+        $server = $this->_server();
+        $item   = $this->_item();
         $object = $this->_object($item, $server);
 
-        // Build form.
+        // Build the form.
         $form = new FedoraConnector_Form_Object();
         $form->populate(array(
-            'server' => $object->server_id,
-            'pid' => $object->pid,
-            'saved-dsids' => $object->dsids
+            'server'        => $object->server_id,
+            'saved-dsids'   => $object->dsids,
+            'pid'           => $object->pid
         ));
 
-        // Generate and write the fixture.
-        $fixture = fopen($this->_fixtures . 'item-edit.html', 'w');
-        fwrite($fixture, $form);
-        fclose($fixture);
+        // Write the fixture.
+        $this->_writeFixture($form, 'item-edit.html');
 
     }
 
 
     /**
-     * Build datastreams json response.
+     * Datastreams JSON.
      */
     public function testBuildDatastreamsJson()
     {
 
         // Mock Fedora response.
-        $this->_mockFedora(
-            'datastreams.xml',
+        $this->_mockFedora('datastreams.xml',
             "//*[local-name() = 'datastream']"
         );
 
@@ -86,20 +64,14 @@ class FedoraConnector_FixtureBuilderTest
         $server = $this->_server();
 
         // Mock POST.
-        $this->request->setMethod('GET')
-            ->setParams(array(
-                'server' => $server->id,
-                'pid' => 'pid:test'
-            )
+        $this->request->setMethod('GET')->setParams(array(
+            'server' => $server->id, 'pid' => 'pid:test'
+        ));
+
+        // Write the fixture.
+        $this->_writeFixtureFromRoute(
+            'fedora-connector/datastreams', 'datastreams.json'
         );
-
-        // Hit /query-datastreams.
-        $this->dispatch('fedora-connector/datastreams/query-datastreams');
-        $response = $this->getResponse()->getBody('default');
-
-        $fixture = fopen($this->_fixtures . 'datastreams.json', 'w');
-        fwrite($fixture, $response);
-        fclose($fixture);
 
     }
 

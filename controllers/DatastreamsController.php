@@ -27,12 +27,10 @@ class FedoraConnector_DatastreamsController
 
 
     /**
-     * ~ AJAX ~
      * Query for datastreams.
-     *
-     * @return void
+     * @ajax
      */
-    public function queryDatastreamsAction()
+    public function indexAction()
     {
 
         // Supress the default Zend layout-sniffer functionality.
@@ -56,7 +54,7 @@ class FedoraConnector_DatastreamsController
             );
         }
 
-        echo json_encode($datastreams);
+        echo Zend_Json::encode($datastreams);
 
     }
 

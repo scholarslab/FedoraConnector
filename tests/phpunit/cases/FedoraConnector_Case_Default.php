@@ -181,4 +181,43 @@ class FedoraConnector_Case_Default extends Omeka_Test_AppTestCase
     }
 
 
+    /**
+     * Write a fixture file.
+     *
+     * @param string $body The fixture body.
+     * @param string $file The name of the fixture file.
+     */
+    protected function _writeFixture($body, $file)
+    {
+
+        // Open the fixture file.
+        $fixture = fopen(FEDORA_DIR.'/tests/jasmine/fixtures/'.$file, 'w');
+
+        // Write fixture.
+        fwrite($fixture, $body);
+        fclose($fixture);
+
+    }
+
+
+    /**
+     * Write the response body from a route to a fixture file.
+     *
+     * @param string $route The resource location.
+     * @param string $file The name of the fixture file.
+     */
+    protected function _writeFixtureFromRoute($route, $file)
+    {
+
+        // Request the route.
+        $this->resetResponse();
+        $this->dispatch($route);
+
+        // Write the fixture.
+        $response = $this->getResponse()->getBody('default');;
+        $this->_writeFixture($response, $file);
+
+    }
+
+
 }
