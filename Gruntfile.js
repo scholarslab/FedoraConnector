@@ -20,6 +20,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-shell');
 
+  var pkg = grunt.file.readJSON('package.json');
   var paths = grunt.file.readJSON('paths.json');
 
   grunt.initConfig({
@@ -85,6 +86,54 @@ module.exports = function(grunt) {
         files: 'views/admin/javascripts/*.js',
         tasks: 'concat'
       }
+    },
+
+    compress: {
+
+      dist: {
+        options: {
+          archive: 'pkg/FedoraConnector-'+pkg.version+'.zip'
+        },
+        dest: 'FedoraConnector/',
+        src: [
+
+          '**',
+
+          // GIT
+          '!.git/**',
+
+          // BOWER
+          '!bower.json',
+          '!bower_components/**',
+
+          // NPM
+          '!package.json',
+          '!node_modules/**',
+
+          // COMPOSER
+          '!composer.json',
+          '!composer.lock',
+          '!vendor/**',
+
+          // RUBY
+          '!Gemfile',
+          '!Gemfile.lock',
+          '!Rakefile',
+
+          // GRUNT
+          '!.grunt/**',
+          '!Gruntfile.js',
+          '!paths.json',
+
+          // DIST
+          '!pkg/**',
+
+          // TESTS
+          '!tests/**'
+
+        ]
+      }
+
     }
 
   });
