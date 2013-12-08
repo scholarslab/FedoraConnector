@@ -15,7 +15,8 @@ Fedora.module('Datastreams', function(Datastreams) {
 
 
     events: {
-      'keyup input[name="pid"]': 'getDatastreams'
+      'change input[name="pid"]': 'getDatastreams',
+      'keyup input[name="pid"]':  'getDatastreams'
     },
 
 
@@ -26,12 +27,12 @@ Fedora.module('Datastreams', function(Datastreams) {
 
       // Get inputs.
       this.server = this.$('select[name="server"]');
-      this.datastream = this.$('select[name="dsids[]"]');
+      this.datastreams = this.$('select[name="dsids[]"]');
       this.pid = this.$('input[name="pid"]');
 
       // Get values in hidden fields.
-      this.datastreamsUri = this.$('input[name="datastreamsuri"]').val();
-      this.savedDsids = this.$('input[name="saveddsids"]').val();
+      this.datastreamsUrl = this.$('input[name="datastreamsuri"]').val();
+      this.savedDatastreams = this.$('input[name="saveddsids"]').val();
 
       // If the pid is populated, get datastreams.
       if (this.pid.val() !== '') this.getDatastreams();
@@ -51,8 +52,8 @@ Fedora.module('Datastreams', function(Datastreams) {
 
       $.ajax({
 
-        url: this.datastreamsUri,
-        dataTyle: 'json',
+        dataType: 'json',
+        url: this.datastreamsUrl,
         data: params,
 
         success: _.bind(function(data) {
@@ -72,17 +73,17 @@ Fedora.module('Datastreams', function(Datastreams) {
     renderDatastreams: function(data) {
 
       // Clear select.
-      this.datastream.empty();
+      this.datastreams.empty();
 
       // Render options.
       _.each(data, _.bind(function(node) {
         var option = $('<option>').text(node.label).val(node.dsid);
-        this.datastream.append(option);
+        this.datastreams.append(option);
       }, this));
 
       // Populated saved dsid.
-      if (!_.isEmpty(this.savedDsids)) {
-        this.datastream.val(this.savedDsids.split(','));
+      if (!_.isEmpty(this.savedDatastreams)) {
+        this.datastreams.val(this.savedDatastreams.split(','));
       }
 
     }

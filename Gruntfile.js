@@ -17,6 +17,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-shell');
 
@@ -153,11 +154,12 @@ module.exports = function(grunt) {
         helpers: [
           paths.vendor.jquery,
           paths.vendor.jasmine_jquery,
-          paths.vendor.sinon
+          paths.vendor.sinon,
+          paths.jasmine+'/helpers/*.js'
         ]
       },
 
-      editor: {
+      datastreams: {
         src: [
           paths.payloads+'/datastreams.js'
         ],
@@ -165,6 +167,17 @@ module.exports = function(grunt) {
           specs: [
             paths.jasmine+'/integration/**/*.spec.js'
           ]
+        }
+      }
+
+    },
+
+    connect: {
+
+      server: {
+        options: {
+          keepalive: true,
+          port: 1337
         }
       }
 
@@ -195,9 +208,16 @@ module.exports = function(grunt) {
     'shell:phpunit'
   ]);
 
+  // Mount Jasmine tests for browser.
+  grunt.registerTask('jasmine:server', [
+    'jasmine:datastreams:build',
+    'connect'
+  ]);
+
   // Run all test suites.
   grunt.registerTask('test', [
-    'phpunit'
+    'phpunit',
+    'jasmine'
   ]);
 
 };

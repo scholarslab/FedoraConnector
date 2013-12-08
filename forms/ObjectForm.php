@@ -64,6 +64,15 @@ class FedoraConnector_Form_Object extends Omeka_Form
         // Saved dsid.
         $this->addElement('hidden', 'saved-dsids');
 
+        $this->addDisplayGroup(array(
+            'server',
+            'pid',
+            'dsids',
+            'import',
+            'datastreams-uri',
+            'saved-dsids',
+        ), 'fedora');
+
     }
 
 
@@ -75,9 +84,8 @@ class FedoraConnector_Form_Object extends Omeka_Form
     public function getServersForSelect()
     {
 
-        // Get file table.
-        $_db = get_db();
-        $_servers = $_db->getTable('FedoraConnectorServer');
+        // Get server table.
+        $_servers = get_db()->getTable('FedoraConnectorServer');
 
         // Fetch.
         $records = $_servers->findAll();

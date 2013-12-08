@@ -8,12 +8,9 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
-Fedora.module('Datastreams', function(Datastreams) {
 
-
-  Datastreams.addInitializer(function() {
-    Datastreams.__view = new Datastreams.View({ el: '#fieldset-fedora' });
-  });
-
-
-});
+/**
+ * Set the fixtures path.
+ */
+jasmine.getFixtures().fixturesPath = 'tests/jasmine/fixtures';
+jasmine.getStyleFixtures().fixturesPath = 'views/shared/css/payloads';
