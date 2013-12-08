@@ -147,6 +147,7 @@ SQL
 
         // Get the form markup.
         $form = new FedoraConnector_Form_Object();
+        $form->removeDecorator('form');
 
         // Get the item.
         $item = get_current_record('item');
