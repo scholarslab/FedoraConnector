@@ -52,6 +52,15 @@ module.exports = function(grunt) {
         stdout: true
       },
 
+      build_sinon: {
+        command: './build',
+        options: {
+          execOptions: {
+            cwd: paths.build.sinon
+          }
+        }
+      },
+
       phpunit: {
         command: '../../vendor/bin/phpunit',
         options: {
@@ -136,6 +145,29 @@ module.exports = function(grunt) {
         ]
       }
 
+    },
+
+    jasmine: {
+
+      options: {
+        helpers: [
+          paths.vendor.jquery,
+          paths.vendor.jasmine_jquery,
+          paths.vendor.sinon
+        ]
+      },
+
+      editor: {
+        src: [
+          paths.payloads+'/datastreams.js'
+        ],
+        options: {
+          specs: [
+            paths.jasmine+'/integration/**/*.spec.js'
+          ]
+        }
+      }
+
     }
 
   });
@@ -147,6 +179,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean',
     'bower',
+    'shell:build_sinon',
     'concat'
   ]);
 

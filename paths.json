@@ -1,13 +1,20 @@
 {
 
-  "src":          "views/admin/javascripts/fedora",
-  "payloads":     "views/admin/javascripts/payloads",
-  "jasmine":      "tests/jasmine",
+  "src":              "views/admin/javascripts/fedora",
+  "payloads":         "views/admin/javascripts/payloads",
+  "jasmine":          "tests/jasmine",
+
+  "build": {
+    "sinon":          "bower_components/sinon"
+  },
 
   "vendor": {
-    "underscore": "bower_components/underscore/underscore.js",
-    "backbone":   "bower_components/backbone/backbone.js",
-    "marionette": "bower_components/marionette/lib/backbone.marionette.js"
+    "jquery":         "bower_components/jquery/jquery.js",
+    "underscore":     "bower_components/underscore/underscore.js",
+    "backbone":       "bower_components/backbone/backbone.js",
+    "marionette":     "bower_components/marionette/lib/backbone.marionette.js",
+    "jasmine_jquery": "bower_components/jasmine-jquery/lib/jasmine-jquery.js",
+    "sinon":          "bower_components/sinon/pkg/sinon.js"
   }
 
 }
