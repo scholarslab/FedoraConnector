@@ -74,6 +74,7 @@ module.exports = function(grunt) {
     },
 
     concat: {
+
       datastreams: {
         src: [
           paths.vendor.underscore,
@@ -84,20 +85,25 @@ module.exports = function(grunt) {
         ],
         dest: paths.payloads+'/datastreams.js'
       }
+
     },
 
     uglify: {
+
       datastreams: {
         src:  '<%= concat.datastreams.dest %>',
         dest: '<%= concat.datastreams.dest %>'
       }
+
     },
 
     watch: {
+
       datastreams: {
         files: paths.src+'/**/*.js',
         tasks: 'concat'
       }
+
     },
 
     compress: {
@@ -160,13 +166,9 @@ module.exports = function(grunt) {
       },
 
       datastreams: {
-        src: [
-          paths.payloads+'/datastreams.js'
-        ],
+        src: paths.payloads+'/datastreams.js',
         options: {
-          specs: [
-            paths.jasmine+'/integration/**/*.spec.js'
-          ]
+          specs: paths.jasmine+'/integration/**/*.spec.js'
         }
       }
 
