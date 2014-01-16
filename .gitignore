@@ -1,14 +1,6 @@
+.DS_Store
 node_modules
 bower_components
 vendor
-
-.*.sw*$
-*~$
-build/
-TAGS
-.settings
-.hgignore
-.buildpath
-.project
-.DS_Store
-pkg/*
+.grunt
+pkg
