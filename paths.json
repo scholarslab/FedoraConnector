@@ -14,7 +14,7 @@
     "backbone":       "bower_components/backbone/backbone.js",
     "marionette":     "bower_components/marionette/lib/backbone.marionette.js",
     "jasmine_jquery": "bower_components/jasmine-jquery/lib/jasmine-jquery.js",
-    "sinon":          "bower_components/sinon/pkg/sinon.js"
+    "sinon":          "bower_components/sinon/index.js"
   }
 
 }

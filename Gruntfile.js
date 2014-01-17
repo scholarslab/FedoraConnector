@@ -53,15 +53,6 @@ module.exports = function(grunt) {
         stdout: true
       },
 
-      build_sinon: {
-        command: './build',
-        options: {
-          execOptions: {
-            cwd: paths.build.sinon
-          }
-        }
-      },
-
       phpunit: {
         command: '../../vendor/bin/phpunit',
         options: {
@@ -91,7 +82,7 @@ module.exports = function(grunt) {
     uglify: {
 
       datastreams: {
-        src:  '<%= concat.datastreams.dest %>',
+        src:  '<%= concat.datastreams.src %>',
         dest: '<%= concat.datastreams.dest %>'
       }
 
@@ -194,8 +185,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean',
     'bower',
-    'shell:build_sinon',
-    'concat'
+    'uglify'
   ]);
 
   // Spawn a release package.
@@ -218,6 +208,7 @@ module.exports = function(grunt) {
 
   // Run all test suites.
   grunt.registerTask('test', [
+    'uglify',
     'phpunit',
     'jasmine'
   ]);
