@@ -40,7 +40,7 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
     function display($object, $params = array()) {
 
         // Construct the image URL.
-        $url = "{$object->getServer()->url}/objects/{$object->pid}" . 
+        $url = "{$object->getServer()->url}/objects/{$object->pid}" .
             "/datastreams/SCREEN/content";
 
         // Return the image tag.
