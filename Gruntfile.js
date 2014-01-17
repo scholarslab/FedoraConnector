@@ -106,6 +106,37 @@ module.exports = function(grunt) {
 
     },
 
+    jasmine: {
+
+      options: {
+        helpers: [
+          paths.vendor.jquery,
+          paths.vendor.jasmine_jquery,
+          paths.vendor.sinon,
+          paths.jasmine+'/helpers/*.js'
+        ]
+      },
+
+      datastreams: {
+        src: paths.payloads+'/datastreams.js',
+        options: {
+          specs: paths.jasmine+'/integration/**/*.spec.js'
+        }
+      }
+
+    },
+
+    connect: {
+
+      server: {
+        options: {
+          keepalive: true,
+          port: 1337
+        }
+      }
+
+    },
+
     compress: {
 
       dist: {
@@ -150,37 +181,6 @@ module.exports = function(grunt) {
           '!tests/**'
 
         ]
-      }
-
-    },
-
-    jasmine: {
-
-      options: {
-        helpers: [
-          paths.vendor.jquery,
-          paths.vendor.jasmine_jquery,
-          paths.vendor.sinon,
-          paths.jasmine+'/helpers/*.js'
-        ]
-      },
-
-      datastreams: {
-        src: paths.payloads+'/datastreams.js',
-        options: {
-          specs: paths.jasmine+'/integration/**/*.spec.js'
-        }
-      }
-
-    },
-
-    connect: {
-
-      server: {
-        options: {
-          keepalive: true,
-          port: 1337
-        }
       }
 
     }
