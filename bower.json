@@ -7,7 +7,7 @@
     , "underscore":     ">= 1.4.4"
     , "backbone":       ">= 0.9.10"
     , "marionette":     ">= 1.4.0"
-    , "jasmine-jquery": "<  2.0.0"
+    , "jasmine-jquery": ">= 2.0.0"
 
     , "sinon": "http://sinonjs.org/releases/sinon-1.7.3.js"
 

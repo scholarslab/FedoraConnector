@@ -63,7 +63,7 @@ class FedoraConnector_FixtureBuilderTest
         // Create server.
         $server = $this->_server();
 
-        // Mock POST.
+        // Set request parameters.
         $this->request->setMethod('GET')->setParams(array(
             'server' => $server->id, 'pid' => 'pid:test'
         ));
