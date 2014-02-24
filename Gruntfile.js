@@ -16,10 +16,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-phpunit');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-bower-task');
-  grunt.loadNpmTasks('grunt-shell');
 
   var pkg = grunt.file.readJSON('package.json');
   var paths = grunt.file.readJSON('paths.json');
@@ -44,23 +44,6 @@ module.exports = function(grunt) {
       payloads: paths.payloads,
       bower: 'bower_components',
       pkg: 'pkg'
-
-    },
-
-    shell: {
-
-      options: {
-        stdout: true
-      },
-
-      phpunit: {
-        command: '../../vendor/bin/phpunit',
-        options: {
-          execOptions: {
-            cwd: 'tests/phpunit'
-          }
-        }
-      },
 
     },
 
@@ -93,6 +76,21 @@ module.exports = function(grunt) {
       datastreams: {
         files: paths.src+'/**/*.js',
         tasks: 'concat'
+      }
+
+    },
+
+    phpunit: {
+
+      options: {
+        bin: 'vendor/bin/phpunit',
+        bootstrap: 'tests/phpunit/bootstrap.php',
+        followOutput: true,
+        colors: true
+      },
+
+      application: {
+        dir: 'tests/phpunit'
       }
 
     },
@@ -193,11 +191,6 @@ module.exports = function(grunt) {
     'uglify',
     'clean:pkg',
     'compress'
-  ]);
-
-  // Run the PHPUnit suite.
-  grunt.registerTask('phpunit', [
-    'shell:phpunit'
   ]);
 
   // Mount Jasmine tests for browser.
