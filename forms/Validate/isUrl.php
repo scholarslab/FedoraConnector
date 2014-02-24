@@ -1,18 +1,28 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Copied with modifications from https://github.com/rondobley/Zend-Framework-Validate-URL.
- *
+ * @package     omeka
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
+
+/**
+ * Copied with modifications from:
+ * https://github.com/rondobley/Zend-Framework-Validate-URL
+ */
 class FedoraConnector_Validate_IsUrl extends Zend_Validate_Abstract
 {
+
+
     /**
      * Error codes
-     * @const string
      */
     const INVALID_URL = 'invalidUrl';
+
 
     /**
      * Error messages
@@ -22,34 +32,43 @@ class FedoraConnector_Validate_IsUrl extends Zend_Validate_Abstract
         self::INVALID_URL   => "'%value%' is not a valid URL.",
     );
 
+
     /**
-     * Defined by Zend_Validate_Interface
-     *
-     * Returns true if and only if the $value is a valid url that starts with http(s)://
-     * and the hostname is a valid TLD
+     * Returns true if the value is a valid url that starts with http(s)://
+     * and the hostname is a valid TLD.
      *
      * @param  string $value
-     * @throws Zend_Validate_Exception if a fatal error occurs for validation process
      * @return boolean
      */
     public function isValid($value)
     {
+
+        // Invalid if not string.
         if (!is_string($value)) {
-            $this->_error(self::INVALID_URL);
-             return false;
-        }
-
-        $this->_setValue($value);
-
-        // Get a Zend_Uri_Http object for our URL, this will only accept http(s) schemes.
-        try {
-            $uriHttp = Zend_Uri_Http::fromString($value);
-        } catch (Zend_Uri_Exception $e) {
             $this->_error(self::INVALID_URL);
             return false;
         }
 
-        $hostnameValidator = new Zend_Validate_Hostname(Zend_Validate_Hostname::ALLOW_LOCAL);
+        $this->_setValue($value);
+
+        try {
+
+            // Try to parse a URL.
+            $uriHttp = Zend_Uri_Http::fromString($value);
+
+        } catch (Zend_Uri_Exception $e) {
+
+            // Invalid if not URL.
+            $this->_error(self::INVALID_URL);
+            return false;
+
+        }
+
+        $hostnameValidator = new Zend_Validate_Hostname(
+            Zend_Validate_Hostname::ALLOW_LOCAL
+        );
+
+        // Allow local URLs.
         if (!$hostnameValidator->isValid($uriHttp->getHost())) {
             $this->_error(self::INVALID_URL);
             return false;
@@ -58,5 +77,6 @@ class FedoraConnector_Validate_IsUrl extends Zend_Validate_Abstract
         return true;
 
     }
+
 
 }

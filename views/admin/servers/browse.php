@@ -1,92 +1,127 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2 cc=80; */
 
 /**
- * Main portal view for Neatline.
- *
- * PHP version 5
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
- *
  * @package     omeka
- * @subpackage  neatline
- * @author      Scholars' Lab <>
- * @author      Bethany Nowviskie <bethany@virginia.edu>
- * @author      Adam Soroka <ajs6f@virginia.edu>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2011 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 ?>
 
 <?php
-$title = __('Fedora Connector | Browse Servers');
-head(array('content_class' => 'fedora', 'title' => $title));
-?>
 
-<?php echo $this->partial('servers/_header.php', array(
-    'title' => $title,
-    'add_button_uri' => 'fedora-connector/servers/add',
-    'add_button_text' => __('Add a Server')
-)); ?>
+  echo head(array(
+    'title' => __('Fedora Connector | Browse Servers'),
+    'bodyclass' => 'browse'
+  ));
+
+  echo flash();
+
+?>
 
 <div id="primary">
 
-    <?php echo flash(); ?>
+  <?php if ($servers): ?>
 
-    <?php if ($servers): ?>
+    <a class="add small green button"
+      href="<?php echo url('fedora-connector/servers/add'); ?>">
+      <?php echo __('Register a Server'); ?>
+    </a>
 
-        <table>
-            <thead>
-                <tr>
-                    <?php browse_headings(array(
-                        'Name' => 'name',
-                        'URL' => 'url',
-                        'Status' => null,
-                        'Version' => null,
-                        'Actions' => null
-                    )); ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($servers as $server): ?>
-                    <tr>
-                        <td><a href="<?php echo uri('fedora-connector/servers/edit/' . $server->id); ?>"><strong><?php echo $server->name; ?></strong></a></td>
-                        <td><a href="<?php echo $server->url; ?>" target="_blank"><?php echo $server->url; ?></a></td>
-                        <td>
-                            <?php if ($server->isOnline()): ?><span class="online status">Online</span>
-                            <?php else: ?><span class="offline status">Offline</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <?php if ($server->isOnline()): echo $server->getVersion(); ?>
-                            <?php else: ?><span class="unavailable status">[not available]</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <?php echo $this->partial('servers/_action_buttons.php', array(
-                                'uriSlug' => 'fedora-connector',
-                                'server' => $server)); ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <table>
 
-    <?php else: ?>
+      <thead>
+        <tr>
+          <?php echo browse_sort_links(array(
+            'Name'    => 'name',
+            'URL'     => 'url',
+            'Status'  => null,
+            'Version' => null,
+            'Actions' => null
+          ), array('link_tag' => 'th scope="col"')); ?>
+        </tr>
+      </thead>
 
-        <p class="neatline-alert"><?php echo __('There are no Fedora servers yet.'); ?>
-        <a href="<?php echo uri('fedora-connector/servers/add'); ?>"><?php echo __('Create one!'); ?></a>
-        </p>
+      <tbody>
 
-    <?php endif; ?>
+        <?php foreach ($servers as $server): ?>
+          <tr>
+
+            <!-- Title. -->
+            <td>
+              <a href="<?php echo url(
+                'fedora-connector/servers/edit/'.$server->id
+              ); ?>">
+                <strong><?php echo $server->name; ?></strong>
+              </a>
+            </td>
+
+            <!-- URL. -->
+            <td>
+              <a href="<?php echo $server->url; ?>" target="_blank">
+                <?php echo $server->url; ?>
+              </a>
+            </td>
+
+            <!-- Status. -->
+            <td>
+              <?php if ($server->isOnline()): ?>
+                <span class="status online">Online</span>
+              <?php else: ?>
+                <span class="status offline">Offline</span>
+              <?php endif; ?>
+            </td>
+
+            <!-- Version. -->
+            <td>
+              <?php if ($server->isOnline()): ?>
+                <span><?php echo $server->getVersion(); ?></span>
+              <?php else: ?>
+                <span class="status unavailable">[not available]</span>
+              <?php endif; ?>
+            </td>
+
+            <!-- Actions. -->
+            <td>
+
+              <!-- Edit. -->
+              <a href="<?php echo url(
+                'fedora-connector/servers/edit/'.$server->id
+              ); ?>" class="edit">
+                <?php echo __('Edit'); ?>
+              </a>
+
+              <!-- Delete. -->
+              <a href="<?php echo url(
+                'fedora-connector/servers/delete-confirm/'.$server->id
+              ); ?>" class="delete-confirm delete">
+                <?php echo __('Delete'); ?>
+              </a>
+
+            </td>
+
+          </tr>
+        <?php endforeach; ?>
+
+      </tbody>
+
+    </table>
+
+  <?php else: ?>
+
+    <h2><?php echo __('No Fedora servers have been registered.'); ?></h2>
+    <p><?php echo __('Get started by adding a new one!'); ?></p>
+
+    <a class="add big green button"
+      href="<?php echo url('fedora-connector/servers/add'); ?>">
+      <?php echo __('Register a Server'); ?>
+    </a>
+
+  <?php endif; ?>
 
 </div>
 
-<?php foot(); ?>
+<?php echo foot(); ?>

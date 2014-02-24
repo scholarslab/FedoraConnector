@@ -1,7 +1,5 @@
 # Fedora Connector
 
-[![Build Status](https://secure.travis-ci.org/scholarslab/FedoraConnector.png)](http://travis-ci.org/scholarslab/FedoraConnector)
-
 FedoraConnector connects items in an Omeka collection with objects in [Fedora Commons] repositories. The plugin makes it possible to create one-to-one associations between Omeka items and Fedora objects and automatically populate the Dublin Core record for the item with values extracted from datastreams associated with the Fedora object.
 
 The plugin also exposes a system of extensible "sub-plugins" that makes it possible to easily add custom importers and renderers to handle different datastream formats (basic Dublin Core, MODS, and image-type handlers come pre-installed).
@@ -72,4 +70,4 @@ With a server (or multiple servers) created, you can link items in the Omeka col
 
 Once you've connected an Omeka item with a Fedora object, the connection can be edited at any point - just change the values in the Server, PID, and Datastreams inputs, and the plugin will immediately update to render the selected datastreams on the new object.
 
-Note that plain-text datastreams like Dublin Core and MODS that create "physical" copies of the Fedora values in the local Omeka item record won't be automatically swapped out if the Fedora object association is changed since the imported values are written to the database as regular element texts on the Item record.
+Note that plain-text datastreams like Dublin Core and MODS that create _copies_ of the Fedora values in the Omeka item record won't be automatically updated if the Fedora object association is changed after the imported values are written to the database.

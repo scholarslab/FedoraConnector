@@ -1,37 +1,36 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Datastreams controller.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
-class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
+
+class FedoraConnector_DatastreamsController
+    extends Omeka_Controller_AbstractActionController
 {
 
+
     /**
-     * Initialize.
-     *
-     * @return void
+     * Cache the servers table.
      */
     public function init()
     {
-        $this->_servers = $this->getTable('FedoraConnectorServer');
+        $this->_servers = $this->_helper->db->getTable(
+            'FedoraConnectorServer'
+        );
     }
 
+
     /**
-     * ~ AJAX ~
      * Query for datastreams.
-     *
-     * @return void
+     * @ajax
      */
-    public function queryDatastreamsAction()
+    public function indexAction()
     {
 
         // Supress the default Zend layout-sniffer functionality.
@@ -50,22 +49,14 @@ class FedoraConnector_DatastreamsController extends Omeka_Controller_Action
         $datastreams = array();
         foreach ($nodes as $node) {
             $datastreams[] = array(
-                'dsid' => $node->getAttribute('dsid'),
+                'dsid'  => $node->getAttribute('dsid'),
                 'label' => $node->getAttribute('label')
             );
         }
 
-        echo json_encode($datastreams);
+        echo Zend_Json::encode($datastreams);
 
     }
 
+
 }
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
- * End:
- */
-
