@@ -66,7 +66,7 @@ With a server (or multiple servers) created, you can link items in the Omeka col
 
 4. You can go ahead and save the item at this point and the current configuration of the Fedora options will be saved. If you selected datastreams that deliver non-text content of a format that can be accommodated by one of the classes in the /Renderers folder, the content will automatically appear at the bottom of the item show views.
 
-  For datastreams like Dublin Core and MODS that deliver plain-text elements that can be mapped onto Omeka Dublin Core elements, the plugin will copy over the Fedora values as new element texts on the local item record. Check the "Import now?" checkbox to execute this import process when the item form is adder or saved (when you click on the "Save Changes" button).
+For datastreams like Dublin Core and MODS that deliver plain-text elements that can be mapped onto Omeka Dublin Core elements, the plugin will copy over the Fedora values as new element texts on the local item record. Check the "Import now?" checkbox to execute this import process when the item form is adder or saved (when you click on the "Save Changes" button).
 
 Once you've connected an Omeka item with a Fedora object, the connection can be edited at any point - just change the values in the Server, PID, and Datastreams inputs, and the plugin will immediately update to render the selected datastreams on the new object.
 
