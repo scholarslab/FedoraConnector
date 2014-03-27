@@ -1,6 +1,8 @@
-# Fedora Connector
+# [Fedora Connector][plugin]
 
-FedoraConnector connects items in an Omeka collection with objects in [Fedora Commons] repositories. The plugin makes it possible to create one-to-one associations between Omeka items and Fedora objects and automatically populate the Dublin Core record for the item with values extracted from datastreams associated with the Fedora object.
+![Fedora](http://www.fedora-commons.org/sites/all/themes/fedora/logo.png)
+
+FedoraConnector connects items in an Omeka collection with objects in [Fedora Commons][fedora-commons] repositories. The plugin makes it possible to create one-to-one associations between Omeka items and Fedora objects and automatically populate the Dublin Core record for the item with values extracted from datastreams associated with the Fedora object.
 
 The plugin also exposes a system of extensible "sub-plugins" that makes it possible to easily add custom importers and renderers to handle different datastream formats (basic Dublin Core, MODS, and image-type handlers come pre-installed).
 
@@ -12,21 +14,15 @@ Here's the basic workflow:
 
 - <strong>Populate item records with Fedora data</strong>: The plugin retrieves data from the Fedora datastreams and maps it onto the fields in the Dublin Core record for the item. For datastreams that do not deliver plain-text data than can be written directly into the Omeka elements, the plugin can also generate new markup to display content (like images) pulled directly from the repository.
 
-[Fedora Commons]: http://www.fedora-commons.org/
-
 ## Requirements
 
-Currently, FedoraConnector can only interact with Fedora servers that do not place authorization checks on remote requests to access object datastreams. Refer to the [Fedora Commons documentation] on installing, configuring, and running a digital repository.
-
-[Fedora Commons documentation]: https://wiki.duraspace.org/display/FCR30/Fedora+Repository+3.4.2+Documentation
+Currently, FedoraConnector can only interact with Fedora servers that do not place authorization checks on remote requests to access object datastreams. Refer to the [Fedora Commons documentation][fedora-docs] on installing, configuring, and running a digital repository.
 
 ## Installing and Configuring
 
-1. Copy the FedoraConnector folder into the "plugins" folder of the root Omeka installation. (see [Installing a Plugin])
+1. Copy the FedoraConnector folder into the "plugins" folder of the root Omeka installation. (see [Installing a Plugin][omeka-plugins])
 
 2. In the Omeka administrative interface, click on the "Settings" button at the top right of the screen, go to the "Plugins" tab, and click the "Install" button next to the listing for Fedora Connector.
-
-[Installing a Plugin]: http://omeka.org/codex/Installing_a_Plugin
 
 ## Usage
 
@@ -71,3 +67,8 @@ For datastreams like Dublin Core and MODS that deliver plain-text elements that 
 Once you've connected an Omeka item with a Fedora object, the connection can be edited at any point - just change the values in the Server, PID, and Datastreams inputs, and the plugin will immediately update to render the selected datastreams on the new object.
 
 Note that plain-text datastreams like Dublin Core and MODS that create _copies_ of the Fedora values in the Omeka item record won't be automatically updated if the Fedora object association is changed after the imported values are written to the database.
+
+[plugin]: http://omeka.org/add-ons/plugins/fedoraconnector/
+[fedora-commons]: http://www.fedora-commons.org/
+[fedora-docs]: https://wiki.duraspace.org/display/FCR30/Fedora+Repository+3.4.2+Documentation
+[omeka-plugins]: http://omeka.org/codex/Installing_a_Plugin
