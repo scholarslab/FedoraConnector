@@ -1,52 +1,38 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * FedoraConnector Omeka plugin allows users to reuse content managed in
- * institutional repositories in their Omeka repositories.
- *
- * The FedoraConnector plugin provides methods to generate calls against Fedora-
- * based content disemminators. Unlike traditional ingestion techniques, this
- * plugin provides a facade to Fedora-Commons repositories and records pointers
- * to the "real" objects rather than creating new physical copies. This will
- * help ensure longer-term durability of the content streams, as well as allow
- * you to pull from multiple institutions with open Fedora-Commons
- * respositories.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
-// {{{ constants
-if (!defined('FEDORA_CONNECTOR_PLUGIN_VERSION')) {
-    define('FEDORA_CONNECTOR_PLUGIN_VERSION', get_plugin_ini('FedoraConnector', 'version'));
-}
+if (!defined('FEDORA_DIR')) define('FEDORA_DIR', dirname(__FILE__));
 
-if (!defined('FEDORA_CONNECTOR_PLUGIN_DIR')) {
-    define('FEDORA_CONNECTOR_PLUGIN_DIR', dirname(__FILE__));
-}
-// }}}
+// PLUGIN
+require_once FEDORA_DIR.'/FedoraConnectorPlugin.php';
 
-// {{{ requires
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/FedoraConnectorPlugin.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraConnectorFunctions.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/helpers/FedoraGateway.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Import.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Render.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/Plugins.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractImporter.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/libraries/FedoraConnector/AbstractRenderer.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ObjectForm.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/ServerForm.php';
-require_once FEDORA_CONNECTOR_PLUGIN_DIR . '/forms/Validate/isUrl.php';
-// }}}
+// HELPERS
+require_once FEDORA_DIR.'/helpers/FedoraConnectorFunctions.php';
+require_once FEDORA_DIR.'/helpers/FedoraGateway.php';
 
-$gateway = new FedoraGateway;
-Zend_Registry::set('gateway', $gateway);
+// LIBRARIES
+require_once FEDORA_DIR.'/libraries/FedoraConnector/Import.php';
+require_once FEDORA_DIR.'/libraries/FedoraConnector/Render.php';
+require_once FEDORA_DIR.'/libraries/FedoraConnector/Plugins.php';
+require_once FEDORA_DIR.'/libraries/FedoraConnector/AbstractImporter.php';
+require_once FEDORA_DIR.'/libraries/FedoraConnector/AbstractRenderer.php';
 
-new FedoraConnectorPlugin;
+// FORMS
+require_once FEDORA_DIR.'/forms/ObjectForm.php';
+require_once FEDORA_DIR.'/forms/ServerForm.php';
+require_once FEDORA_DIR.'/forms/Validate/isUrl.php';
+
+// Inject the live Fedora adapter.
+Zend_Registry::set('gateway', new FedoraGateway);
+
+$fedora = new FedoraConnectorPlugin();
+$fedora->setUp();

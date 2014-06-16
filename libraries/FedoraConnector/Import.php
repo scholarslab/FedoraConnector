@@ -1,35 +1,30 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Top-level import executor.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
 class FedoraConnector_Import
 {
 
+
     /**
      * Set importer directory, instantiate plugins class.
      *
-     * @param string $importerDir The directory containing the
-     * importers. Defaults to FedoraConnector/Importers.
-     *
-     * @return void.
+     * @param string $importerDir The directory containing the importers.
      */
     public function __construct($importerDir = null)
     {
 
         $this->importerDir = isset($importerDir) ?
             $importerDir :
-            FEDORA_CONNECTOR_PLUGIN_DIR . '/Importers';
+            FEDORA_DIR . '/importers';
 
         $this->plugins = new FedoraConnector_Plugins(
             $this->importerDir,
@@ -40,17 +35,15 @@ class FedoraConnector_Import
 
     }
 
+
     /**
      * Import an object.
      *
      * @param Omeka_Record $object The object record.
-     *
-     * @return array $results Array of dsid => boolean (true if the
-     * datastream was handled).
+     * @return array $results dsid => boolean (true if datastream handled).
      */
     public function import($object) {
 
-        // Walk datastreams.
         foreach (explode(',', $object->dsids) as $dsid) {
 
             // Try to get an importer.
@@ -65,17 +58,17 @@ class FedoraConnector_Import
 
     }
 
+
     /**
      * Try to find an importer for the datastream.
      *
      * @param Omeka_Record $dsid The datastream dsid.
-     *
-     * @return FedoraConnector_BaseImporter|null If an importer can be found,
-     * it's returned; otherwise, null.
+     * @return FedoraConnector_BaseImporter|null The importer, if one exists.
      */
     public function getImporter($dsid) {
         return $this->plugins->getPlugin($dsid);
     }
+
 
     /**
      * This returns the importer plugins loaded.
@@ -86,6 +79,7 @@ class FedoraConnector_Import
         return $this->plugins->getPlugins();
     }
 
+
     /**
      * This tests whether a datastream can be imported by any importer plugins.
      *
@@ -95,7 +89,8 @@ class FedoraConnector_Import
      * datastream.
      */
     public function canImport($datastream) {
-        return ($this->getImporter($datastream) !== null);
+        return $this->getImporter($datastream) !== null;
     }
+
 
 }

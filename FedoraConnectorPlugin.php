@@ -1,158 +1,138 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Plugin runner.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
-class FedoraConnectorPlugin
+class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 {
 
-    // Hooks.
-    private static $_hooks = array(
+
+    protected $_hooks = array(
         'install',
         'uninstall',
-        'before_delete_item',
-        'after_save_form_item',
-        'admin_theme_header',
         'define_routes',
-        'admin_append_to_items_show_primary',
-        'public_append_to_items_show'
+        'after_save_item',
+        'admin_head',
+        'admin_items_show',
+        'public_items_show'
     );
 
-    // Filters.
-    private static $_filters = array(
+
+    protected $_filters = array(
         'admin_items_form_tabs',
-        'admin_navigation_main',
-        'exhibit_builder_exhibit_display_item',
-        'exhibit_builder_display_exhibit_thumbnail_gallery'
+        'admin_navigation_main'
     );
+
 
     /**
-     * Add hooks and filers, get tables.
-     *
-     * @return void
+     * Load the objects table.
      */
     public function __construct()
     {
-        $this->_db = get_db();
+        parent::__construct();
         $this->_objects = $this->_db->getTable('FedoraConnectorObject');
-        self::addHooksAndFilters();
     }
+
 
     /**
-     * Connect hooks and filters with callbacks.
-     *
-     * @return void
+     * Create servers and objects tables.
      */
-    public function addHooksAndFilters()
+    public function hookInstall()
     {
 
-        foreach (self::$_hooks as $hookName) {
-            $functionName = Inflector::variablize($hookName);
-            add_plugin_hook($hookName, array($this, $functionName));
-        }
+        $this->_db->query(<<<SQL
+        CREATE TABLE IF NOT EXISTS
+            {$this->_db->prefix}fedora_connector_servers (
 
-        foreach (self::$_filters as $filterName) {
-            $functionName = Inflector::variablize($filterName);
-            add_filter($filterName, array($this, $functionName));
-        }
+            id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            name        TINYTEXT NOT NULL,
+            url         TINYTEXT NOT NULL,
+
+            PRIMARY KEY (id)
+
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SQL
+);
+
+        $this->_db->query(<<<SQL
+        CREATE TABLE IF NOT EXISTS
+            {$this->_db->prefix}fedora_connector_objects (
+
+            id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            item_id     INT(10) UNSIGNED NOT NULL,
+            server_id   INT(10) UNSIGNED NOT NULL,
+            pid         TINYTEXT NOT NULL,
+            dsids       TINYTEXT NOT NULL,
+
+            PRIMARY KEY (id)
+
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SQL
+);
 
     }
+
 
     /**
-     * Install.
-     *
-     * @return void
+     * Drop tables.
      */
-    public function install()
+    public function hookUninstall()
     {
-
-        // Servers.
-        $this->_db->query(
-            "CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}fedora_connector_servers` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `url` tinytext collate utf8_unicode_ci,
-                `name` tinytext collate utf8_unicode_ci,
-                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"
-        );
-
-        // Objects.
-        $this->_db->query(
-            "CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}fedora_connector_objects` (
-                `id` int(10) unsigned NOT NULL auto_increment,
-                `item_id` int(10) unsigned,
-                `server_id` int(10) unsigned,
-                `pid` tinytext collate utf8_unicode_ci,
-                `dsids` tinytext collate utf8_unicode_ci,
-                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"
-        );
-
+        $this->_db->query(<<<SQL
+        DROP TABLE {$this->_db->prefix}fedora_connector_servers
+SQL
+);
+        $this->_db->query(<<<SQL
+        DROP TABLE {$this->_db->prefix}fedora_connector_objects
+SQL
+);
     }
+
 
     /**
-     * Uninstall.
+     * Register routes.
      *
-     * @return void
+     * @param array $args Contains: `router` (Zend_Config).
      */
-    public function uninstall()
+    public function hookDefineRoutes($args)
     {
-
-        // Drop the servers table.
-        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_servers`";
-        $this->_db->query($sql);
-
-        // Drop the objects table.
-        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}fedora_connector_objects`";
-        $this->_db->query($sql);
+        $args['router']->addConfig(new Zend_Config_Ini(
+            FEDORA_DIR . '/routes.ini'
+        ));
     }
+
 
     /**
      * Add plugin static assets.
      *
      * @param Zend_Controller_Request_Http $request The request.
-     *
-     * @return void
      */
-    public function adminThemeHeader($request)
+    public function hookAdminHead($args)
     {
 
-        if (in_array($request->getModuleName(), array(
-          'fedora-connector', 'default'))) {
+        // Get request module and action.
+        $controller = Zend_Controller_Front::getInstance();
+        $module = $controller->getRequest()->getModuleName();
+        $action = $controller->getRequest()->getActionName();
 
-            // Admin css.
-            queue_css('fedora_connector_main');
-
-            // Datastreams dependencies.
-            queue_js('vendor/load/load');
-            queue_js('load-datastreams');
-
+        // Server browse CSS:
+        if ($module == 'fedora-connector' && $action == 'browse') {
+            queue_css_file('browse');
         }
 
-    }
+        // Datastreams form JS:
+        if ($module == 'default' && ($action == 'add' || $action == 'edit')) {
+            queue_js_file('payloads/datastreams');
+            queue_js_file('bootstrap');
+        }
 
-    /**
-     * Register routes.
-     *
-     * @param object $router Front controller router.
-     *
-     * @return void
-     */
-    public function defineRoutes($router)
-    {
-        $router->addConfig(new Zend_Config_Ini(
-            FEDORA_CONNECTOR_PLUGIN_DIR . '/routes.ini', 'routes'
-        ));
     }
 
     /**
@@ -162,18 +142,17 @@ class FedoraConnectorPlugin
      *
      * @return array Updated $tabs array.
      */
-    public function adminItemsFormTabs($tabs)
+    public function filterAdminItemsFormTabs($tabs)
     {
 
-        // Construct the form, strip the <form> tag.
+        // Get the form markup.
         $form = new FedoraConnector_Form_Object();
         $form->removeDecorator('form');
 
         // Get the item.
-        $item = get_current_item();
+        $item = get_current_record('item');
 
-        // If the item is saved.
-        if (!is_null($item->id)) {
+        if ($item->exists()) {
 
             // Try to get a datastream.
             $object = $this->_objects->findByItem($item);
@@ -181,9 +160,9 @@ class FedoraConnectorPlugin
             // Populate fields.
             if ($object) {
                 $form->populate(array(
-                    'server' => $object->server_id,
-                    'pid' => $object->pid,
-                    'saved-dsids' => $object->dsids
+                    'server'        => $object->server_id,
+                    'pid'           => $object->pid,
+                    'saved-dsids'   => $object->dsids
                 ));
             }
         }
@@ -194,23 +173,29 @@ class FedoraConnectorPlugin
 
     }
 
+
     /**
-     * Save/update datastream, do import.
+     * Save / update datastream, import from Fedora.
      *
-     * @param Item  $item The item.
-     * @param array $post The complete $_POST.
-     *
-     * @return void.
+     * @param array $args
      */
-    public function afterSaveFormItem($item, $post)
+    public function hookAfterSaveItem($args)
     {
+
+        $item = $args['record'];
+        $post = $args['post'];
+
+        // TODO|refactor
+        // Only try to run the import if the Item form is being saved, and a
+        // POST array is defined. Is there no clearer way to do this?
+        if (!$post) return;
 
         // Create or update the datastream.
         $object = $this->_objects->createOrUpdate(
             $item, (int) $post['server'], $post['pid'], $post['dsids']
         );
 
-        // Import.
+        // Perform the import.
         if ((bool) $post['import']) {
             $importer = new FedoraConnector_Import();
             $importer->import($object);
@@ -218,74 +203,38 @@ class FedoraConnectorPlugin
 
     }
 
+
     /**
-     * Add Fedora tab to admin menu bar.
+     * Add link to admin menu bar.
      *
-     * @param array $tabs Array of label => URI.
-     *
-     * @return array The modified tabs array.
+     * @param array $tabs Tabs, <LABEL> => <URI> pairs.
+     * @return array The tab array with the "Fedora Connector" tab.
      */
-    public function adminNavigationMain($tabs)
+    public function filterAdminNavigationMain($tabs)
     {
-        $tabs['Fedora Connector'] = uri('fedora-connector');
+        $tabs[] = array(
+            'label' => 'Fedora Connector', 'uri' => url('fedora-connector')
+        );
         return $tabs;
     }
 
+
     /**
      * Render the datastream on admin show page.
-     *
-     * @return void.
      */
-    public function adminAppendToItemsShowPrimary()
+    public function hookAdminItemsShow()
     {
-        echo fedora_connector_display_object(get_current_item());
+        echo fc_displayObject(get_current_record('item'));
     }
+
 
     /**
      * Render the datastream on public show page.
-     *
-     * @return void.
      */
-    public function publicAppendToItemsShow()
+    public function hookPublicItemsShow()
     {
-        echo fedora_connector_display_object(get_current_item());
+        echo fc_displayObject(get_current_record('item'));
     }
 
-    public function exhibitBuilderExhibitDisplayItem($html, $displayFileOptions, $linkProperties, $item)
-    {
-      $fedoraObject = fedora_connector_display_object($item, array('scale' => settings('fullsize_constraint')));
-      $html = $fedoraObject ? exhibit_builder_link_to_exhibit_item($fedoraObject, $linkProperties, $item) : $html;
-      return $html;
-    }
-
-    public function exhibitBuilderDisplayExhibitThumbnailGallery($html, $start, $end, $props, $thumbnailType) {
-
-      $params = array();
-
-      switch($thumbnailType) {
-        case 'thumbnail':
-          $params['scale'] = settings('thumbnail_constraint');
-          break;
-        case 'square_thumbnail':
-          $params['region'] = '0.5,0.5,'.settings('square_thumbnail_constraint').','.settings('square_thumbnail_constraint');
-          $params['level'] = 1;
-          break;
-      }
-
-      $html = '';
-
-      for ($i=(int)$start; $i <= (int)$end; $i++) {
-        if (exhibit_builder_use_exhibit_page_item($i)) {
-          $thumbnail = fedora_connector_display_object($item, $params) ? fedora_connector_display_object($item, $params) : item_image($thumbnailType, $props);
-          $html .= "\n" . '<div class="exhibit-item">';
-          $html .= exhibit_builder_link_to_exhibit_item($thumbnail);
-          $html .= exhibit_builder_exhibit_display_caption($i);
-          $html .= '</div>' . "\n";
-
-        }
-      }
-
-      return $html;
-    }
 
 }

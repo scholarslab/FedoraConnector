@@ -1,36 +1,24 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Object form.
- *
- * PHP version 5
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
- *
  * @package     omeka
- * @subpackage  fedoraconector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2011 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
+
 
 class FedoraConnector_Form_Object extends Omeka_Form
 {
 
+
     private $_server;
+
 
     /**
      * Build the form.
-     *
-     * @return void.
      */
     public function init()
     {
@@ -39,7 +27,6 @@ class FedoraConnector_Form_Object extends Omeka_Form
 
         $this->setMethod('post');
         $this->setAttrib('id', 'datastream-form');
-        $this->addElementPrefixPath('FedoraConnector', dirname(__FILE__));
 
         // Server.
         $this->addElement('select', 'server', array(
@@ -51,7 +38,7 @@ class FedoraConnector_Form_Object extends Omeka_Form
         // PID.
         $this->addElement('text', 'pid', array(
             'label'         => __('PID'),
-            'description'   => __('Enter the object PID of the Fedora resource.'),
+            'description'   => __('Enter the PID of the Fedora resource.'),
             'size'          => 40
         ));
 
@@ -66,18 +53,28 @@ class FedoraConnector_Form_Object extends Omeka_Form
         // Import.
         $this->addElement('checkbox', 'import', array(
             'label'         => 'Import now?',
-            'description'   => 'Import Fedora data when the Item form is saved.'
+            'description'   => 'Import Fedora data when the Item is saved.'
         ));
 
         // Query datastreams uri.
         $this->addElement('hidden', 'datastreams-uri', array(
-            'value'   => uri('fedora-connector/datastreams/query-datastreams')
+            'value'         => url('fedora-connector/datastreams')
         ));
 
         // Saved dsid.
         $this->addElement('hidden', 'saved-dsids');
 
+        $this->addDisplayGroup(array(
+            'server',
+            'pid',
+            'dsids',
+            'import',
+            'datastreams-uri',
+            'saved-dsids',
+        ), 'fedora');
+
     }
+
 
     /**
      * Get the list of Fedora servers.
@@ -87,9 +84,8 @@ class FedoraConnector_Form_Object extends Omeka_Form
     public function getServersForSelect()
     {
 
-        // Get file table.
-        $_db = get_db();
-        $_servers = $_db->getTable('FedoraConnectorServer');
+        // Get server table.
+        $_servers = get_db()->getTable('FedoraConnectorServer');
 
         // Fetch.
         $records = $_servers->findAll();
@@ -103,5 +99,6 @@ class FedoraConnector_Form_Object extends Omeka_Form
         return $servers;
 
     }
+
 
 }

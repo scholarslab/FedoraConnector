@@ -1,56 +1,51 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 cc=80; */
 
 /**
- * Abstract importer.
- *
  * @package     omeka
- * @subpackage  fedoraconnector
- * @author      Scholars' Lab <>
- * @author      David McClure <david.mcclure@virginia.edu>
- * @copyright   2012 The Board and Visitors of the University of Virginia
- * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
+ * @subpackage  fedora-connector
+ * @copyright   2012 Rector and Board of Visitors, University of Virginia
+ * @license     http://www.apache.org/licenses/LICENSE-2.0.html
  */
 
 
 abstract class FedoraConnector_AbstractImporter
 {
 
+
     /**
      * Test if the datastream metadata format has an importer plugin.
      *
      * @param Omeka_Record $datastream The datastream to import metadata from.
-     *
      * @return bool True if format can be handled.
      */
     abstract function canImport($datastream);
 
+
     /**
-     * Get xpath queries for finding nodes in the input data for a given DC name.
+     * Get XPath queries for nodes in the Fedora XML for a given DC name.
      *
      * @param string $name The DC name of the element.
-     *
      * @return array The array of xpath queries.
      */
     abstract function getQueries($name);
 
+
     /**
-     * Get database object and set datastream.
-     *
-     * @return void.
+     * Get a database object.
      */
     public function __construct()
     {
         $this->db = get_db();
     }
 
+
     /**
      * Import metadata.
      *
      * @param Omeka_Record $object The Fedora object record.
      * @param string $dsid The dsid to import.
-     *
-     * @return void
      */
     public function import($object, $dsid)
     {
@@ -75,7 +70,7 @@ abstract class FedoraConnector_AbstractImporter
             foreach ($nodes as $node) {
                 $text = new ElementText;
                 $text->record_id = $item->id;
-                $text->record_type_id = 2;
+                $text->record_type = 'Item';
                 $text->element_id = $element->id;
                 $text->html = 0;
                 $text->text = $node->nodeValue;
@@ -86,12 +81,12 @@ abstract class FedoraConnector_AbstractImporter
 
     }
 
+
     /**
      * Execute queries on metadata XML.
      *
      * @param DOMXPath $xml The XML document.
      * @param array $queries The array of queries.
-     *
      * @return array $results The node matches.
      */
     public function queryAll($xml, $queries)
@@ -110,17 +105,18 @@ abstract class FedoraConnector_AbstractImporter
 
     }
 
+
     /**
      * Get XML from Fedora for the item.
      *
      * @param Omeka_Record $object The Fedora object record.
      * @param string $dsid The dsid to load.
-     *
      * @return DOMDocument The metadata XML.
      */
     public function getMetadataXml($object, $dsid) {
         $url = $object->getMetadataUrl($dsid);
         return Zend_Registry::get('gateway')->load($url);
     }
+
 
 }

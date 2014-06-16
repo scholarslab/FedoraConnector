@@ -1,0 +1,13 @@
+<phpunit bootstrap="bootstrap.php"
+         convertErrorsToExceptions="true"
+         convertWarningsToExceptions="true"
+         colors="true"
+         verbose="true">
+
+    <testsuite name="FedoraConnector Tests">
+        <directory>integration</directory>
+        <directory>unit</directory>
+        <directory>fixtures</directory>
+    </testsuite>
+
+</phpunit>
