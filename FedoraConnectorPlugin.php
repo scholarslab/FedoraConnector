@@ -130,7 +130,7 @@ SQL
         // Datastreams form JS:
         if ($module == 'default' && ($action == 'add' || $action == 'edit')) {
             queue_js_file('payloads/datastreams');
-            queue_js_file('bootstrap');
+            queue_js_file('fedora-bootstrap');
         }
 
     }
