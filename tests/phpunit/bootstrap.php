@@ -19,3 +19,5 @@ require_once OMEKA_DIR.'/application/tests/bootstrap.php';
 
 // Laod the base test case.
 require_once FEDORA_TEST_DIR.'/cases/FedoraConnector_Case_Default.php';
+require_once FEDORA_DIR . '/libraries/FedoraConnector/AbstractImporter.php';
+require_once FEDORA_DIR . '/importers/DC.php';
