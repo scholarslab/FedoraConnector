@@ -152,15 +152,16 @@ class FedoraConnector_ItemsControllerTest
         // Set exhibit id.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public'    => 1,
-                'featured'  => 0,
-                'Elements'  => array(),
-                'order'     => array(),
-                'tags'      => '',
-                'server'    => 1,
-                'pid'       => 'pid:test',
-                'dsids'     => array('DC', 'content'),
-                'import'    => 0
+                'public'     => 1,
+                'featured'   => 0,
+                'Elements'   => array(),
+                'order'      => array(),
+                'tags'       => '',
+                'server'     => 1,
+                'pid'        => 'pid:test',
+                'dsids'      => array('DC', 'content'),
+                'import'     => 0,
+                'csrf_token' => $this->_getCsrfToken()
             )
         );
 
@@ -189,23 +190,24 @@ class FedoraConnector_ItemsControllerTest
         // Create server.
         $server = $this->_server();
 
+        // Mock Fedora.
+        $this->_mockImport('describe-v3x.xml', 'dc.xml');
+
         // Mock post.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public'    => 1,
-                'featured'  => 0,
-                'Elements'  => array(),
-                'order'     => array(),
-                'tags'      => '',
-                'server'    => $server->id,
-                'pid'       => 'pid:test',
-                'dsids'     => array('DC'),
-                'import'    => 1
+                'public'     => 1,
+                'featured'   => 0,
+                'Elements'   => array(),
+                'order'      => array(),
+                'tags'       => '',
+                'server'     => $server      -> id,
+                'pid'        => 'pid:test',
+                'dsids'      => array('DC'),
+                'import'     => 1,
+                'csrf_token' => $this->_getCsrfToken()
             )
         );
-
-        // Mock Fedora.
-        $this->_mockImport('describe-v3x.xml', 'dc.xml');
 
         // Hit item edit.
         $this->dispatch('items/add');
@@ -214,8 +216,8 @@ class FedoraConnector_ItemsControllerTest
         $item = $this->_getLastRow($this->itemsTable);
 
         // Title.
-        $title = metadata($item, array('Dublin Core', 'Title'));
-        $this->assertEquals($title, 'Dr. J.S. Grasty');
+        $title = metadata($item, array('Dublin Core', 'Title'), array('no_filter' => true));
+        $this->assertEquals('Dr. J.S. Grasty', $title);
 
         // Contributor
         $contributor = metadata($item, array('Dublin Core', 'Contributor'));
@@ -273,15 +275,16 @@ class FedoraConnector_ItemsControllerTest
         // Set exhibit id.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public'    => 1,
-                'featured'  => 0,
-                'Elements'  => array(),
-                'order'     => array(),
-                'tags'      => '',
-                'server'    => 1,
-                'pid'       => 'pid:test',
-                'dsids'     => array('DC', 'content'),
-                'import'    => 0
+                'public'     => 1,
+                'featured'   => 0,
+                'Elements'   => array(),
+                'order'      => array(),
+                'tags'       => '',
+                'server'     => 1,
+                'pid'        => 'pid:test',
+                'dsids'      => array('DC', 'content'),
+                'import'     => 0,
+                'csrf_token' => $this->_getCsrfToken()
             )
         );
 
@@ -319,15 +322,16 @@ class FedoraConnector_ItemsControllerTest
         // Set exhibit id.
         $this->request->setMethod('POST')
             ->setPost(array(
-                'public'    => 1,
-                'featured'  => 0,
-                'Elements'  => array(),
-                'order'     => array(),
-                'tags'      => '',
-                'server'    => 1,
-                'pid'       => 'pid:test2',
-                'dsids'     => array('DC2', 'content2'),
-                'import'    => 0
+                'public'     => 1,
+                'featured'   => 0,
+                'Elements'   => array(),
+                'order'      => array(),
+                'tags'       => '',
+                'server'     => 1,
+                'pid'        => 'pid:test2',
+                'dsids'      => array('DC2', 'content2'),
+                'import'     => 0,
+                'csrf_token' => $this->_getCsrfToken()
             )
         );
 
@@ -357,31 +361,31 @@ class FedoraConnector_ItemsControllerTest
         $item   = $this->_item();
         $object = $this->_object($item);
 
-        // Mock post.
-        $this->request->setMethod('POST')
-            ->setPost(array(
-                'public'    => 1,
-                'featured'  => 0,
-                'Elements'  => array(),
-                'order'     => array(),
-                'tags'      => '',
-                'server'    => $server->id,
-                'pid'       => 'pid:test',
-                'dsids'     => array('DC'),
-                'import'    => 1
-            )
-        );
-
         // Mock Fedora.
         $this->_mockImport('describe-v3x.xml', 'dc.xml');
+
+        // Mock post.
+        $post = array(
+            'public'     => 1,
+            'featured'   => 0,
+            'Elements'   => array(),
+            'order'      => array(),
+            'tags'       => '',
+            'server'     => $server->id,
+            'pid'        => 'pid:test',
+            'dsids'      => array('DC'),
+            'import'     => 1,
+            'csrf_token' => $this->_getCsrfToken()
+        );
+        $this->request->setMethod('POST')->setPost($post);
 
         // Apply the edit, reload the item.
         $this->dispatch('items/edit/' . $item->id);
         $item = $this->_reload($item);
 
         // Title.
-        $title = metadata($item, array('Dublin Core', 'Title'));
-        $this->assertEquals($title, 'Dr. J.S. Grasty');
+        $title = metadata($item, array('Dublin Core', 'Title'), array('no_filter' => true));
+        $this->assertEquals('Dr. J.S. Grasty', $title);
 
         // Contributor
         $contributor = metadata($item, array('Dublin Core', 'Contributor'));

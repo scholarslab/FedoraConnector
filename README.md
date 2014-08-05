@@ -1,6 +1,6 @@
-# [Fedora Connector][plugin]
-
-![Fedora](http://www.fedora-commons.org/sites/all/themes/fedora/logo.png)
+# Fedora Connector
+[![Dependency Status](https://gemnasium.com/scholarslab/FedoraConnector.png)](https://gemnasium.com/scholarslab/FedoraConnector)
+[![Build Status](https://secure.travis-ci.org/scholarslab/FedoraConnector.png)](http://travis-ci.org/scholarslab/FedoraConnector)
 
 FedoraConnector connects items in an Omeka collection with objects in [Fedora Commons][fedora-commons] repositories. The plugin makes it possible to create one-to-one associations between Omeka items and Fedora objects and automatically populate the Dublin Core record for the item with values extracted from datastreams associated with the Fedora object.
 

@@ -151,6 +151,7 @@ module.exports = function(grunt) {
           // COMPOSER
           '!composer.json',
           '!composer.lock',
+          '!composer.phar',
           '!vendor/**',
 
           // RUBY

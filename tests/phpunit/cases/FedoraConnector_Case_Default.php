@@ -219,5 +219,17 @@ class FedoraConnector_Case_Default extends Omeka_Test_AppTestCase
 
     }
 
+    /**
+     * This returns the value for a CSRF token.
+     *
+     * @return String
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    protected function _getCsrfToken()
+    {
+        $csrf = new Omeka_Form_SessionCsrf;
+        return $csrf->getElement('csrf_token')->getToken();
+    }
+
 
 }
