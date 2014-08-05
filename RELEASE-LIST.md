@@ -19,7 +19,7 @@ Connector installed in its normal place in the Omeka `plugins` directory.
 1. grunt
 1. grunt compress
 1. git flow release finish "$VERSION"
-1. git push
+1. git push --all
 1. git push --tags
 
 Upload!
