@@ -119,8 +119,11 @@ SQL
 
         // Get request module and action.
         $controller = Zend_Controller_Front::getInstance();
+        $cname  = $controller->getRequest()->getControllerName();
         $module = $controller->getRequest()->getModuleName();
         $action = $controller->getRequest()->getActionName();
+
+        // queue_js_string("console.log('hookAdminHead: $cname/$module/$action');");
 
         // Server browse CSS:
         if ($module == 'fedora-connector' && $action == 'browse') {
@@ -128,7 +131,8 @@ SQL
         }
 
         // Datastreams form JS:
-        if ($module == 'default' && ($action == 'add' || $action == 'edit')) {
+        if ($cname != 'users' && $module == 'default'
+            && ($action == 'add' || $action == 'edit')) {
             queue_js_file('payloads/datastreams');
             queue_js_file('fedora-bootstrap');
         }
