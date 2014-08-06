@@ -14,7 +14,7 @@ Connector installed in its normal place in the Omeka `plugins` directory.
 1. Update versions
    * `plugin.ini`
    * `package.json`
-   * `bower.json`:w
+   * `bower.json`
 1. git commit -a -m "$VERSION"
 1. grunt
 1. grunt compress
