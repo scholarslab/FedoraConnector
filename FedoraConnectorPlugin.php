@@ -27,7 +27,8 @@ class FedoraConnectorPlugin extends Omeka_Plugin_AbstractPlugin
 
     protected $_filters = array(
         'admin_items_form_tabs',
-        'admin_navigation_main'
+        'admin_navigation_main',
+        'exhibit_attachment_markup'
     );
 
 
@@ -240,5 +241,15 @@ SQL
         echo fc_displayObject(get_current_record('item'));
     }
 
+    public function filterExhibitAttachmentMarkup($html, $options)
+    {
+        $item = $options['attachment']->getItem();
+        if (fc_isFedoraStream($item)) {
+            $uri  = exhibit_builder_exhibit_item_uri($item);
+            $img  = fc_displayObject($item);
+            $html = "<a href=\"$uri\" class=\"exhibit-item-link\">$img</a>";
+        }
+        return $html;
+    }
 
 }

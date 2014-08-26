@@ -30,3 +30,19 @@ function fc_displayObject($item=null, $params=array()) {
     }
 
 }
+
+/**
+ * Tests whether an item contains Fedora streams.
+ *
+ * @param Item $item The item.
+ * @return bool Is the item a Fedora stream?
+ * @author Eric Rochester <erochest@virginia.edu>
+ **/
+function fc_isFedoraStream($item=null)
+{
+    $item     = $item ? $item : get_current_record('item');
+    $objects  = get_db()->getTable('FedoraConnectorObject');
+    $isStream = $item && $objects->findByItem($item);
+
+    return $isStream;
+}
