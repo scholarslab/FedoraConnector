@@ -247,7 +247,8 @@ SQL
         if (fc_isFedoraStream($item)) {
             $uri  = exhibit_builder_exhibit_item_uri($item);
             $img  = fc_displayObject($item);
-            $html = "<a href=\"$uri\" class=\"exhibit-item-link\">$img</a>";
+            $html = "<a href=\"$uri\" class=\"exhibit-item-link\">$img</a>"
+                  . get_view()->exhibitAttachmentCaption($options['attachment']);
         }
         return $html;
     }
