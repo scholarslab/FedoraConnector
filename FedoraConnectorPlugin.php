@@ -247,7 +247,17 @@ SQL
         $item = $options['attachment']->getItem();
         if (fc_isFedoraStream($item)) {
             $uri  = exhibit_builder_exhibit_item_uri($item);
-            $img  = fc_displayObject($item);
+
+            $dom  = fc_displayObject($item);
+            if ($dom->documentElement->tagName == 'img') {
+                $caption = $options['attachment']->caption;
+                $caption = strip_tags($caption, '<br>');
+                $el      = $dom->documentElement;
+                $el->setAttribute('alt',   $caption);
+                $el->setAttribute('title', $caption);
+            }
+            $img  = $dom->saveHTML();
+
             $html = "<a href=\"$uri\" class=\"exhibit-item-link\">$img</a>"
                   . get_view()->exhibitAttachmentCaption($options['attachment']);
         }
