@@ -40,7 +40,7 @@ class FedoraConnector_Render
      * Render a datastream.
      *
      * @param Omeka_Record $object The Fedora object record.
-     * @return string|null The output of the renderer.
+     * @return DOMDocument|null The output of the renderer.
      */
     public function display($object, $params = null) {
 

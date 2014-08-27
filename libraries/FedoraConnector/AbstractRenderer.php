@@ -27,7 +27,7 @@ abstract class FedoraConnector_AbstractRenderer
      * This displays a datastream.
      *
      * @param Omeka_Record $datastream The data stream.
-     * @return string The display HTML for the datastream.
+     * @return DOMDocument The HTML DOM for the datastream.
      */
     abstract function display($datastream, $params = null);
 
