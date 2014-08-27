@@ -30,7 +30,7 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      * Displays an object.
      *
      * @param Omeka_Record $object The Fedora object record.
-     * @return string The display HTML for the datastream.
+     * @return DOMDocument The HTML DOM for the datastream.
      */
     function display($object, $params = array())
     {
@@ -44,24 +44,27 @@ class Jp2_Renderer extends FedoraConnector_AbstractRenderer
      * @param Omeka_Record $object The Fedora object record.
      * @param string $size The size to scale the image to.
      *
-     * @return string The HTML for the image.
+     * @return DOMDocument The HTML DOM for the image.
      */
     private function _display($object, $params = array())
     {
+        if (empty($params))
+            $params = array('scale' => '400,0');
 
-        // Default parameters.
-        if (empty($params)) $params = array('scale' => '400,0');
-
-        // Get server.
         $server = $object->getServer();
 
-        // Construct image URL.
         $url = "{$server->url}/{$server->getService()}/{$object->pid}" .
-            "/methods/djatoka:jp2SDef/getRegion?". http_build_query($params);
+            "/methods/djatoka:jp2SDef/getRegion?" . http_build_query($params);
 
-        // Return the image tag.
-        return "<img class='fedora-renderer' alt='image' src='{$url}' />";
+        $dom  = new DOMDocument();
+        $node = $dom->createElement('img');
+        $dom ->appendChild($node);
+        $node->setAttribute('class', 'fedora-renderer');
+        $node->setAttribute('alt', 'image');
+        $node->setAttribute('src', $url);
 
+
+        return $dom;
     }
 
 

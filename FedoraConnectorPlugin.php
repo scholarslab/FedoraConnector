@@ -229,7 +229,8 @@ SQL
      */
     public function hookAdminItemsShow()
     {
-        echo fc_displayObject(get_current_record('item'));
+        $dom = fc_displayObject(get_current_record('item'));
+        echo $dom->saveHTML();
     }
 
 

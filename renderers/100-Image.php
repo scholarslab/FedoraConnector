@@ -35,17 +35,20 @@ class Image_Renderer extends FedoraConnector_AbstractRenderer
      * Display an object.
      *
      * @param Omeka_Record $object The Fedora object record.
-     * @return string The display HTML for the datastream.
+     * @return DOMDocument The HTML DOM for the datastream.
      */
     function display($object, $params = array()) {
-
-        // Construct the image URL.
         $url = "{$object->getServer()->url}/objects/{$object->pid}" .
             "/datastreams/SCREEN/content";
 
-        // Return the image tag.
-        return "<img class='fedora-renderer' alt='image' src='{$url}' />";
+        $dom  = new DOMDocument();
+        $node = $dom->createElement('img');
+        $dom ->appendChild($node);
+        $node->setAttribute('class', 'fedora-renderer');
+        $node->setAttribute('alt', 'image');
+        $node->setAttribute('src', $url);
 
+        return $dom;
     }
 
 

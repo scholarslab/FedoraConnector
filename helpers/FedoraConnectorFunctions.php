@@ -15,7 +15,7 @@
  *
  * @param Item $item The item.
  * @param array $params Options for the renderer.
- * @return string|null The Fedora object markup.
+ * @return DOMDocument|null The Fedora object markup.
  */
 function fc_displayObject($item=null, $params=array()) {
 
