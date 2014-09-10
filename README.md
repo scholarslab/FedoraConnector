@@ -6,6 +6,8 @@ FedoraConnector connects items in an Omeka collection with objects in [Fedora Co
 
 The plugin also exposes a system of extensible "sub-plugins" that makes it possible to easily add custom importers and renderers to handle different datastream formats (basic Dublin Core, MODS, and image-type handlers come pre-installed).
 
+All of this works together to allow you to include metadata and media from a Fedora store in your Omeka exhibits. It also seemlessly integrates with the [ExhibitBuilder plugin](http://omeka.org/add-ons/plugins/exhibit-builder/) to display media from Fedora on the exhibit pages.
+
 Here's the basic workflow:
 
 - <strong>Add server records that point to Fedora Commons repositories</strong>: Different items in the same Omeka collection can pull from objects in different Fedora repositories.
