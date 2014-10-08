@@ -227,19 +227,24 @@ SQL
     /**
      * Render the datastream on admin show page.
      */
-    public function hookAdminItemsShow()
+    public function hookAdminItemsShow($args)
     {
-        $dom = fc_displayObject(get_current_record('item'));
-        echo $dom->saveHTML();
+        $dom = fc_displayObject($args['item']);
+        if (!is_null($dom)) {
+            echo $dom->saveHTML();
+        }
     }
 
 
     /**
      * Render the datastream on public show page.
      */
-    public function hookPublicItemsShow()
+    public function hookPublicItemsShow($args)
     {
-        echo fc_displayObject(get_current_record('item'));
+        $dom = fc_displayObject($args['item']);
+        if (!is_null($dom)) {
+            echo $dom->saveHTML();
+        }
     }
 
     public function filterExhibitAttachmentMarkup($html, $options)
