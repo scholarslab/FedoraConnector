@@ -1,6 +1,6 @@
 {
     "name": "FedoraConnector"
-  , "version": "2.1.3"
+  , "version": "2.1.4.rc1"
   , "private": false
   , "devDependencies": {
       "grunt":                  ">= 0.4.0"

@@ -241,9 +241,11 @@ SQL
      */
     public function hookPublicItemsShow($args)
     {
-        $dom = fc_displayObject($args['item']);
-        if (!is_null($dom)) {
-            echo $dom->saveHTML();
+        if (array_key_exists('item', $args)) {
+            $dom = fc_displayObject($args['item']);
+            if (!is_null($dom)) {
+                echo $dom->saveHTML();
+            }
         }
     }
 
