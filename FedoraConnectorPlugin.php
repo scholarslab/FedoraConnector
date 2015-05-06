@@ -252,6 +252,11 @@ SQL
     public function filterExhibitAttachmentMarkup($html, $options)
     {
         $item = $options['attachment']->getItem();
+
+        if ($item === null) {
+            return;
+        }
+
         if (fc_isFedoraStream($item)) {
             $uri  = exhibit_builder_exhibit_item_uri($item);
 
